@@ -1,0 +1,101 @@
+@use '../helpers/' as *;
+
+.article {
+    padding: rem(10);
+    border-radius: rem(20);
+    aspect-ratio: 3/1;
+    background-color: #393101;
+
+    &__view {
+        display: flex;
+        flex-direction: column;
+        gap: rem(10);
+        cursor: pointer;
+    }
+
+    &__viewTop {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    &__viewFirstBlock {
+        display: flex;
+        gap: rem(10);
+    }
+
+    &__viewSecondBlock {
+        color: #F2F1E8;
+    }
+
+    &__viewTopIcone {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        aspect-ratio: 1/1;
+        flex: 0 0 rem(40);
+        border-radius: rem(10);
+        background-color: #B8B39A;
+        color: #080628;
+    }
+
+    &__viewTopRighteBlock {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__viewInformation {
+        color: #C6A343;
+    }
+
+    &__viewLine {
+        height: rem(1);
+        width: 100%;
+        background-color: #080628;;
+
+    }
+
+    &__dropdown {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+
+        &.article__dropdown_open {
+            display: flex;
+            flex-direction: column;
+            gap: rem(10);
+            max-height: rem(500);
+            margin-top: rem(10);
+        }
+    }
+
+    &__dropdownArrPeople {
+        display: flex;
+        justify-content: space-between;
+        border-bottom: rem(1) solid #080628;
+    }
+
+    &__dropdownPerson {
+        display: flex;
+        gap: rem(10);
+    }
+
+    &__dropdownSearch {
+        background: none;
+        border: none;
+    }
+
+    &__dropdownAdd {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    &__dropdownNotPerson {
+        color: #C6A343;
+    }
+
+    &__dropdownAddButton {
+        all: unset;
+        cursor: pointer;
+    }
+
+}

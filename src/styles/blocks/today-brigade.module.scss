@@ -1,0 +1,93 @@
+/*src/styles/blocks/today-brigade.module.scss*/
+
+@use '../helpers/' as *;
+
+
+
+    
+    .today-brigade {
+
+        width: 100%;
+        height: rem(325);
+        overflow: scroll;
+        scrollbar-width: none;
+
+        &__header {
+            display: flex;
+            gap: rem(16);
+            align-items: center;
+            background: black;
+            height: rem(50);
+            padding: rem(16);
+        }
+
+        &__icon {
+            color: green;
+            display: flex;
+            align-items: center;
+        }
+
+        &__title {
+            margin: 0;
+            font-weight: 700;
+            color: white;
+        }
+
+        &__meta {
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-end;
+        }
+
+        &__meta-row {
+            display: flex;
+        }
+
+        &__meta-text {
+            margin: 0;
+            color: gray;
+        }
+
+        &__divider {
+            height: 1px;
+            background: gray;
+            
+        }
+
+        &__all{
+            display: flex;
+            flex-direction: column;
+            gap: rem(10);
+            background-color: black;
+            color: antiquewhite;
+            padding: rem(16);
+            gap: rem(16);
+        }
+
+        &__person {
+            display: flex;
+            align-items: center;
+            gap: rem(16);
+        }
+
+        &__person-index {
+            
+        }
+
+        &__person-content {
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            gap: rem(8);
+            
+        }
+
+        &__person-row {
+            display: flex;
+            justify-content: space-between;
+        }
+
+        &__person-text {
+            margin: 0;
+        }
+    }

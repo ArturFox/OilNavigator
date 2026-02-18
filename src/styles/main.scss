@@ -1,0 +1,13 @@
+/*src/styles/main.scss*/
+
+@use './fonts';
+@use './globals';
+@use './normalize';
+@use './utils';
+@use './varibles' as *;
+@use './helpers/index' as *;
+
+body {
+  color: #F2F1E8;
+  background-color: #080628;
+}

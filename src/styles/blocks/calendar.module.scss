@@ -1,0 +1,42 @@
+@use '../helpers/' as *;
+
+.article {
+    display: flex;
+    gap: rem(10);
+    overflow: scroll;
+    scrollbar-width: none;
+    border-top: rem(1) solid #F2F1E8;
+    border-radius: rem(10);
+    padding: rem(20);
+
+    &__block {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex: 0 0 rem(40);
+    }
+
+    &__dayOfWeek {
+
+    }
+
+    &__blockDayAndExclamation {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        border-radius: rem(10);
+        width: 100%;
+
+        &.article__blockDayAndExclamation_open {
+            background-color: #393101;
+        }
+    }
+
+    &__day {
+
+    }
+
+    &__exclamation {
+
+    }
+}
