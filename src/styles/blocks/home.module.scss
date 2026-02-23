@@ -6,6 +6,7 @@
   flex-direction: column;
   padding: rem(20);
   gap: rem(16);
+  padding-bottom: rem(80);
 
   &__filter {
     padding: rem(2);
@@ -25,6 +26,29 @@
     gap: rem(10);
   }
 
+  &__alarmPeople {
+    display: flex;
+    gap: rem(10);
+  }
+
+  &__alarmPeopleArticle {
+    display: flex;
+    flex-direction: column;
+    gap: rem(10);
+    background-color: #393101;
+    border-radius: rem(20);
+    height: rem(200);
+    overflow: scroll;
+    flex: 1;
+    padding: rem(10);
+  }
+
+  &__h3 {
+    display: flex;
+    justify-content: center;
+    margin-top: 0;
+  }
+
   &__topBar {
     background-color: #080628;
     position: sticky;
@@ -33,10 +57,10 @@
   }
 
   &__bottomBar {
-    position: fixed;       // фиксируем снизу экрана
+    position: fixed;
     bottom: 0;
     left: 0;
-    width: 100%;           // растягиваем на всю ширину
+    width: 100%;
     display: flex;
     justify-content: space-around;
     align-items: center;

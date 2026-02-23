@@ -12,6 +12,8 @@ export interface Person {
   vacationStart: string
   vacationEnd: string
   heCan: string[]
+  sickStart: string 
+  sickEnd: string 
 }
 
 

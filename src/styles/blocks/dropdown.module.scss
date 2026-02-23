@@ -35,12 +35,27 @@
         flex: 0 0 rem(40);
         border-radius: rem(10);
         background-color: #B8B39A;
-        color: #080628;
+    }
+
+    &__viewTopIconeColorRed {
+        color: red;
+    }
+
+    &__viewTopIconeColorGreen {
+        color: green;
     }
 
     &__viewTopRighteBlock {
         display: flex;
         flex-direction: column;
+    }
+
+    &__viewTopRighteBlockAlarm {
+        color: red;
+    }
+
+    &__viewTopRighteBlockGood {
+        color: green;
     }
 
     &__viewInformation {
@@ -79,6 +94,10 @@
         gap: rem(10);
     }
 
+    &__dropdownAlarm {
+        color: red;
+    }
+
     &__dropdownSearch {
         background: none;
         border: none;
@@ -90,7 +109,7 @@
     }
 
     &__dropdownNotPerson {
-        color: #C6A343;
+        color: red;
     }
 
     &__dropdownAddButton {

@@ -2,12 +2,25 @@
 
 .article {
     display: flex;
+    flex-direction: column;
     gap: rem(10);
-    overflow: scroll;
-    scrollbar-width: none;
-    border-top: rem(1) solid #F2F1E8;
+    border: rem(1) solid #080628;
     border-radius: rem(10);
-    padding: rem(20);
+    padding: rem(20) 0;
+
+    &__month {
+        display: flex;
+        justify-content: space-between;
+        color: white;
+        font-weight: bolder;
+    }
+
+    &__blockDays {
+        display: flex;
+        gap: rem(10);
+        overflow: scroll;
+        scrollbar-width: none;
+    }
 
     &__block {
         display: flex;
@@ -20,15 +33,19 @@
 
     }
 
-    &__blockDayAndExclamation {
+    &__dayAndIcone {
         display: flex;
         flex-direction: column;
         align-items: center;
-        border-radius: rem(10);
         width: 100%;
+        border-radius: rem(10);
 
-        &.article__blockDayAndExclamation_open {
+        &.article__dayAndIcone_alarm {
             background-color: #393101;
+        }
+
+        &.article__dayAndIcone_today {
+            background-color: gray;
         }
     }
 
@@ -37,6 +54,10 @@
     }
 
     &__exclamation {
+        opacity: 0;
+    }
 
+    &__exclamation_red {
+        color: red;
     }
 }

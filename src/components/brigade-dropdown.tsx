@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ArrowDownWideNarrow, OctagonAlert, BadgeCheck, Search } from "lucide-react";
 import type { BrigadeShift, Person } from "../types/schedule";
 import styles from '../styles/blocks/dropdown.module.scss'
@@ -6,41 +6,76 @@ import { useDispatch } from "react-redux";
 import { addPerson, changePeson } from "../store/new-store";
 
 interface BrigadeDropdownProps {
-  people: Person[][];
-  shift: BrigadeShift
-  text: string
+  people: Person[];
+  shift: BrigadeShift;
 }
 
 
-export function BrigadeDropdown({people, shift, text}: BrigadeDropdownProps) {
+export function BrigadeDropdown({people, shift}: BrigadeDropdownProps) {
 
     const dispatch = useDispatch();
 
     const [open, setOpen] = useState<boolean>(false);
     const [notHuman, setNotHuman] = useState<boolean>(false);
 
-    const peopl = people.flat().filter((e) => e.brigade === shift.brigade)
-
     const parseDate = (dateStr: string) => {
+      if (!dateStr) return null;
       const [day, month, year] = dateStr.split('.').map(Number);
       return new Date(year, month - 1, day);
     };
 
-    const todayDate = new Date();
+    const plusSevenDays = (todayDate: Date): Date => {
+        
+        const newDate = new Date(todayDate);
 
-    const alarmPeople = peopl
-    .filter((f) => {
+        newDate.setDate(newDate.getDate() + 7);
 
-      const start = parseDate(f.vacationStart);
-      const end = parseDate(f.vacationEnd);
+        return newDate
+    }
+    
+    const peopleWithStatus = useMemo(() => {
 
-      return todayDate >= start && todayDate <= end;
+        const todayDate = new Date();
 
-    })
+        return people.map((f) => {
+
+            const startVacation = parseDate(f.vacationStart);
+            const endVacation = parseDate(f.vacationEnd);
+            const birthday = parseDate(f.birthday);
+            const startSick = parseDate(f.sickStart);
+            const endSick = parseDate(f.sickEnd);
+            const weekLater = plusSevenDays(todayDate);
+
+            const status: string[] = [];
+
+            if (startVacation && endVacation && todayDate >= startVacation && todayDate <= endVacation) {
+                status.push('В отпуске');
+            }
+
+            if (startVacation && startVacation > todayDate && startVacation <= weekLater) {
+                status.push('Приближается отпуск');
+            }
+
+            if (birthday && birthday.getDate() === todayDate.getDate() &&
+                birthday.getMonth() === todayDate.getMonth()) {
+                status.push('День рождения');
+            }
+
+            if (startSick && endSick && todayDate >= startSick && todayDate <= endSick) {
+                status.push('Больничный');
+            }
+
+            return {...f, status}
+        
+        });
+
+    }, [people]);
+
+    const hasProblems = peopleWithStatus.some(p => p.status.length > 0) || notHuman;
 
     useEffect(() => {
-        setNotHuman(peopl.length < 7);
-    }, [peopl]);
+        setNotHuman(people.length < 7);
+    }, [people]);
 
     function fn(p: Person){
         dispatch(changePeson(true))
@@ -58,12 +93,25 @@ export function BrigadeDropdown({people, shift, text}: BrigadeDropdownProps) {
                         <div className={styles["article__viewFirstBlock"]}>
 
                             <div className={styles["article__viewTopIcone"]}>
-                                {notHuman ? <OctagonAlert/> : <BadgeCheck/>}
+                                {hasProblems
+                                    ? <OctagonAlert className={styles["article__viewTopIconeColorRed"]}/> 
+                                    : <BadgeCheck className={styles["article__viewTopIconeColorGreen"]}/>
+                                }
                             </div>
 
                             <div className={styles["article__viewTopRighteBlock"]}>
-                                <span>{text} {shift.brigade}</span>
-                                <span className={styles["article__viewInformation"]}>Информационное поле</span>
+
+                                <span>Бригада №{shift.brigade}</span>
+                                
+                                {hasProblems
+                                    ? (<span className={styles["article__viewTopRighteBlockAlarm"]}>
+                                            Что-то не так
+                                        </span>)
+                                    : (<span className={styles["article__viewTopRighteBlockGood"]}>
+                                            Проблем нет
+                                        </span>)
+                                }
+
                             </div>
 
                         </div>
@@ -85,9 +133,12 @@ export function BrigadeDropdown({people, shift, text}: BrigadeDropdownProps) {
 
             <div  className={`${styles.article__dropdown} ${open ? styles['article__dropdown_open'] : ''}`}>
 
-                {peopl?.map((person) => {
+                {peopleWithStatus?.map((person) => {
 
-                    const isOnVacation = alarmPeople.includes(person);
+                    const isOnVacation = person.status.includes('В отпуске');
+                    const birthdayToday = person.status.includes('День рождения');
+                    const isOnSick = person.status.includes('Больничный');
+                    const soonVacation = person.status.includes('Приближается отпуск');
 
                     return (
 
@@ -97,13 +148,15 @@ export function BrigadeDropdown({people, shift, text}: BrigadeDropdownProps) {
                         >
 
                             <div className={styles["article__dropdownPerson"]}>
+                               
                                 <span>{person.name} {person.surname}</span>
-                                <span>{person.jobTitle}</span>
+                        
                             </div>
 
-                            {isOnVacation && (
-                                <div>!!!</div>
-                            )}
+                            {isOnVacation && <span className={styles["article__dropdownAlarm"]}>В отпуске!</span>}
+                            {birthdayToday && <span className={styles["article__dropdownAlarm"]}>Др!</span>}
+                            {isOnSick && <span className={styles["article__dropdownAlarm"]}>Больничный!</span>}
+                            {soonVacation && <span className={styles["article__dropdownAlarm"]}>Приближается отпуск</span>}
 
                             <button 
                                 className={styles["article__dropdownSearch"]}
@@ -115,7 +168,7 @@ export function BrigadeDropdown({people, shift, text}: BrigadeDropdownProps) {
                         </div>
 
                     )
-}               )}
+                })}
 
                 {notHuman && (
 

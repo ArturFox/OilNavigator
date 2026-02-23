@@ -1,0 +1,35 @@
+@use '../helpers/' as *;
+
+.block {
+    display: flex;
+    flex-direction: column;
+    gap: rem(5);
+    border: rem(1) solid black;
+    border-radius: rem(10);
+    padding: rem(5);
+
+    &__nameAndSurname {
+        position: relative;
+        display: inline-block;
+
+        &::after {
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            width: 60%;
+            height: rem(1);
+            background-color: black;
+        }
+    }
+
+    &__sick {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__date {
+        display: flex;
+        flex-direction: column;
+    }
+}

@@ -1,158 +1,206 @@
 import { OctagonAlert } from 'lucide-react'
 import styles from '../styles/blocks/calendar.module.scss'
-import { useDispatch } from 'react-redux'
-import { addDate } from '../store/new-store'
+import type { BrigadeShift, Person } from '../types/schedule';
+import { useDispatch } from 'react-redux';
+import { changeDay } from '../store/new-store';
+import { useState } from 'react';
 
-interface BrigadeShift {
-  id: string
-  code: string
-  label: string
-  color: string
-  startDate: string
-  brigade: string
-  startTime: string | null
-  endTime: string | null
+interface peopleMapeProps {
+    peopleMap: Map<string, Person[]>
+    arrSortDates: Map<string, BrigadeShift[]>
+    stringDateProps: string
 }
 
-interface BrigadeDropdownProps {
-
-  arrSortDates: BrigadeShift[]
-  dateS: string
-  
-}
-
-export function ICalendarRotate ({arrSortDates, dateS}: BrigadeDropdownProps) {
+export function ICalendarRotate ({peopleMap, arrSortDates, stringDateProps}: peopleMapeProps) {
 
     const dispatch = useDispatch();
 
-    const nowDate = new Date();
+    const today = new Date();
 
-    const monthNow = new Date(
-        nowDate.getFullYear(),
-        nowDate.getMonth() + 1,
-        0
+
+
+    const dateToday= new Date(
+        today.getFullYear(),
+        today.getMonth(),
+        today.getDate()
+    )
+
+    const yearToday = dateToday.getFullYear();
+    const monthToday = dateToday.getMonth();
+    const dayToday = dateToday.getDate();
+
+    const strigDateToday = `${String(dayToday).padStart(2,'0')}.${String(monthToday + 1).padStart(2,'0')}.${yearToday}`;
+
+
+
+
+    const [dayPlus, setDayPlus] = useState(0);
+    const [monthPlus, setMonthPlus] = useState(1);
+    const daysMonth = new Date(
+        today.getFullYear(),
+        today.getMonth() + monthPlus,
+        dayPlus
     ).getDate();
 
-    const firstDayOfMonth = new Date(
-        nowDate.getFullYear(),
-        nowDate.getMonth(),
+
+
+    const [monthP, setMonthP] = useState(0);
+    const stringMonth = new Date(
+        today.getFullYear(),
+        today.getMonth() + monthP,
         1
-    ).getDay();
-
-    const startOffset = (firstDayOfMonth + 6) % 7;
-
-
-    const todayNumber = nowDate.getDate();
-
-    const prevMonthDays = new Date(
-        nowDate.getFullYear(),
-        nowDate.getMonth(),
-        0
-    ).getDate();
-    console.log(prevMonthDays)
-
-    const nextMonthDays = new Date(
-        nowDate.getFullYear(),
-        nowDate.getMonth() + 2,
-        0
-    ).getDate();
-    console.log(nextMonthDays)
-
-    const totalCells = startOffset + monthNow;
-
-    const extraNextDays = (7 - (totalCells % 7)) % 7;
+    )
+    const month = new Intl.DateTimeFormat('ru-RU', { month: 'long' }).format(stringMonth);
+    const monthToUpperCase = month[0].toUpperCase() + month.slice(1);
 
 
-    const days = Array.from({ length: totalCells + extraNextDays }, (_, i) => {
 
-        let dayNumber;
-        let isCurrentMonth = true;
 
-        if (i < startOffset) {
+    const days = Array.from({ length: daysMonth }, (_, i) => {
 
-            dayNumber = prevMonthDays - startOffset + i + 1;
-            isCurrentMonth = false;
-
-        } else if (i < startOffset + monthNow) {
-        
-            dayNumber = i - startOffset + 1;
-
-        } else {
-            
-            dayNumber = i - (startOffset + monthNow) + 1;
-            isCurrentMonth = false;
-        }
-        
-        const date = new Date(
-            nowDate.getFullYear(),
-            isCurrentMonth ? nowDate.getMonth() : i < startOffset
-            ? nowDate.getMonth() - 1
-            : nowDate.getMonth() + 1,
-        dayNumber
+        const dayWeek = new Date(
+            stringMonth.getFullYear(),
+            stringMonth.getMonth(),
+            i + 1
         );
 
-        const formattedDate = `${String(date.getDate()).padStart(2,'0')}.${String(date.getMonth()+1).padStart(2,'0')}.${date.getFullYear()}`;
+        const weekday = new Intl.DateTimeFormat('ru-RU', { weekday: 'short' }).format(dayWeek);
 
-        const shiftss = arrSortDates.filter(shift => shift.startDate === formattedDate);
+        const year = new Date(
+            stringMonth.getFullYear(),
+            stringMonth.getMonth() + monthP,
+            1
+        ).getFullYear();
 
-        const shifts = shiftss.filter(sort => sort.code !== 'О')
+        const month = new Date(
+            stringMonth.getFullYear(),
+            stringMonth.getMonth(),
+            1
+        ).getMonth();
+
+        const stringDate = `${String(i + 1).padStart(2, '0')}.${String(month + 1).padStart(2, '0')}.${year}`;
+        console.log(stringDate)
+
+        const shiftsForDay = arrSortDates.get(stringDate) ?? [];
+        const activeShifts = shiftsForDay.filter(f => f.code !== 'О');
+
+        const hasProblem = activeShifts.some(shift => {
+
+            const people = peopleMap.get(shift.brigade) ?? [];
+
+            return people.some(person => {
+
+                const todayDate = new Date(
+                    stringMonth.getFullYear(),
+                    stringMonth.getMonth(),
+                    i+1
+                );
+
+                const parseDate = (dateStr?: string) => {
+                    if (!dateStr) return null;
+                    const [day, month, year] = dateStr.split('.').map(Number);
+                    return new Date(year, month - 1, day);
+                };
+
+                const startVacation = parseDate(person.vacationStart);
+                const endVacation = parseDate(person.vacationEnd);
+                const startSick = parseDate(person.sickStart);
+                const endSick = parseDate(person.sickEnd);
+
+                const inVacation = startVacation && endVacation &&
+                    todayDate >= startVacation && todayDate <= endVacation;
+
+                const inSick = startSick && endSick &&
+                    todayDate >= startSick && todayDate <= endSick;
+
+                return inVacation || inSick;
+            });
+
+        }) || activeShifts.some(shift => {
+            const people = peopleMap.get(shift.brigade) ?? [];
+            return people.length < 7;
+        });
 
         return {
-            day: dayNumber,
-            dayOfWeek: date.toLocaleDateString('ru-RU', { weekday: 'short' }),
-            currentMonth: isCurrentMonth,
-            formattedDate,
-            shifts
+            day: i + 1,
+            weekDay: weekday,
+            hasProblem,
+            stringDate
         };
     });
 
-
-    function fn (arr: BrigadeShift[]) {
-       
-        const date = arr[0].startDate;
-
-        dispatch(addDate(date))
-
+    function fn (day: string) {
+        dispatch(changeDay(day))
     }
 
+    function f () {
+        setMonthP(monthP+1)
+        setMonthPlus(monthPlus+1)
+    }
 
-const todayFormatted = `${String(nowDate.getDate()).padStart(2,'0')}.${String(nowDate.getMonth()+1).padStart(2,'0')}.${nowDate.getFullYear()}`;
-
-    
+    function g () {
+        setMonthP(monthP-1)
+        setMonthPlus(monthPlus-1)
+    }
 
     return(
 
         <article className={styles["article"]}>
 
-            {days.map((day, index) => (
-                <div 
-                    key={index}
-                    className={styles["article__block"]}
-                    onClick={() => fn(day.shifts)}
-                >
+            <div className={styles["article__month"]}>
+                <span>{monthToUpperCase}</span>
+                <span onClick={g}>Назад</span>
+                <span onClick={f}>Следующий</span>
+            </div>
 
-                    <span className={styles["article__dayOfWeek"]}>
-                        {day.dayOfWeek}
-                    </span>
+            <div className={styles["article__blockDays"]}>
 
-                    <div 
-                        className={`${styles.article__blockDayAndExclamation} 
-                        ${
-                            (dateS && dateS === day.formattedDate) ||
-                            (!dateS && day.formattedDate === todayFormatted)
-                            ? styles['article__blockDayAndExclamation_open']
-                            : ''
-                        }`}
-                    >
+                {days.map((day, index) => {
 
+                    const isSelected = stringDateProps === day.stringDate;
+                    const isToday = strigDateToday === day.stringDate;
+                
+                    return(
+                        <div 
+                            key={index}
+                            className={styles["article__block"]}
+                            
+                        >
 
-                            <span className={styles["article__day"]}>{day.day}</span>
-                            <span className={styles["article__exclamation"]}><OctagonAlert/></span>
-                    
-                    </div>
+                            <span className={styles["article__dayOfWeek"]}>
 
-                </div>
-            ))}            
+                                {day.weekDay}
+                            
+                            </span>
+
+                            <div 
+                                className={`
+                                    ${styles["article__dayAndIcone"]}
+                                    ${isSelected 
+                                        ? styles["article__dayAndIcone_alarm"] 
+                                        : isToday 
+                                            ? styles["article__dayAndIcone_today"] 
+                                            : ''
+                                    }
+                                `}
+
+                                    onClick={() => fn(day.stringDate)}
+                            >
+
+                                    <span className={styles["article__day"]}>{day.day}</span>
+                                    <span className={
+                                        day.hasProblem
+                                            ? styles["article__exclamation_red"]
+                                            : styles["article__exclamation"]
+                                    }><OctagonAlert/></span>
+                            
+                            </div>
+
+                        </div>
+                    )
+                   
+                })}   
+            </div>         
 
         </article>
     )

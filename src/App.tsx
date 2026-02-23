@@ -1,126 +1,172 @@
 import { useSelector } from "react-redux";
 import { type RootState } from "./store/new-store";
 import { BrigadeDropdown } from "./components/brigade-dropdown";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 import { ICalendarRotate } from "./components/i-calendar-rotate";
-import type { BrigadeShift } from "./types/schedule";
+import type { BrigadeShift, Person } from "./types/schedule";
 import styles from './styles/blocks/home.module.scss'
 import { InfoAboutPerson } from "./components/infoAboutPerson";
-import { ArrowDown, Bus, CalendarCheck, CookingPot, GraduationCap, UserPen } from "lucide-react";
-
-type BrigadesMap = {
-  brigadeOneState: BrigadeShift[];
-  brigadeTwoState: BrigadeShift[];
-  brigadeThreeState: BrigadeShift[];
-  brigadeFourState: BrigadeShift[];
-  brigadeFiveState: BrigadeShift[];
-};
+import { Bus, CalendarCheck, CookingPot, GraduationCap, UserPen } from "lucide-react";
+import { AlarmPeople } from "./components/alarm-people";
 
 export default function App() {
 
-    const brigadeOneState = useSelector((state: RootState) => state.allBrigades.brigadeOneState);
-    const brigadeTwoState = useSelector((state: RootState) => state.allBrigades.brigadeTwoState);
-    const brigadeThreeState = useSelector((state: RootState) => state.allBrigades.brigadeThreeState);
-    const brigadeFourState = useSelector((state: RootState) => state.allBrigades.brigadeFourState);
-    const brigadeFiveState = useSelector((state: RootState) => state.allBrigades.brigadeFiveState);
+  const brigadeOneState = useSelector((state: RootState) => state.allBrigades.brigadeOneState);
+  const brigadeTwoState = useSelector((state: RootState) => state.allBrigades.brigadeTwoState);
+  const brigadeThreeState = useSelector((state: RootState) => state.allBrigades.brigadeThreeState);
+  const brigadeFourState = useSelector((state: RootState) => state.allBrigades.brigadeFourState);
+  const brigadeFiveState = useSelector((state: RootState) => state.allBrigades.brigadeFiveState);
 
-    const brigadeOnePeople = useSelector((state: RootState) => state.allPeople.brigadeOnePeople);
-    const brigadeTwoPeople = useSelector((state: RootState) => state.allPeople.brigadeTwoPeople);
-    const brigadeThreePeople = useSelector((state: RootState) => state.allPeople.brigadeThreePeople);
-    const brigadeFourPeople = useSelector((state: RootState) => state.allPeople.brigadeFourPeople);
-    const brigadeFivePeople = useSelector((state: RootState) => state.allPeople.brigadeFivePeople);
+  const brigadeOnePeople = useSelector((state: RootState) => state.allPeople.brigadeOnePeople);
+  const brigadeTwoPeople = useSelector((state: RootState) => state.allPeople.brigadeTwoPeople);
+  const brigadeThreePeople = useSelector((state: RootState) => state.allPeople.brigadeThreePeople);
+  const brigadeFourPeople = useSelector((state: RootState) => state.allPeople.brigadeFourPeople);
+  const brigadeFivePeople = useSelector((state: RootState) => state.allPeople.brigadeFivePeople);
 
-    const dateS = useSelector((state: RootState) => state.date.d);
-    const personFlag = useSelector((state: RootState) => state.date.personFlag)
+  const personFlag = useSelector((state: RootState) => state.date.personFlag);
+  const stringDateUserChange = useSelector((state: RootState) => state.date.day);
 
-    const [open, setOpen] = useState<boolean>(false);
-    const [viewFilter, setViewFilter] = useState<boolean>(false);
+  const brigadeSchedule = useMemo( () =>
+    [brigadeOneState, brigadeTwoState, brigadeThreeState, brigadeFourState, brigadeFiveState],
+    [brigadeOneState, brigadeTwoState, brigadeThreeState, brigadeFourState, brigadeFiveState]
+  );
 
-    const brigadeSchedule = useMemo( () =>
-      [brigadeOneState, brigadeTwoState, brigadeThreeState, brigadeFourState, brigadeFiveState],
-      [brigadeOneState, brigadeTwoState, brigadeThreeState, brigadeFourState, brigadeFiveState]
-    );
+  const brigadePeople = useMemo ( () => 
+    [brigadeOnePeople, brigadeTwoPeople, brigadeThreePeople, brigadeFourPeople, brigadeFivePeople],
+    [brigadeOnePeople, brigadeTwoPeople, brigadeThreePeople, brigadeFourPeople, brigadeFivePeople],
+  )
 
-    const brigadePeople = useMemo ( () => 
-      [brigadeOnePeople, brigadeTwoPeople, brigadeThreePeople, brigadeFourPeople, brigadeFivePeople],
-      [brigadeOnePeople, brigadeTwoPeople, brigadeThreePeople, brigadeFourPeople, brigadeFivePeople],
-    )
-
+  const peopleMap = useMemo(() => {
     
-    const addOneDay = (dateStr: string) => {
+    const map = new Map<string, Person[]>();
 
-      const [day, month, year] = dateStr.split('.').map(Number);
-      const daysInMonth = new Date(year, month, 0).getDate();
-      let newDay = day + 1;
-      let newMonth = month;
-      let newYear = year;
+    brigadePeople.flat().forEach((person) => {
+      
+      if(!map.has(person.brigade)){
 
-      if (newDay > daysInMonth) {
-        newDay = 1;
-        newMonth += 1;
-        if (newMonth > 12) {
-          newMonth = 1;
-          newYear += 1;
-        }
+        map.set(person.brigade, []);
+
       }
 
-      return `${String(newDay).padStart(2,'0')}.${String(newMonth).padStart(2,'0')}.${newYear}`;
+      map.get(person.brigade)!.push(person);
+
+    });
+
+    return map;
+
+  }, [brigadePeople]) 
+
+  const peopleAlarm = useMemo(() => {
+
+    const todayDate = new Date();
+
+    const parseDate = (dateStr: string) => {
+      if (!dateStr) return null;
+      const [day, month, year] = dateStr.split('.').map(Number);
+      return new Date(year, month - 1, day);
     };
 
+    const sortPeopleAlarm = Array.from(peopleMap.values())
+    .flat()
+    .map(f => {
+      const startVacation = parseDate(f.vacationStart);
+      const endVacation = parseDate(f.vacationEnd);
+      const startSick = parseDate(f.sickStart);
+      const endSick = parseDate(f.sickEnd);
 
-    const allDates = useMemo(() => {
+      const status: string[] = [];
 
-      const arr: BrigadesMap = {
-        brigadeOneState: [],
-        brigadeTwoState: [],
-        brigadeThreeState: [],
-        brigadeFourState: [],
-        brigadeFiveState: [],
-      };
-
-      const keys = Object.keys(arr) as (keyof typeof arr)[];
-
-      for(let i = 0; i < brigadeSchedule.length; i++){
-
-        const key = keys[i];
-
-        const arrObjects = brigadeSchedule[i];
-        
-        for(let j = 0; j < 18; j++){
-          
-          for(let k = 0; k < arrObjects.length; k++){
-
-            const baseDate = arrObjects[0].startDate;
-
-            let newDate = baseDate;
-
-            const offset = j * arrObjects.length + k;
-
-            for (let d = 0; d < offset; d++) {
-              newDate = addOneDay(newDate);
-            }
-
-            arr[key].push({
-              ...arrObjects[k],
-              id: `${i}-${j}-${k}`,
-              startDate: newDate,
-            });
-          }
-
-        }
-
+      if (startVacation && endVacation && todayDate >= startVacation && todayDate <= endVacation) {
+          status.push('В отпуске');
       }
 
-      return arr;
+      if (startSick && endSick && todayDate >= startSick && todayDate <= endSick) {
+          status.push('Больничный');
+      }
+
+      return {...f, status}
+    })
+
+    const filterAlarm = sortPeopleAlarm.filter(f => f.status.length > 0);
+
+    const sortfilterAlarm = filterAlarm.sort((a, b) => {
+
+      const aDates = [
+        parseDate(a.vacationEnd),
+        parseDate(a.sickEnd)
+      ].filter(Boolean) as Date[]
+
+      const bDates = [
+        parseDate(b.vacationEnd),
+        parseDate(b.sickEnd)
+      ].filter(Boolean) as Date[]
+
+      const aMin = aDates.length ? Math.min(...aDates.map(d => d.getTime())) : Infinity
+      const bMin = bDates.length ? Math.min(...bDates.map(d => d.getTime())) : Infinity
+
+      return aMin - bMin
+    })
+
+    return sortfilterAlarm
+
+  }, [peopleMap]);
+
+
+  const brigadesMap = useMemo(() => {
+
+    function addOneD (startDate: string, index: number){
+    
+      const [day, month, year] = startDate.split('.').map(Number);
+
+      const date = new Date(year, month - 1, day);
+
+      date.setDate(date.getDate() + index);
+
+      const newDay = String(date.getDate()).padStart(2, '0');
+      const newMonth = String(date.getMonth() + 1).padStart(2, '0');
+      const newYear = date.getFullYear()
+
+      return `${newDay}.${newMonth}.${newYear}`;
+
+    }
+
+    const map = new Map<string, BrigadeShift[]>();
+
+    brigadeSchedule.forEach((brigade) => {
+
+      if(brigade.length === 0) return;
+
+      const baseDate = brigade[0].startDate;
+
+      for(let day = 0; day < 180; day++){
+
+        const template = brigade[day % brigade.length];
+
+        if (!map.has(template.brigade)) {
+          map.set(template.brigade, []);
+        }
+
+        const newDate = addOneD(baseDate, day);
+
+        map.get(template.brigade)!.push({
+          ...template,
+          startDate: newDate,
+          id: `${newDate}-${template.brigade}-${template.label}`
+        });
+      }
+
+    });
+
+    return map;
+
+  }, [brigadeSchedule])
+
+  const arrSortDates = useMemo(() => {
+
+    const sorted = Array.from(brigadesMap.values())
+      .flat()
+      .sort((a,b) => {
       
-    }, [brigadeSchedule]);
-
-    const schedule: BrigadeShift[][] = Object.values(allDates);
-
-    const arrSortDates: BrigadeShift[] = schedule
-    .flat()
-    .sort((a,b) => {
-        
         const [dayA, monthA, yearA] = a.startDate.split('.').map(Number);
         const [dayB, monthB, yearB] = b.startDate.split('.').map(Number);
 
@@ -128,135 +174,101 @@ export default function App() {
         const dateB = new Date(yearB, monthB - 1, dayB);
 
         if (dateA.getTime() !== dateB.getTime()) {
-            return dateA.getTime() - dateB.getTime();
+
+          return dateA.getTime() - dateB.getTime();
+        
         }
 
         const order = { "Н": 0, "У": 1, "В": 2, "О": 3 };
 
         return order[a.code as "Н" | "У" | "В" | "О"] - order[b.code as "Н" | "У" | "В" | "О"];
 
-    })
-
-    const formatDate = (date: Date) => {
-      const day = String(date.getDate()).padStart(2, '0');
-      const month = String(date.getMonth() + 1).padStart(2, '0');
-      const year = date.getFullYear();
-      return `${day}.${month}.${year}`;
-    }
-
-    const today = new Date();
-    const todayHours = today.getHours();
-    const formattedToday = formatDate(today);
-
-    const getCurrentPeriod = (hour: number) => {
-        if (hour >= 8 && hour < 16) return "morning";   
-        if (hour >= 16 && hour < 24) return "evening"; 
-        return "night";                                
-    };
-
-    const currentPeriod = getCurrentPeriod(todayHours);
-
-    const periodToCode: Record<string, string> = {
-        morning: "У",
-        evening: "В",
-        night: "Н",
-    };
-
-    const startIndex = arrSortDates.findIndex( shift => (
-        
-      
-          shift.startDate === formattedToday 
-                &&
-               shift.code === periodToCode[currentPeriod]
-      
-
-    ));
-
-    let start;
-
-    if(dateS){
-      start = arrSortDates.findIndex((shift) => (
-        shift.startDate === dateS
-      ))
-    }
-
-    const p: BrigadeShift[] = [];
-
-    if (dateS && start) {
-      for (let i = start; i < arrSortDates.length && p.length < 3; i++) {
-        if (arrSortDates[i].startDate === dateS) {
-          p.push(arrSortDates[i]);
-        }
       }
-    }
+    );
 
-    const g: BrigadeShift[] = [];
+    const map = new Map<string, BrigadeShift[]>();
 
-    if (startIndex !== -1) {
+    for (const shift of sorted) {
+
+      if (!map.has(shift.startDate)) {
+
+        map.set(shift.startDate, []);
       
-      for (let i = startIndex; i < arrSortDates.length && g.length < 3; i++) {
-        if (arrSortDates[i].code !== 'О') {
-          g.push(arrSortDates[i]);
-        }
       }
 
+      map.get(shift.startDate)!.push(shift);
     }
 
-    const parseDate = (dateStr: string) => {
-      const [day, month, year] = dateStr.split('.').map(Number);
-      return new Date(year, month - 1, day);
-    };
+    return map;
 
-    const todayDate = parseDate(formattedToday);
+  }, [brigadesMap]);
 
-    const alarmPeople = brigadePeople
-    .flat()
-    .filter((f) => {
 
-      const start = parseDate(f.vacationStart);
-      const end = parseDate(f.vacationEnd);
+  const today = new Date();
 
-      return todayDate >= start && todayDate <= end;
+  const f = new Date(
+      today.getFullYear(),
+      today.getMonth(),
+      today.getDate()
+  );
 
-    })
+  const year = f.getFullYear();
+  const month = f.getMonth();
+  const day = f.getDate();
+  
+  const stringDate =  stringDateUserChange
+                        ? stringDateUserChange 
+                        : `${String(day).padStart(2,'0')}.${String(month + 1).padStart(2,'0')}.${year}`
+                        
 
-    let gp: BrigadeShift[] = [];
+  const arr = arrSortDates.get(stringDate) ?? [];
 
-    if(!dateS){
-      gp = g
-    } else if (dateS === formattedToday) {
-      gp = g
-    } else {
-      gp = p
-    }
-
-   const text: string[] = [
-    'Сейчас бригада №',
-    'Следующая бригада №',
-    'Далее бригада №'
-  ]
+  const arrSort = arr.filter(f => f.code !== 'О');
+  console.log(arrSort)
 
   return (
 
     <main className={styles["main"]}>
 
       <section className={styles["main__topBar"]}>
-        <ICalendarRotate arrSortDates={arrSortDates} dateS={dateS}/>
+
+        <ICalendarRotate peopleMap={peopleMap} arrSortDates={arrSortDates} stringDateProps={stringDate}/>
+      
       </section>
 
       <section className={styles["main__dropdown"]}>
 
-        {viewFilter && (
-          <div className={styles["main__filter"]} onClick={() => setOpen(!open)}>
-            < ArrowDown size={16}  style={{ transform: open ? "rotate(180deg)" : "rotate(0deg)", transition: "0.3s",  }}/> 
-            Кто в этот день
-          </div>
-        )}
-
-        {gp.map((s, index) => (
-          <BrigadeDropdown key={s.id} shift={s} people={brigadePeople} text={text[index]}/>
+        {arrSort.map((shift) => (
+          <BrigadeDropdown key={shift.id} shift={shift} people={peopleMap.get(shift.brigade) ?? []}/>
         ))}
 
+      </section>
+
+      <section className={styles["main__alarmPeople"]}>
+
+        <article className={styles["main__alarmPeopleArticle"]}>
+
+          <h3 className={styles["main__h3"]}>
+            Отсутствуют
+          </h3>
+
+          {peopleAlarm.map((alarm) => (
+            <AlarmPeople 
+              key={`${alarm.id}-${stringDate}`}
+              alarm={alarm} 
+            />
+          ))}
+        
+        </article>
+        
+        <article className={styles["main__alarmPeopleArticle"]}>
+          
+          <h3 className={styles["main__h3"]}>
+            Изменить
+          </h3>
+        
+        </article>
+      
       </section>
 
       {personFlag && (
