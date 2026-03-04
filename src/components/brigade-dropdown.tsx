@@ -1,85 +1,86 @@
 import { useEffect, useMemo, useState } from "react";
-import { ArrowDownWideNarrow, OctagonAlert, BadgeCheck, Search } from "lucide-react";
-import type { BrigadeShift, Person } from "../types/schedule";
+import { ArrowDownWideNarrow, OctagonAlert, BadgeCheck, Search, Cake } from "lucide-react";
 import styles from '../styles/blocks/dropdown.module.scss'
-import { useDispatch } from "react-redux";
-import { addPerson, changePeson } from "../store/new-store";
+import { useDispatch, useSelector } from "react-redux";
+import { addPerson, changePeson, setInfoPersonBrigadeDropDown, type RootState } from "../store/new-store";
+import type { BrigadesDto } from "../api/brigades/brigades.dto";
+import type { PersonsDto } from "../api/persons/persons.dto";
+import type { SortShift } from "../api/shifts/shifts.dto";
 
 interface BrigadeDropdownProps {
-  people: Person[];
-  shift: BrigadeShift;
+  people: PersonsDto[];
+  shift: SortShift;
+  stringDate: string;
+  brigadesProps: Map<string,BrigadesDto>
 }
 
 
-export function BrigadeDropdown({people, shift}: BrigadeDropdownProps) {
+export function BrigadeDropdown({people, shift, stringDate, brigadesProps}: BrigadeDropdownProps) {
 
     const dispatch = useDispatch();
 
     const [open, setOpen] = useState<boolean>(false);
     const [notHuman, setNotHuman] = useState<boolean>(false);
 
-    const parseDate = (dateStr: string) => {
-      if (!dateStr) return null;
-      const [day, month, year] = dateStr.split('.').map(Number);
-      return new Date(year, month - 1, day);
-    };
+    const brigadeName = brigadesProps.get(shift.brigade)?.name
 
-    const plusSevenDays = (todayDate: Date): Date => {
-        
-        const newDate = new Date(todayDate);
-
-        newDate.setDate(newDate.getDate() + 7);
-
-        return newDate
-    }
-    
     const peopleWithStatus = useMemo(() => {
 
-        const todayDate = new Date();
+        const today = new Date(stringDate);
 
-        return people.map((f) => {
+        const sevenDays = new Date(
+            today.getFullYear(),
+            today.getMonth(),
+            today.getDate() + 7
+        );
 
-            const startVacation = parseDate(f.vacationStart);
-            const endVacation = parseDate(f.vacationEnd);
-            const birthday = parseDate(f.birthday);
-            const startSick = parseDate(f.sickStart);
-            const endSick = parseDate(f.sickEnd);
-            const weekLater = plusSevenDays(todayDate);
+        const stringSevendDays = `${sevenDays.getFullYear()}-${String(sevenDays.getMonth()+1).padStart(2,'0')}-${String(sevenDays.getDate()).padStart(2,'0')}`;
+        
 
+        return people.map((person) => {
+            
             const status: string[] = [];
+            const yellowAlarm: string[] = [];
+            const birthday: string[] = [];
 
-            if (startVacation && endVacation && todayDate >= startVacation && todayDate <= endVacation) {
-                status.push('В отпуске');
+            if( person.vacation_start && person.vacation_end && stringDate >= person.vacation_start && stringDate <= person.vacation_end){
+                status.push('В отпуске')
+            }
+            if( person.sick_start && person.sick_end && stringDate >= person.sick_start && stringDate <= person.sick_end){
+                status.push('Больничный')
             }
 
-            if (startVacation && startVacation > todayDate && startVacation <= weekLater) {
-                status.push('Приближается отпуск');
+            if( person.vacation_start && person.vacation_start > stringDate && person.vacation_start <= stringSevendDays){
+                yellowAlarm.push('Приближается отпуск')
             }
 
-            if (birthday && birthday.getDate() === todayDate.getDate() &&
-                birthday.getMonth() === todayDate.getMonth()) {
-                status.push('День рождения');
+            if( person.birthday && person.birthday === stringDate){
+                birthday.push('День рождения')
             }
 
-            if (startSick && endSick && todayDate >= startSick && todayDate <= endSick) {
-                status.push('Больничный');
-            }
-
-            return {...f, status}
+            return {...person, status, yellowAlarm, birthday}
         
         });
 
-    }, [people]);
+    }, [people, stringDate]);
 
     const hasProblems = peopleWithStatus.some(p => p.status.length > 0) || notHuman;
+    const hasYellowAlarm = peopleWithStatus.some(p => p.yellowAlarm.length > 0);
+    const hasBirthday = peopleWithStatus.some(p => p.birthday.length > 0);
 
     useEffect(() => {
         setNotHuman(people.length < 7);
     }, [people]);
 
-    function fn(p: Person){
+    function fn(p: BrigadesDto){
         dispatch(changePeson(true))
         dispatch(addPerson(p))
+    }
+
+    const k = useSelector((state: RootState) => state.date.infoPersonBrigadeDropDown)
+
+    function fnn(){
+        dispatch(setInfoPersonBrigadeDropDown(!k))
     }
 
     return (
@@ -93,23 +94,44 @@ export function BrigadeDropdown({people, shift}: BrigadeDropdownProps) {
                         <div className={styles["article__viewFirstBlock"]}>
 
                             <div className={styles["article__viewTopIcone"]}>
-                                {hasProblems
-                                    ? <OctagonAlert className={styles["article__viewTopIconeColorRed"]}/> 
-                                    : <BadgeCheck className={styles["article__viewTopIconeColorGreen"]}/>
+                                {hasProblems && hasYellowAlarm
+                                    ? <OctagonAlert className={styles["article__viewTopIconeColorRedandYellow"]}/> 
+                                    : hasProblems
+                                        ? <OctagonAlert className={styles["article__viewTopIconeColorRed"]}/> 
+                                        : hasYellowAlarm
+                                            ? <OctagonAlert className={styles["article__viewTopIconeColorYellow"]}/> 
+                                            : <BadgeCheck className={styles["article__viewTopIconeColorGreen"]}/>
                                 }
                             </div>
 
                             <div className={styles["article__viewTopRighteBlock"]}>
 
-                                <span>Бригада №{shift.brigade}</span>
+                                {hasBirthday 
+
+                                ?   <span className={styles["article__viewTopRighteBlockBirthday"]}>
+                                        {brigadeName} <Cake size={20}/>
+                                    </span>
+
+                                :   <span>
+                                        {brigadeName}
+                                    </span>
+                                }
                                 
-                                {hasProblems
+                                {hasProblems && hasYellowAlarm
                                     ? (<span className={styles["article__viewTopRighteBlockAlarm"]}>
                                             Что-то не так
                                         </span>)
-                                    : (<span className={styles["article__viewTopRighteBlockGood"]}>
-                                            Проблем нет
-                                        </span>)
+                                    : hasProblems
+                                        ? (<span className={styles["article__viewTopRighteBlockAlarmRed"]}>
+                                                Что-то не так
+                                            </span>) 
+                                        : hasYellowAlarm
+                                            ? (<span className={styles["article__viewTopRighteBlockAlarmYellow"]}>
+                                                    Что-то не так
+                                                </span>) 
+                                            : (<span className={styles["article__viewTopRighteBlockGood"]}>
+                                                    Проблем нет
+                                                </span>) 
                                 }
 
                             </div>
@@ -136,14 +158,14 @@ export function BrigadeDropdown({people, shift}: BrigadeDropdownProps) {
                 {peopleWithStatus?.map((person) => {
 
                     const isOnVacation = person.status.includes('В отпуске');
-                    const birthdayToday = person.status.includes('День рождения');
+                    const birthdayToday = person.birthday.includes('День рождения');
                     const isOnSick = person.status.includes('Больничный');
-                    const soonVacation = person.status.includes('Приближается отпуск');
+                    const soonVacation = person.yellowAlarm.includes('Приближается отпуск');
 
                     return (
 
                         <div 
-                            key={`${person.brigade}-${person.id}`} 
+                            key={`${person.brigade_id}-${person.id}`} 
                             className={styles["article__dropdownArrPeople"]}
                         >
 
@@ -156,7 +178,7 @@ export function BrigadeDropdown({people, shift}: BrigadeDropdownProps) {
                             {isOnVacation && <span className={styles["article__dropdownAlarm"]}>В отпуске!</span>}
                             {birthdayToday && <span className={styles["article__dropdownAlarm"]}>Др!</span>}
                             {isOnSick && <span className={styles["article__dropdownAlarm"]}>Больничный!</span>}
-                            {soonVacation && <span className={styles["article__dropdownAlarm"]}>Приближается отпуск</span>}
+                            {soonVacation && <span className={styles["article__dropdownAlarmYellow"]}>Приближается отпуск</span>}
 
                             <button 
                                 className={styles["article__dropdownSearch"]}
@@ -179,7 +201,7 @@ export function BrigadeDropdown({people, shift}: BrigadeDropdownProps) {
                         </span>
 
                         <button 
-                            
+                            onClick={() => fnn()}
                             className={styles["article__dropdownAddButton"]}
                         >
                                 Добавить

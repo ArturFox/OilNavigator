@@ -1,13 +1,14 @@
-import { OctagonAlert } from 'lucide-react'
+import { ArrowBigLeft, ArrowBigRight, OctagonAlert } from 'lucide-react'
 import styles from '../styles/blocks/calendar.module.scss'
-import type { BrigadeShift, Person } from '../types/schedule';
 import { useDispatch } from 'react-redux';
 import { changeDay } from '../store/new-store';
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
+import type { PersonsDto } from '../api/persons/persons.dto';
+import type { SortShift } from '../api/shifts/shifts.dto';
 
 interface peopleMapeProps {
-    peopleMap: Map<string, Person[]>
-    arrSortDates: Map<string, BrigadeShift[]>
+    peopleMap: Map<string, PersonsDto[]>
+    arrSortDates: Map<string, SortShift[]>
     stringDateProps: string
 }
 
@@ -16,26 +17,11 @@ export function ICalendarRotate ({peopleMap, arrSortDates, stringDateProps}: peo
     const dispatch = useDispatch();
 
     const today = new Date();
-
-
-
-    const dateToday= new Date(
-        today.getFullYear(),
-        today.getMonth(),
-        today.getDate()
-    )
-
-    const yearToday = dateToday.getFullYear();
-    const monthToday = dateToday.getMonth();
-    const dayToday = dateToday.getDate();
-
-    const strigDateToday = `${String(dayToday).padStart(2,'0')}.${String(monthToday + 1).padStart(2,'0')}.${yearToday}`;
-
-
-
+    const dateToday = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
 
     const [dayPlus, setDayPlus] = useState(0);
     const [monthPlus, setMonthPlus] = useState(1);
+
     const daysMonth = new Date(
         today.getFullYear(),
         today.getMonth() + monthPlus,
@@ -45,6 +31,7 @@ export function ICalendarRotate ({peopleMap, arrSortDates, stringDateProps}: peo
 
 
     const [monthP, setMonthP] = useState(0);
+
     const stringMonth = new Date(
         today.getFullYear(),
         today.getMonth() + monthP,
@@ -52,9 +39,12 @@ export function ICalendarRotate ({peopleMap, arrSortDates, stringDateProps}: peo
     )
     const month = new Intl.DateTimeFormat('ru-RU', { month: 'long' }).format(stringMonth);
     const monthToUpperCase = month[0].toUpperCase() + month.slice(1);
+    
+    const todayRef = useRef<HTMLSpanElement | null>(null);
 
-
-
+    useEffect(() => {
+        todayRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
+    }, []);
 
     const days = Array.from({ length: daysMonth }, (_, i) => {
 
@@ -66,66 +56,75 @@ export function ICalendarRotate ({peopleMap, arrSortDates, stringDateProps}: peo
 
         const weekday = new Intl.DateTimeFormat('ru-RU', { weekday: 'short' }).format(dayWeek);
 
-        const year = new Date(
-            stringMonth.getFullYear(),
-            stringMonth.getMonth() + monthP,
-            1
-        ).getFullYear();
-
-        const month = new Date(
-            stringMonth.getFullYear(),
-            stringMonth.getMonth(),
-            1
-        ).getMonth();
-
-        const stringDate = `${String(i + 1).padStart(2, '0')}.${String(month + 1).padStart(2, '0')}.${year}`;
-        console.log(stringDate)
+        
+        const stringDate = `${stringMonth.getFullYear()}-${String(stringMonth.getMonth()+1).padStart(2,'0')}-${String(dayWeek.getDate()).padStart(2,'0')}`;
 
         const shiftsForDay = arrSortDates.get(stringDate) ?? [];
         const activeShifts = shiftsForDay.filter(f => f.code !== 'О');
 
-        const hasProblem = activeShifts.some(shift => {
+        const isFutureOrToday = stringDate >= dateToday;
+
+        const hasProblem = isFutureOrToday && (
+            
+            activeShifts.some(shift => {
+
+                const people = peopleMap.get(shift.brigade) ?? [];
+
+                return people.some(person => {
+
+                    const inVacation =
+                        person.vacation_start &&
+                        person.vacation_end &&
+                        stringDate >= person.vacation_start &&
+                        stringDate <= person.vacation_end;
+
+                    const inSick =
+                        person.sick_start &&
+                        person.sick_end &&
+                        stringDate >= person.sick_start &&
+                        stringDate <= person.sick_end;
+
+
+                    return inVacation || inSick;
+                });
+
+                }) || activeShifts.some(shift => {
+                    const people = peopleMap.get(shift.brigade) ?? [];
+                    return people.length < 7;
+            })
+        )
+
+        const soonVacation = activeShifts.some(shift => {
 
             const people = peopleMap.get(shift.brigade) ?? [];
 
             return people.some(person => {
 
-                const todayDate = new Date(
-                    stringMonth.getFullYear(),
-                    stringMonth.getMonth(),
-                    i+1
+                const currentDay = new Date(stringDate);
+
+                const sevenDayPlus = new Date(
+                    currentDay.getFullYear(),
+                    currentDay.getMonth(),
+                    currentDay.getDate() + 7
                 );
 
-                const parseDate = (dateStr?: string) => {
-                    if (!dateStr) return null;
-                    const [day, month, year] = dateStr.split('.').map(Number);
-                    return new Date(year, month - 1, day);
-                };
+                const stringDateSeven = `${sevenDayPlus.getFullYear()}-${String(sevenDayPlus.getMonth()+1).padStart(2,'0')}-${String(sevenDayPlus.getDate()).padStart(2,'0')}`;                
 
-                const startVacation = parseDate(person.vacationStart);
-                const endVacation = parseDate(person.vacationEnd);
-                const startSick = parseDate(person.sickStart);
-                const endSick = parseDate(person.sickEnd);
+                const vacationSoon = 
+                    person.vacation_start &&
+                    person.vacation_start > stringDate &&
+                    person.vacation_start <= stringDateSeven;
 
-                const inVacation = startVacation && endVacation &&
-                    todayDate >= startVacation && todayDate <= endVacation;
-
-                const inSick = startSick && endSick &&
-                    todayDate >= startSick && todayDate <= endSick;
-
-                return inVacation || inSick;
-            });
-
-        }) || activeShifts.some(shift => {
-            const people = peopleMap.get(shift.brigade) ?? [];
-            return people.length < 7;
-        });
+                return vacationSoon
+            })
+        })
 
         return {
             day: i + 1,
             weekDay: weekday,
             hasProblem,
-            stringDate
+            stringDate,
+            soonVacation
         };
     });
 
@@ -149,8 +148,10 @@ export function ICalendarRotate ({peopleMap, arrSortDates, stringDateProps}: peo
 
             <div className={styles["article__month"]}>
                 <span>{monthToUpperCase}</span>
-                <span onClick={g}>Назад</span>
-                <span onClick={f}>Следующий</span>
+                <div className={styles["article__arrow"]}>
+                    <span onClick={g}><ArrowBigLeft/></span>
+                    <span onClick={f}><ArrowBigRight/></span>
+                </div>
             </div>
 
             <div className={styles["article__blockDays"]}>
@@ -158,7 +159,7 @@ export function ICalendarRotate ({peopleMap, arrSortDates, stringDateProps}: peo
                 {days.map((day, index) => {
 
                     const isSelected = stringDateProps === day.stringDate;
-                    const isToday = strigDateToday === day.stringDate;
+                    const isToday = dateToday === day.stringDate;
                 
                     return(
                         <div 
@@ -187,12 +188,24 @@ export function ICalendarRotate ({peopleMap, arrSortDates, stringDateProps}: peo
                                     onClick={() => fn(day.stringDate)}
                             >
 
-                                    <span className={styles["article__day"]}>{day.day}</span>
-                                    <span className={
-                                        day.hasProblem
-                                            ? styles["article__exclamation_red"]
-                                            : styles["article__exclamation"]
-                                    }><OctagonAlert/></span>
+                                    <span 
+                                        className={styles["article__day"]}
+                                        ref={isToday ? todayRef : undefined}
+                                    >
+                                            {day.day}
+                                    </span>
+
+                                    <span 
+    className={
+        day.hasProblem
+            ? styles["article__exclamation_red"]
+            : day.soonVacation
+                ? styles["article__exclamation_yellow"]
+                : styles["article__exclamation"]
+    }
+>
+    <OctagonAlert/>
+</span>
                             
                             </div>
 

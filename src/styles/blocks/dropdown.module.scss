@@ -37,8 +37,28 @@
         background-color: #B8B39A;
     }
 
+    &__viewTopIconeColorRedandYellow {
+        animation: colorChange 2s infinite;
+
+        @keyframes colorChange {
+            0% {
+                color: red;
+            }
+            50% {
+                color: yellow;
+            }
+            100% {
+                color: red;
+            }
+        }
+    }
+
     &__viewTopIconeColorRed {
         color: red;
+    }
+
+    &__viewTopIconeColorYellow {
+        color: yellow;
     }
 
     &__viewTopIconeColorGreen {
@@ -50,8 +70,34 @@
         flex-direction: column;
     }
 
+    &__viewTopRighteBlockBirthday {
+        display: flex;
+        align-items: center;
+        gap: rem(10);
+    }
+
     &__viewTopRighteBlockAlarm {
+        animation: n 2s infinite;
+
+        @keyframes n {
+            0% {
+                color: red;
+            }
+            50% {
+                color: yellow;
+            }
+            100% {
+                color: red;
+            }
+        }
+    }
+
+    &__viewTopRighteBlockAlarmRed {
         color: red;
+    }
+
+    &__viewTopRighteBlockAlarmYellow {
+        color: yellow;
     }
 
     &__viewTopRighteBlockGood {
@@ -96,6 +142,10 @@
 
     &__dropdownAlarm {
         color: red;
+    }
+
+    &__dropdownAlarmYellow {
+        color: yellow;
     }
 
     &__dropdownSearch {

@@ -1,9 +1,9 @@
 import { useDispatch } from 'react-redux'
 import styles from '../styles/blocks/alarm-people.module.scss'
-import type { Person } from '../types/schedule'
 import { addPerson, changePeson } from '../store/new-store'
+import type { BrigadesDto } from '../api/brigades/brigades.dto'
 
-type alarmPeopleType = Person & {
+type alarmPeopleType = BrigadesDto & {
   status: string[]
 }
 
@@ -19,8 +19,8 @@ export function AlarmPeople ({alarm}: Props) {
 
         const { status, ...personWithoutStatus } = alarm
         
-            dispatch(changePeson(true))
-            dispatch(addPerson(personWithoutStatus))
+        dispatch(changePeson(true))
+        dispatch(addPerson(personWithoutStatus))
     }
 
     return(

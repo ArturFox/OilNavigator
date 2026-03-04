@@ -1,291 +1,161 @@
-import { useSelector } from "react-redux";
-import { type RootState } from "./store/new-store";
+import { useDispatch, useSelector } from "react-redux";
+import { changeDay, setFlag, type RootState } from "./store/new-store";
 import { BrigadeDropdown } from "./components/brigade-dropdown";
-import { useMemo } from "react";
 import { ICalendarRotate } from "./components/i-calendar-rotate";
-import type { BrigadeShift, Person } from "./types/schedule";
 import styles from './styles/blocks/home.module.scss'
 import { InfoAboutPerson } from "./components/infoAboutPerson";
 import { Bus, CalendarCheck, CookingPot, GraduationCap, UserPen } from "lucide-react";
-import { AlarmPeople } from "./components/alarm-people";
+import { NowIDont } from "./components/nowIDont";
+import { useGetPesonsQuery } from "./api/persons/persons.api";
+import { personsMap } from "./api/persons/persons.selector";
+import { useGetBrigadesQuery } from "./api/brigades/brigades.api";
+import { useGetShiftsQuery } from "./api/shifts/shifts.api";
+import { shiftSortDates } from "./api/shifts/shifts.selectors";
+import { brigades } from "./api/brigades/brigades.selectors";
+import { useEffect, useState } from "react";
+import { Link, Route, Routes, useLocation } from "react-router-dom";
+
 
 export default function App() {
 
-  const brigadeOneState = useSelector((state: RootState) => state.allBrigades.brigadeOneState);
-  const brigadeTwoState = useSelector((state: RootState) => state.allBrigades.brigadeTwoState);
-  const brigadeThreeState = useSelector((state: RootState) => state.allBrigades.brigadeThreeState);
-  const brigadeFourState = useSelector((state: RootState) => state.allBrigades.brigadeFourState);
-  const brigadeFiveState = useSelector((state: RootState) => state.allBrigades.brigadeFiveState);
+  const dispatch = useDispatch();
 
-  const brigadeOnePeople = useSelector((state: RootState) => state.allPeople.brigadeOnePeople);
-  const brigadeTwoPeople = useSelector((state: RootState) => state.allPeople.brigadeTwoPeople);
-  const brigadeThreePeople = useSelector((state: RootState) => state.allPeople.brigadeThreePeople);
-  const brigadeFourPeople = useSelector((state: RootState) => state.allPeople.brigadeFourPeople);
-  const brigadeFivePeople = useSelector((state: RootState) => state.allPeople.brigadeFivePeople);
+  useGetPesonsQuery(undefined, { refetchOnMountOrArgChange: false });
+  useGetBrigadesQuery(undefined, { refetchOnMountOrArgChange: false });
+  useGetShiftsQuery(undefined, { refetchOnMountOrArgChange: false });
 
   const personFlag = useSelector((state: RootState) => state.date.personFlag);
-  const stringDateUserChange = useSelector((state: RootState) => state.date.day);
+  const personsMapApp = useSelector(personsMap);
+  const brigadesApp = useSelector(brigades);
+  const arrSortDates = useSelector(shiftSortDates);
 
-  const brigadeSchedule = useMemo( () =>
-    [brigadeOneState, brigadeTwoState, brigadeThreeState, brigadeFourState, brigadeFiveState],
-    [brigadeOneState, brigadeTwoState, brigadeThreeState, brigadeFourState, brigadeFiveState]
-  );
+  const [flagArrslakers, setFlagArrslakers] = useState<boolean>(false);
 
-  const brigadePeople = useMemo ( () => 
-    [brigadeOnePeople, brigadeTwoPeople, brigadeThreePeople, brigadeFourPeople, brigadeFivePeople],
-    [brigadeOnePeople, brigadeTwoPeople, brigadeThreePeople, brigadeFourPeople, brigadeFivePeople],
-  )
+  const location = useLocation();
+  const isCalendar = location.pathname === "/";
+  const isTransport = location.pathname === "/transport";
+  const isStudy = location.pathname === "/study";
+  const isFood = location.pathname === "/food";
+  const isProfile = location.pathname === "/profile";
 
-  const peopleMap = useMemo(() => {
-    
-    const map = new Map<string, Person[]>();
 
-    brigadePeople.flat().forEach((person) => {
-      
-      if(!map.has(person.brigade)){
-
-        map.set(person.brigade, []);
-
-      }
-
-      map.get(person.brigade)!.push(person);
-
-    });
-
-    return map;
-
-  }, [brigadePeople]) 
-
-  const peopleAlarm = useMemo(() => {
-
-    const todayDate = new Date();
-
-    const parseDate = (dateStr: string) => {
-      if (!dateStr) return null;
-      const [day, month, year] = dateStr.split('.').map(Number);
-      return new Date(year, month - 1, day);
-    };
-
-    const sortPeopleAlarm = Array.from(peopleMap.values())
-    .flat()
-    .map(f => {
-      const startVacation = parseDate(f.vacationStart);
-      const endVacation = parseDate(f.vacationEnd);
-      const startSick = parseDate(f.sickStart);
-      const endSick = parseDate(f.sickEnd);
-
-      const status: string[] = [];
-
-      if (startVacation && endVacation && todayDate >= startVacation && todayDate <= endVacation) {
-          status.push('В отпуске');
-      }
-
-      if (startSick && endSick && todayDate >= startSick && todayDate <= endSick) {
-          status.push('Больничный');
-      }
-
-      return {...f, status}
-    })
-
-    const filterAlarm = sortPeopleAlarm.filter(f => f.status.length > 0);
-
-    const sortfilterAlarm = filterAlarm.sort((a, b) => {
-
-      const aDates = [
-        parseDate(a.vacationEnd),
-        parseDate(a.sickEnd)
-      ].filter(Boolean) as Date[]
-
-      const bDates = [
-        parseDate(b.vacationEnd),
-        parseDate(b.sickEnd)
-      ].filter(Boolean) as Date[]
-
-      const aMin = aDates.length ? Math.min(...aDates.map(d => d.getTime())) : Infinity
-      const bMin = bDates.length ? Math.min(...bDates.map(d => d.getTime())) : Infinity
-
-      return aMin - bMin
-    })
-
-    return sortfilterAlarm
-
-  }, [peopleMap]);
-
-
-  const brigadesMap = useMemo(() => {
-
-    function addOneD (startDate: string, index: number){
-    
-      const [day, month, year] = startDate.split('.').map(Number);
-
-      const date = new Date(year, month - 1, day);
-
-      date.setDate(date.getDate() + index);
-
-      const newDay = String(date.getDate()).padStart(2, '0');
-      const newMonth = String(date.getMonth() + 1).padStart(2, '0');
-      const newYear = date.getFullYear()
-
-      return `${newDay}.${newMonth}.${newYear}`;
-
-    }
-
-    const map = new Map<string, BrigadeShift[]>();
-
-    brigadeSchedule.forEach((brigade) => {
-
-      if(brigade.length === 0) return;
-
-      const baseDate = brigade[0].startDate;
-
-      for(let day = 0; day < 180; day++){
-
-        const template = brigade[day % brigade.length];
-
-        if (!map.has(template.brigade)) {
-          map.set(template.brigade, []);
-        }
-
-        const newDate = addOneD(baseDate, day);
-
-        map.get(template.brigade)!.push({
-          ...template,
-          startDate: newDate,
-          id: `${newDate}-${template.brigade}-${template.label}`
-        });
-      }
-
-    });
-
-    return map;
-
-  }, [brigadeSchedule])
-
-  const arrSortDates = useMemo(() => {
-
-    const sorted = Array.from(brigadesMap.values())
-      .flat()
-      .sort((a,b) => {
-      
-        const [dayA, monthA, yearA] = a.startDate.split('.').map(Number);
-        const [dayB, monthB, yearB] = b.startDate.split('.').map(Number);
-
-        const dateA = new Date(yearA, monthA - 1, dayA);
-        const dateB = new Date(yearB, monthB - 1, dayB);
-
-        if (dateA.getTime() !== dateB.getTime()) {
-
-          return dateA.getTime() - dateB.getTime();
-        
-        }
-
-        const order = { "Н": 0, "У": 1, "В": 2, "О": 3 };
-
-        return order[a.code as "Н" | "У" | "В" | "О"] - order[b.code as "Н" | "У" | "В" | "О"];
-
-      }
-    );
-
-    const map = new Map<string, BrigadeShift[]>();
-
-    for (const shift of sorted) {
-
-      if (!map.has(shift.startDate)) {
-
-        map.set(shift.startDate, []);
-      
-      }
-
-      map.get(shift.startDate)!.push(shift);
-    }
-
-    return map;
-
-  }, [brigadesMap]);
-
-
-  const today = new Date();
-
-  const f = new Date(
-      today.getFullYear(),
-      today.getMonth(),
-      today.getDate()
-  );
-
-  const year = f.getFullYear();
-  const month = f.getMonth();
-  const day = f.getDate();
   
-  const stringDate =  stringDateUserChange
-                        ? stringDateUserChange 
-                        : `${String(day).padStart(2,'0')}.${String(month + 1).padStart(2,'0')}.${year}`
-                        
+  const today = new Date();
+  const dateString = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
+  const stringDate = useSelector((state: RootState) => state.date.day);
+
+  useEffect(() => {
+    if (!stringDate) {
+      dispatch(changeDay(dateString));
+    } 
+  }, [stringDate, dateString, dispatch]);
+  
 
   const arr = arrSortDates.get(stringDate) ?? [];
 
   const arrSort = arr.filter(f => f.code !== 'О');
-  console.log(arrSort)
+  const whoRest = arr.filter(f => f.code === 'О');
 
   return (
 
+    
     <main className={styles["main"]}>
 
-      <section className={styles["main__topBar"]}>
+    <Routes>
 
-        <ICalendarRotate peopleMap={peopleMap} arrSortDates={arrSortDates} stringDateProps={stringDate}/>
-      
-      </section>
-
-      <section className={styles["main__dropdown"]}>
-
-        {arrSort.map((shift) => (
-          <BrigadeDropdown key={shift.id} shift={shift} people={peopleMap.get(shift.brigade) ?? []}/>
-        ))}
-
-      </section>
-
-      <section className={styles["main__alarmPeople"]}>
-
-        <article className={styles["main__alarmPeopleArticle"]}>
-
-          <h3 className={styles["main__h3"]}>
-            Отсутствуют
-          </h3>
-
-          {peopleAlarm.map((alarm) => (
-            <AlarmPeople 
-              key={`${alarm.id}-${stringDate}`}
-              alarm={alarm} 
+      <Route path="/" element={
+        <>
+          <section className={styles["main__topBar"]}>
+            <ICalendarRotate 
+              peopleMap={personsMapApp} 
+              arrSortDates={arrSortDates} 
+              stringDateProps={stringDate}
             />
-          ))}
-        
-        </article>
-        
-        <article className={styles["main__alarmPeopleArticle"]}>
-          
-          <h3 className={styles["main__h3"]}>
-            Изменить
-          </h3>
-        
-        </article>
-      
-      </section>
+          </section>
 
-      {personFlag && (
-        <InfoAboutPerson/>
-      )}
+          <section className={styles["main__changeShift"]}>
+            <button 
+              onClick={() => setFlagArrslakers(!flagArrslakers)}
+              className={styles["main__buttonChangeShift"]}
+            >
+              Все бригады
+            </button>
+            <Link to='/changeShift'>
+              <button className={styles["main__buttonChangeShift"]}>
+                Изменить расписание
+              </button>
+            </Link>
+          </section>
 
-      <section className={styles["main__bottomBar"]}>
-        <div className={styles["main__bottomIcone"]}><CalendarCheck/>Календарь</div>
-        <div className={styles["main__bottomIcone"]}><Bus/>Транспорт</div>
-        <div className={styles["main__bottomIcone"]}><GraduationCap/>Учеба</div>
-        <div className={styles["main__bottomIcone"]}><CookingPot/>Питание</div>
-        <div className={styles["main__bottomIcone"]}><UserPen/>Профиль</div>
-      </section>
+          <section className={styles["main__dropdown"]}>
+            {arrSort.map((shift) => (
+              <BrigadeDropdown 
+                key={shift.id} 
+                shift={shift} 
+                people={personsMapApp.get(shift.brigade) ?? []} 
+                stringDate={stringDate}
+                brigadesProps={brigadesApp}
+              />
+            ))}
+
+            {flagArrslakers && (
+              <div className={styles["main__block"]}>
+                <div className={styles["main__line"]}></div>
+                <span className={styles["main__rest"]}>Отдыхают</span>
+              </div>
+            )}
+
+            {flagArrslakers && (
+              whoRest.map((shift) => (
+                <BrigadeDropdown 
+                  key={shift.id}
+                  shift={shift}
+                  people={personsMapApp.get(shift.brigade) ?? []}
+                  stringDate={stringDate}
+                  brigadesProps={brigadesApp}
+                />
+              ))
+            )}
+          </section>
+
+          {personFlag && <InfoAboutPerson />}
+        </>
+      } />
+
+      <Route path="/transport" element={<div>Транспорт</div>} />
+      <Route path="/study" element={<div>Учёба</div>} />
+      <Route path="/food" element={<div>Питание</div>} />
+      <Route path="/profile" element={<div>Профиль</div>} />
+      <Route path="/changeShift" element={<NowIDont brigadesProps={brigadesApp} personsProps={personsMapApp}/>}/>
+
+    </Routes>
+
+    <section className={styles["main__bottomBar"]}>
+      <Link to="/" className={styles["main__bottomIcone"]}>
+        <CalendarCheck className={isCalendar ? styles["main__active"] : ""}/>Календарь
+      </Link>
+
+      <Link to="/transport" className={styles["main__bottomIcone"]}>
+        <Bus className={isTransport ? styles["main__active"] : ""}/>Транспорт
+      </Link>
+
+      <Link to="/study" className={styles["main__bottomIcone"]}>
+        <GraduationCap className={isStudy ? styles["main__active"] : ""}/>Учёба
+      </Link>
+
+      <Link to="/food" className={styles["main__bottomIcone"]}>
+        <CookingPot className={isFood ? styles["main__active"] : ""}/>Питание
+      </Link>
+
+      <Link to="/profile" className={styles["main__bottomIcone"]}>
+        <UserPen className={isProfile ? styles["main__active"] : ""}/>Профиль
+      </Link>
+    </section>
       
       
     </main>
 
+    
   );
 
 }

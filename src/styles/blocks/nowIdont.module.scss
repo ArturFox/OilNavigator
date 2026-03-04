@@ -1,0 +1,397 @@
+@use '../helpers/' as *;
+
+.main {
+    display: flex;
+    flex-direction: column;
+    gap: rem(10);
+
+    &__topBar {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        position: relative;
+
+    }
+
+    &__button {
+        background-color: transparent;
+        color: white;
+        border: none;
+        padding: none;
+        position: absolute;
+        left: 0;
+        
+    }
+
+    &__arrShift {
+        display: flex;
+        flex-direction: column;
+        gap: rem(10);
+    }
+
+    &__arrShiftBlock {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    &__arrShiftTitle {
+        margin: 0;
+    }
+
+    &__arrShiftButton {
+        border: none;
+        background-color: transparent;
+        color: yellow;
+        padding: 0;
+    }
+
+    &__arrShiftArr {
+        display: flex;
+        gap: rem(10);
+        flex-wrap: wrap;
+    }
+
+    &__arrShiftArrBlock {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: rem(5);
+        color: black;
+        min-width: rem(60);
+        border-radius: rem(10);
+        
+        &_yellow {
+            background-color: yellow;
+        }
+
+        &_evening {
+            background-color: darkmagenta;
+        }
+
+        &_night {
+            background-color: darkblue;
+        }
+
+        &_dayOff {
+            background-color: wheat;
+        }
+    }
+
+    &__arrShiftArrowAndText {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    &__putButton {
+        display: flex;
+        gap: rem(10);
+        flex-wrap: wrap;
+    }
+
+    &__putButtonChange {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: rem(5);
+        color: black;
+        min-width: rem(60);
+        border-radius: rem(10);
+        border: none;
+        
+        &_yellow {
+            background-color: yellow;
+        }
+
+        &_evening {
+            background-color: darkmagenta;
+        }
+
+        &_night {
+            background-color: darkblue;
+        }
+
+        &_dayOff {
+            background-color: wheat;
+        }
+    }
+
+    &__sectionBase {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: rem(10);
+    }
+
+    &__sectionTitle {
+        margin: 0;
+    }
+
+    &__sectionBlock {
+        display: flex;
+        flex-direction: column;
+        gap: rem(20);
+        background-color: #393101;
+        border-radius: rem(20);
+        padding: rem(10);
+        width: 100%;
+    }
+
+    &__sectionInfo {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border-bottom: rem(1) solid black;
+    }
+
+    &__sectionTimeMorning {
+        color: white;
+        margin-bottom: rem(5);
+        padding: rem(2);
+        border-radius: rem(10);
+        border: rem(2) solid transparent;
+        background: 
+            linear-gradient(#0f172a, #0f172a) padding-box,
+            linear-gradient(
+                90deg,
+                #f59e0b,
+                #fbbf24,
+                #f97316,
+                #f59e0b
+            ) border-box;
+        background-size: 100% 100%, 300% 300%;
+        animation: borderMoveMorning 4s linear infinite;
+        box-shadow:
+            0 0 10px rgba(99, 102, 241, 0.6),
+            0 0 20px rgba(99, 102, 241, 0.4),
+            0 8px 20px rgba(0, 0, 0, 0.4);
+        @keyframes borderMoveMorning {
+        0%   { background-position: 0% 50%, 0% 50%; }
+        100% { background-position: 300% 50%, 300% 50%; }
+    }
+    }
+
+    &__sectionTimeEvening {
+        color: white;
+        margin-bottom: rem(5);
+        padding: rem(2);
+        border-radius: rem(10);
+        border: rem(2) solid transparent;
+        background: 
+            linear-gradient(#0f172a, #0f172a) padding-box,
+            linear-gradient(
+                90deg,
+                #a21caf,
+                #c026d3,
+                #e879f9,
+                #a21caf
+            )border-box;
+        background-size: 100% 100%, 300% 300%;
+        animation: borderMoveEvening 4s linear infinite;
+        box-shadow:
+            0 0 10px rgba(99, 102, 241, 0.6),
+            0 0 20px rgba(99, 102, 241, 0.4),
+            0 8px 20px rgba(0, 0, 0, 0.4);
+        @keyframes borderMoveEvening {
+            0% {background-position: 0% 50%;}
+            100% {background-position: 300% 50%;}
+        }
+    }
+
+    &__sectionTime {
+        color: white;
+        margin-bottom: rem(5);
+        padding: rem(2);
+        border-radius: rem(10);
+        border: rem(2) solid transparent;
+        background:
+            linear-gradient(#0f172a, #0f172a) padding-box,
+            linear-gradient(
+                90deg,
+                #1e3a8a,
+                #2563eb,
+                #38bdf8,
+                #1e3a8a
+            ) border-box;
+        background-size: 100% 100%, 300% 300%;
+        animation: borderMove 4s linear infinite;
+        box-shadow:
+            0 0 10px rgba(99, 102, 241, 0.6),
+            0 0 20px rgba(99, 102, 241, 0.4),
+            0 8px 20px rgba(0, 0, 0, 0.4);
+
+        @keyframes borderMove {
+            0%   { background-position: 0% 50%; }
+            100% { background-position: 300% 50%; }
+        }
+    }
+
+    &__sectionBrigades {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: rem(10);
+    }
+
+    &__sectionTitleBrigades {
+        margin: 0;
+    }
+
+    &__sectionBlockBrigades {
+        display: flex;
+        flex-direction: column;
+        gap: rem(20);
+        background-color: #393101;
+        border-radius: rem(20);
+        padding: rem(10);
+        width: 100%;
+    }
+
+    &__sectionInfoBrigades {
+        display: flex;
+        flex-direction: column;
+        gap: rem(5);
+    }
+
+    &__sectionInfoBrigadesBlock {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        border: rem(2) solid transparent;
+        padding: rem(2);
+        border-radius: rem(10);
+
+        &_active {
+            background: 
+                linear-gradient(#393101) padding-box,
+                linear-gradient(
+                   90deg,
+                    #ffffff,
+                    #fefce8,
+                    #fef9c3,
+                    #ffffff
+                ) border-box
+            ;
+
+            background-size: 100% 100%, 300% 300%;
+            animation: borderBrigade 4s linear infinite;
+            box-shadow:
+                0 0 10px rgba(99, 102, 241, 0.6),
+                0 0 20px rgba(99, 102, 241, 0.4),
+                0 8px 20px rgba(0, 0, 0, 0.4);
+
+            @keyframes borderBrigade {
+                0%   { background-position: 0% 50%; }
+                100% { background-position: 300% 50%; }
+            }
+        }
+    }
+
+    &__sectionInfoBrigadesSpan {
+        
+    }
+
+    &__sectionInfoBrigadesInput {
+        text-align: center;
+        border-radius: rem(10);
+        border: none;
+        color: black;
+    }
+
+    &__sectionInfoBrigadesButton {
+        border: none;
+        padding: 0;
+        background: transparent;
+        color: white;
+    }
+
+    &__sectionInfoBrigadesLine {
+        width: 100%;
+        height: rem(1);
+        background-color: black;
+    }
+
+    &__overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        display: flex;
+        align-items: flex-end;
+        z-index: 1000;
+    }
+
+    &__bottomSheet {
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        left: 0;
+        right: 0;
+        bottom: 0;
+
+        background: #0f172a;
+        border-radius: rem(16) rem(16) 0 0;
+
+        padding: rem(20);
+        padding-bottom: rem(80);
+        min-height: 50vh;
+
+        transform: translateY(100%);
+        animation: slideUp 0.25s ease-out forwards;
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(100%);
+            }
+            to {
+                transform: translateY(0);
+            }
+        }
+    }
+
+    &__articleOne {
+        height: 20vh;
+        display: flex;
+        align-items: center;
+        border-bottom: rem(1) solid black;
+    }
+
+    &__blockStartTime {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: rem(10);
+        flex: 1;
+    }
+
+    &__line {
+        height: 100%;
+        width: rem(1);
+        background-color: black;
+    }
+
+    &__blockEndTime {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: rem(10);
+        flex: 1;
+    }
+
+    &__articleTwo {
+        display: flex;
+        height: 30vh;
+    }
+
+    &__changeTime {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 7;
+    }
+
+    &__ok {
+        background-color: transparent;
+        border: none;
+        flex: 1;
+    }
+}

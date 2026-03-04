@@ -8,16 +8,37 @@
   gap: rem(16);
   padding-bottom: rem(80);
 
-  &__filter {
-    padding: rem(2);
-    border-radius: rem(20);
-    width: 40%;
-    background-color: #393101;
+  &__topBar {
+    background-color: #080628;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+  }
+
+  &__changeShift {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: rem(3);
-    font-size: 14px;
+    justify-content: space-between;
+  }
+
+  &__buttonChangeShift {
+    border: none;
+    background-color: #393101;
+    border-radius: rem(20);
+    padding: rem(5);
+    cursor: pointer;
+    color: #B8B39A;
+    transition: background-color 0.3s ease, color 0.3s ease;
+
+    @media (hover: hover) {
+      &:hover {
+        background-color: #B8B39A;
+        color: #393101;
+      }
+    }
+
+    &:active {
+      transform: scale(0.90);
+    }
   }
 
   &__dropdown {
@@ -26,34 +47,21 @@
     gap: rem(10);
   }
 
-  &__alarmPeople {
-    display: flex;
-    gap: rem(10);
-  }
-
-  &__alarmPeopleArticle {
+  &__block {
     display: flex;
     flex-direction: column;
-    gap: rem(10);
+    align-items: center;
+    gap: rem(5);
+  }
+
+  &__line {
+    width: 100%;
+    height: rem(1);
     background-color: #393101;
-    border-radius: rem(20);
-    height: rem(200);
-    overflow: scroll;
-    flex: 1;
-    padding: rem(10);
   }
 
-  &__h3 {
-    display: flex;
-    justify-content: center;
-    margin-top: 0;
-  }
+  &__rest {
 
-  &__topBar {
-    background-color: #080628;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
   }
 
   &__bottomBar {
@@ -75,5 +83,15 @@
     flex-direction: column;
     align-items: center;
     color: #393101;
+    text-decoration: none;
   }
+
+  &__active {
+    stroke: yellow;
+
+    &:active {
+      transform: scale(0.90);
+    }
+  }
+
 }
