@@ -8,7 +8,7 @@ const date = createSlice({
   initialState: {
     d: '',
     personFlag: false,
-    person: {id: '', name: "", surname: "", otherSurname: "", discharge: '', brigade: '', block: "", jobTitle: "", phoneNumber: "", birthday: "", vacation: ""  },
+    person: {id: '', name: "", surname: "", other_surname: "", discharge: '', brigade_name: '', block: "", job_title: "", phone_number: "", birthday: "", vacation_start: "", vacation_end: "",  },
     day: '',
     p: {id: '', name: "", surname: "", otherSurname: "", discharge: '', brigade: '', block: "", jobTitle: "", phoneNumber: "", birthday: "", vacation: ""  },
     flag: false,

@@ -45,7 +45,9 @@ export const createMonthShift = createSelector(
 
     Array.from(br.values()).forEach((oneBrigade) => {
 
-      const baseDate = new Date(oneBrigade.cycle_start_date);
+      const baseDate = oneBrigade.cycle_start_date
+        ? new Date(oneBrigade.cycle_start_date)
+        : new Date();
 
       
 

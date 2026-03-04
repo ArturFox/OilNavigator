@@ -1,6 +1,5 @@
 import { useDispatch, useSelector } from "react-redux"
 import { changePeson, type RootState } from "../store/new-store"
-import type { Person } from "../types/schedule";
 import styles from '../styles/blocks/info-about-person.module.scss'
 import { useEffect } from "react";
 
@@ -8,7 +7,22 @@ export function InfoAboutPerson () {
 
     const dispatch = useDispatch();
 
-    const person: Person = useSelector((state: RootState) => state.date.person);
+    interface PersonStore {
+        id: string;
+        name: string;
+        surname: string;
+        other_surname: string;
+        discharge: string;
+        brigade_name: string;
+        block: string;
+        job_title: string;
+        phone_number: string;
+        birthday: string;
+        vacation_start: string;
+        vacation_end: string;
+    }
+
+    const person: PersonStore = useSelector((state: RootState) => state.date.person);
 
     useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -33,7 +47,7 @@ export function InfoAboutPerson () {
 
                         <span>{person.name}</span>
                         <span>{person.surname}</span>
-                        <span>{person.otherSurname}</span>
+                        <span>{person.other_surname}</span>
 
                     </div>
 
@@ -53,7 +67,7 @@ export function InfoAboutPerson () {
 
                     <div className={styles["section__block"]}>
                         <span>Должность</span>
-                        <span>{person.jobTitle}</span>
+                        <span>{person.job_title}</span>
                     </div>
 
                     <div className={styles["section__block"]}>
@@ -68,12 +82,12 @@ export function InfoAboutPerson () {
 
                     <div className={styles["section__block"]}>
                         <span>Бригада</span>
-                        <span>{person.brigade}</span>
+                        <span>{person.brigade_name}</span>
                     </div>
 
                     <div className={styles["section__block"]}>
                         <span>Отпуск</span>
-                        <span>{person.vacationStart} - {person.vacationEnd}</span>
+                        <span>{person.vacation_start} - {person.vacation_end}</span>
                     </div>
 
                     <div className={styles["section__block"]}>
@@ -83,7 +97,7 @@ export function InfoAboutPerson () {
 
                     <div className={styles["section__block"]}>
                         <span>Телефон</span>
-                        <span>{person.phoneNumber}</span>
+                        <span>{person.phone_number}</span>
                     </div>
                 </div>
             </div>
