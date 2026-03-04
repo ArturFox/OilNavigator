@@ -19,7 +19,7 @@ export function ICalendarRotate ({peopleMap, arrSortDates, stringDateProps}: peo
     const today = new Date();
     const dateToday = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
 
-    const [dayPlus, setDayPlus] = useState(0);
+    const [dayPlus] = useState(0);
     const [monthPlus, setMonthPlus] = useState(1);
 
     const daysMonth = new Date(

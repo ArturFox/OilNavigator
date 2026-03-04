@@ -2,16 +2,14 @@ import { useEffect, useState } from "react";
 import { supabase } from "../supabase";
 import styles from '../styles/blocks/nowIdont.module.scss' 
 import type { BrigadesDto } from "../api/brigades/brigades.dto";
-import type { PersonsDto } from "../api/persons/persons.dto";
 import { useNavigate } from "react-router-dom";
-import { ArrowBigUp } from "lucide-react";
+import { ArrowBigUp, ArrowLeft } from "lucide-react";
 
 interface nowIdontProps {
   brigadesProps: Map<string, BrigadesDto>
-  personsProps: Map<string, PersonsDto[]>
 }
 
-export function NowIDont({brigadesProps, personsProps}: nowIdontProps) {
+export function NowIDont({brigadesProps}: nowIdontProps) {
 
   const navigate = useNavigate();
 
@@ -137,7 +135,7 @@ export function NowIDont({brigadesProps, personsProps}: nowIdontProps) {
           onClick={() => { goBack();}}
           className={styles['main__button']}
         >
-          {`<=`}
+          <ArrowLeft/>
         </button>
 
         <h2 className={styles['main__title']}>

@@ -1,5 +1,5 @@
 import { useDispatch, useSelector } from "react-redux";
-import { changeDay, setFlag, type RootState } from "./store/new-store";
+import { changeDay, type RootState } from "./store/new-store";
 import { BrigadeDropdown } from "./components/brigade-dropdown";
 import { ICalendarRotate } from "./components/i-calendar-rotate";
 import styles from './styles/blocks/home.module.scss'
@@ -126,7 +126,7 @@ export default function App() {
       <Route path="/study" element={<div>Учёба</div>} />
       <Route path="/food" element={<div>Питание</div>} />
       <Route path="/profile" element={<div>Профиль</div>} />
-      <Route path="/changeShift" element={<NowIDont brigadesProps={brigadesApp} personsProps={personsMapApp}/>}/>
+      <Route path="/changeShift" element={<NowIDont brigadesProps={brigadesApp}/>}/>
 
     </Routes>
 
