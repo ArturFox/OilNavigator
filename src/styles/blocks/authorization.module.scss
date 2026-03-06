@@ -1,0 +1,187 @@
+@use '../helpers/' as *;
+
+.mainAuthorization {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: black;
+
+    &__title {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: rem(10) rem(0);
+    }
+
+    &__titleText {
+        margin: 0;
+    }
+
+    &__form {
+        display: flex;
+        flex-direction: column;
+        gap: rem(10);
+    }
+
+    &__idText {
+        margin: 0;
+    }
+
+    &__idInput {
+        border: rem(4) solid transparent;
+        border-radius: rem(10);
+        padding: rem(5);
+        outline: none;
+        color: #F2F1E8;
+
+        &_error {
+            transition: border-color-error 0.2 ease;
+            background: 
+                linear-gradient(black) padding-box,
+                linear-gradient(
+                    90deg,
+                    #FF0D00,
+                    #D0006E,
+                    #FF7800,
+                    #FF0D00
+                ) border-box
+            ;
+            background-size: 100% 100%, 300% 300%;
+            animation: inputAnimationError 4s linear infinite;
+
+            @keyframes inputAnimationError {
+                0%   { background-position: 0% 50%; }
+                100% { background-position: 300% 50%; }
+            }
+            
+            &:focus {
+                border-color: #FF0D00;
+            }
+        }
+
+        &_good {
+            background: 
+                linear-gradient(black) padding-box,
+                linear-gradient(
+                    90deg,
+                    #3914AF,
+                    #FFAA00,
+                    #FFFF00,
+                    #3914AF
+                ) border-box
+            ;
+            background-size: 100% 100%, 300% 300%;
+            animation: inputAnimation 4s linear infinite;
+            transition: border-color 0.2s ease;
+
+            @keyframes inputAnimation {
+                0%   { background-position: 0% 50%; }
+                100% { background-position: 300% 50%; }
+            }   
+
+            &:focus {
+                border-color: #FFAA00;
+            }
+        }
+    }
+
+    &__error {
+        color: #FF0D00;
+    }
+
+    &__pasword {
+        display: flex;
+        flex-direction: column;
+    }
+
+    &__titlePassword {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+    &__titlePasswordH4 {
+        margin: 0;
+    }
+
+    &__titlePasswordButton {
+        padding: 0;
+        border: none;
+        background: transparent;
+        color: #F2F1E8;
+    }
+
+    &__titlePasswordInput {
+        border: rem(4) solid transparent;
+        border-radius: rem(10);
+        padding: rem(5);
+        outline: none;
+        color: #F2F1E8;
+
+        &_error {
+            transition: border-color-error 0.2 ease;
+            background: 
+                linear-gradient(black) padding-box,
+                linear-gradient(
+                    90deg,
+                    #FF0D00,
+                    #D0006E,
+                    #FF7800,
+                    #FF0D00
+                ) border-box
+            ;
+            background-size: 100% 100%, 300% 300%;
+            animation: inputAnimationError 4s linear infinite;
+
+            @keyframes inputAnimationError {
+                0%   { background-position: 0% 50%; }
+                100% { background-position: 300% 50%; }
+            }
+            
+            &:focus {
+                border-color: #FF0D00;
+            }
+        }
+
+        &_good {
+            background: 
+                linear-gradient(black) padding-box,
+                linear-gradient(
+                    90deg,
+                    #3914AF,
+                    #FFAA00,
+                    #FFFF00,
+                    #3914AF
+                ) border-box
+            ;
+            background-size: 100% 100%, 300% 300%;
+            animation: inputAnimation 4s linear infinite;
+            transition: border-color 0.2s ease;
+
+            @keyframes inputAnimation {
+                0%   { background-position: 0% 50%; }
+                100% { background-position: 300% 50%; }
+            }   
+
+            &:focus {
+                border-color: #FFAA00;
+            }
+        }
+    }
+
+    &__buttonSignIn {
+        border: rem(4) solid gray;
+        border-radius: rem(10);
+        padding: rem(4);
+        background: transparent;
+        color: gray;
+
+        &_good {
+            border: rem(4) solid #F2F1E8;
+            color: #F2F1E8;
+        }
+    }
+
+}

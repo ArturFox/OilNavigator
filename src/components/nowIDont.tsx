@@ -74,25 +74,27 @@ export function NowIDont({brigadesProps}: nowIdontProps) {
         code: shift.code,
       }));
 
-      const { error: insertError } = await supabase
-        .from("shift_pattern")
-        .insert(payload);
+      const insertPromise = supabase
+      .from("shift_pattern")
+      .insert(payload);
 
-      if (insertError) {
-        console.error("Ошибка вставки shift_pattern:", insertError);
-        continue;
-      }
+      const updatePromise = supabase
+      .from("brigades")
+      .update({
+        cycle_start_date: dateInput[brigadeId] || null
+      })
+      .eq("id", brigadeId);
 
-      const { error: updateError } = await supabase
-        .from("brigades")
-        .update({
-          cycle_start_date: dateInput[brigadeId] || null
-        })
-        .eq("id", brigadeId);
+      const [{ error: insertError }, { error: updateError }] =
+        await Promise.all([insertPromise, updatePromise]);
 
-      if (updateError) {
-        console.error("Ошибка обновления brigades:", updateError);
-      }
+        if (insertError) {
+          console.error("Ошибка вставки:", insertError);
+        }
+
+        if (updateError) {
+          console.error("Ошибка обновления:", updateError);
+        }
     }
 
     console.log("Сохранение завершено");

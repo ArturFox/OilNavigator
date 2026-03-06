@@ -14,6 +14,9 @@ import { shiftSortDates } from "./api/shifts/shifts.selectors";
 import { brigades } from "./api/brigades/brigades.selectors";
 import { useEffect, useState } from "react";
 import { Link, Route, Routes, useLocation } from "react-router-dom";
+import { supabase } from "./supabase";
+import type { Session } from "@supabase/supabase-js";
+import { SignIn } from "./components/signIn/signIn.index";
 
 
 export default function App() {
@@ -32,7 +35,7 @@ export default function App() {
   const [flagArrslakers, setFlagArrslakers] = useState<boolean>(false);
 
   const location = useLocation();
-  const isCalendar = location.pathname === "/";
+  const isCalendar = location.pathname === "/calendar";
   const isTransport = location.pathname === "/transport";
   const isStudy = location.pathname === "/study";
   const isFood = location.pathname === "/food";
@@ -55,6 +58,37 @@ export default function App() {
 
   const arrSort = arr.filter(f => f.code !== 'О');
   const whoRest = arr.filter(f => f.code === 'О');
+
+  // ====== ПРОВЕРКА СЕССИИ ======
+  const [session, setSession] = useState<Session | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session);
+    });
+
+    const { data } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => {
+      data.subscription.unsubscribe();
+    };
+  }, []);
+
+  if (!session) {
+    return (
+      <Routes>
+        <Route path="*" element={<SignIn />} />
+      </Routes>
+    )
+  }
+
+  console.log(arrSortDates);
+
+  async function handleLogout() {
+  await supabase.auth.signOut()
+}
 
   return (
 
@@ -121,34 +155,40 @@ export default function App() {
           {personFlag && <InfoAboutPerson />}
         </>
       } />
-
       <Route path="/transport" element={<div>Транспорт</div>} />
       <Route path="/study" element={<div>Учёба</div>} />
       <Route path="/food" element={<div>Питание</div>} />
-      <Route path="/profile" element={<div>Профиль</div>} />
+      <Route path="/profile" 
+        element={
+          <main>
+            Профиль
+            <button onClick={handleLogout}>выйти</button>
+          </main>
+        } 
+      />
       <Route path="/changeShift" element={<NowIDont brigadesProps={brigadesApp}/>}/>
 
     </Routes>
 
     <section className={styles["main__bottomBar"]}>
       <Link to="/" className={styles["main__bottomIcone"]}>
-        <CalendarCheck className={isCalendar ? styles["main__active"] : ""}/>Календарь
+        <CalendarCheck className={isCalendar ? styles["main__active"] : ""}/>
       </Link>
 
       <Link to="/transport" className={styles["main__bottomIcone"]}>
-        <Bus className={isTransport ? styles["main__active"] : ""}/>Транспорт
+        <Bus className={isTransport ? styles["main__active"] : ""}/>
       </Link>
 
       <Link to="/study" className={styles["main__bottomIcone"]}>
-        <GraduationCap className={isStudy ? styles["main__active"] : ""}/>Учёба
+        <GraduationCap className={isStudy ? styles["main__active"] : ""}/>
       </Link>
 
       <Link to="/food" className={styles["main__bottomIcone"]}>
-        <CookingPot className={isFood ? styles["main__active"] : ""}/>Питание
+        <CookingPot className={isFood ? styles["main__active"] : ""}/>
       </Link>
 
       <Link to="/profile" className={styles["main__bottomIcone"]}>
-        <UserPen className={isProfile ? styles["main__active"] : ""}/>Профиль
+        <UserPen className={isProfile ? styles["main__active"] : ""}/>
       </Link>
     </section>
       

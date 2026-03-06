@@ -7,6 +7,12 @@
 @use './varibles' as *;
 @use './helpers/index' as *;
 
+html,
+body {
+  min-height: 100vh;
+  margin: 0;
+}
+
 body {
   color: #F2F1E8;
   background-color: #080628;
