@@ -7,25 +7,24 @@ import type { PersonsDto } from '../api/persons/persons.dto';
 import type { SortShift } from '../api/shifts/shifts.dto';
 
 interface peopleMapeProps {
-    peopleMap: Map<string, PersonsDto[]>
-    arrSortDates: Map<string, SortShift[]>
+    personsMapProps: Map<string, PersonsDto[]>
+    shiftsMapProps: Map<string, SortShift[]>
     stringDateProps: string
 }
 
-export function ICalendarRotate ({peopleMap, arrSortDates, stringDateProps}: peopleMapeProps) {
+export function ICalendarRotate ({personsMapProps, shiftsMapProps, stringDateProps}: peopleMapeProps) {
 
     const dispatch = useDispatch();
 
     const today = new Date();
     const dateToday = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
 
-    const [dayPlus] = useState(0);
     const [monthPlus, setMonthPlus] = useState(1);
 
     const daysMonth = new Date(
         today.getFullYear(),
         today.getMonth() + monthPlus,
-        dayPlus
+        0
     ).getDate();
 
 
@@ -59,7 +58,7 @@ export function ICalendarRotate ({peopleMap, arrSortDates, stringDateProps}: peo
         
         const stringDate = `${stringMonth.getFullYear()}-${String(stringMonth.getMonth()+1).padStart(2,'0')}-${String(dayWeek.getDate()).padStart(2,'0')}`;
 
-        const shiftsForDay = arrSortDates.get(stringDate) ?? [];
+        const shiftsForDay = shiftsMapProps.get(stringDate) ?? [];
         const activeShifts = shiftsForDay.filter(f => f.code !== 'О');
 
         const isFutureOrToday = stringDate >= dateToday;
@@ -68,7 +67,7 @@ export function ICalendarRotate ({peopleMap, arrSortDates, stringDateProps}: peo
             
             activeShifts.some(shift => {
 
-                const people = peopleMap.get(shift.brigade) ?? [];
+                const people = personsMapProps.get(shift.brigade) ?? [];
 
                 return people.some(person => {
 
@@ -89,35 +88,38 @@ export function ICalendarRotate ({peopleMap, arrSortDates, stringDateProps}: peo
                 });
 
                 }) || activeShifts.some(shift => {
-                    const people = peopleMap.get(shift.brigade) ?? [];
+                    const people = personsMapProps.get(shift.brigade) ?? [];
                     return people.length < 7;
             })
         )
 
-        const soonVacation = activeShifts.some(shift => {
+        const soonVacation = isFutureOrToday && (
+            
+            activeShifts.some(shift => {
 
-            const people = peopleMap.get(shift.brigade) ?? [];
+                const people = personsMapProps.get(shift.brigade) ?? [];
 
-            return people.some(person => {
+                return people.some(person => {
 
-                const currentDay = new Date(stringDate);
+                    const currentDay = new Date(stringDate);
 
-                const sevenDayPlus = new Date(
-                    currentDay.getFullYear(),
-                    currentDay.getMonth(),
-                    currentDay.getDate() + 7
-                );
+                    const sevenDayPlus = new Date(
+                        currentDay.getFullYear(),
+                        currentDay.getMonth(),
+                        currentDay.getDate() + 7
+                    );
 
-                const stringDateSeven = `${sevenDayPlus.getFullYear()}-${String(sevenDayPlus.getMonth()+1).padStart(2,'0')}-${String(sevenDayPlus.getDate()).padStart(2,'0')}`;                
+                    const stringDateSeven = `${sevenDayPlus.getFullYear()}-${String(sevenDayPlus.getMonth()+1).padStart(2,'0')}-${String(sevenDayPlus.getDate()).padStart(2,'0')}`;                
 
-                const vacationSoon = 
-                    person.vacation_start &&
-                    person.vacation_start > stringDate &&
-                    person.vacation_start <= stringDateSeven;
+                    const vacationSoon = 
+                        person.vacation_start &&
+                        person.vacation_start > stringDate &&
+                        person.vacation_start <= stringDateSeven;
 
-                return vacationSoon
+                    return vacationSoon
+                })
             })
-        })
+        )
 
         return {
             day: i + 1,
@@ -130,16 +132,41 @@ export function ICalendarRotate ({peopleMap, arrSortDates, stringDateProps}: peo
 
     function fn (day: string) {
         dispatch(changeDay(day))
+        console.log(day)
     }
 
     function f () {
-        setMonthP(monthP+1)
-        setMonthPlus(monthPlus+1)
+        const nextMonth = monthP + 1;
+
+        setMonthP(nextMonth)
+        setMonthPlus(monthPlus + 1)
+
+        const nextDate = new Date(
+            today.getFullYear(),
+            today.getMonth() + nextMonth,
+            1
+        );
+
+        const stringDate = `${nextDate.getFullYear()}-${String(nextDate.getMonth()+1).padStart(2,'0')}-01`;
+
+        dispatch(changeDay(stringDate))
     }
 
     function g () {
-        setMonthP(monthP-1)
+        const prevMonth = monthP - 1;
+
+        setMonthP(prevMonth)
         setMonthPlus(monthPlus-1)
+        
+        const prevDate = new Date(
+            today.getFullYear(),
+            today.getMonth() - prevMonth,
+            1
+        );
+
+        const stringDate = `${prevDate.getFullYear()}-${String(prevDate.getMonth()+1).padStart(2,'0')}-01`;
+
+        dispatch(changeDay(stringDate))
     }
 
     return(
@@ -196,16 +223,18 @@ export function ICalendarRotate ({peopleMap, arrSortDates, stringDateProps}: peo
                                     </span>
 
                                     <span 
-    className={
-        day.hasProblem
-            ? styles["article__exclamation_red"]
-            : day.soonVacation
-                ? styles["article__exclamation_yellow"]
-                : styles["article__exclamation"]
-    }
->
-    <OctagonAlert/>
-</span>
+                                        className={
+                                            day.hasProblem && day.soonVacation
+                                                ? styles["article__exclamation_redAndYellow"]
+                                                : day.hasProblem
+                                                    ? styles["article__exclamation_red"]
+                                                    : day.soonVacation
+                                                        ? styles["article__exclamation_yellow"]
+                                                        : styles['article__exclamation']
+                                        }
+                                    >
+                                        <OctagonAlert/>
+                                    </span>
                             
                             </div>
 

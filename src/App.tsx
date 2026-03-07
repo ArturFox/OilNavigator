@@ -4,19 +4,20 @@ import { BrigadeDropdown } from "./components/brigade-dropdown";
 import { ICalendarRotate } from "./components/i-calendar-rotate";
 import styles from './styles/blocks/home.module.scss'
 import { InfoAboutPerson } from "./components/infoAboutPerson";
-import { Bus, CalendarCheck, CookingPot, GraduationCap, UserPen } from "lucide-react";
+import { Book, CalendarCheck, UserPen } from "lucide-react";
 import { NowIDont } from "./components/nowIDont";
 import { useGetPesonsQuery } from "./api/persons/persons.api";
 import { personsMap } from "./api/persons/persons.selector";
 import { useGetBrigadesQuery } from "./api/brigades/brigades.api";
 import { useGetShiftsQuery } from "./api/shifts/shifts.api";
-import { shiftSortDates } from "./api/shifts/shifts.selectors";
+import { shiftMap } from "./api/shifts/shifts.selectors";
 import { brigades } from "./api/brigades/brigades.selectors";
 import { useEffect, useState } from "react";
 import { Link, Route, Routes, useLocation } from "react-router-dom";
 import { supabase } from "./supabase";
 import type { Session } from "@supabase/supabase-js";
 import { SignIn } from "./components/signIn/signIn.index";
+import { PersonCart } from './components/personCart/personCart.index'
 
 
 export default function App() {
@@ -30,16 +31,14 @@ export default function App() {
   const personFlag = useSelector((state: RootState) => state.date.personFlag);
   const personsMapApp = useSelector(personsMap);
   const brigadesApp = useSelector(brigades);
-  const arrSortDates = useSelector(shiftSortDates);
+  const shiftsMapApp = useSelector(shiftMap);
 
   const [flagArrslakers, setFlagArrslakers] = useState<boolean>(false);
 
   const location = useLocation();
-  const isCalendar = location.pathname === "/calendar";
-  const isTransport = location.pathname === "/transport";
-  const isStudy = location.pathname === "/study";
-  const isFood = location.pathname === "/food";
+  const isCalendar = location.pathname === "/";
   const isProfile = location.pathname === "/profile";
+  const isBook = location.pathname === '/allPersons'
 
 
   
@@ -54,7 +53,7 @@ export default function App() {
   }, [stringDate, dateString, dispatch]);
   
 
-  const arr = arrSortDates.get(stringDate) ?? [];
+  const arr = shiftsMapApp.get(stringDate) ?? [];
 
   const arrSort = arr.filter(f => f.code !== 'О');
   const whoRest = arr.filter(f => f.code === 'О');
@@ -84,11 +83,9 @@ export default function App() {
     )
   }
 
-  console.log(arrSortDates);
-
   async function handleLogout() {
-  await supabase.auth.signOut()
-}
+    await supabase.auth.signOut()
+  }
 
   return (
 
@@ -101,8 +98,8 @@ export default function App() {
         <>
           <section className={styles["main__topBar"]}>
             <ICalendarRotate 
-              peopleMap={personsMapApp} 
-              arrSortDates={arrSortDates} 
+              personsMapProps={personsMapApp} 
+              shiftsMapProps={shiftsMapApp} 
               stringDateProps={stringDate}
             />
           </section>
@@ -155,9 +152,7 @@ export default function App() {
           {personFlag && <InfoAboutPerson />}
         </>
       } />
-      <Route path="/transport" element={<div>Транспорт</div>} />
-      <Route path="/study" element={<div>Учёба</div>} />
-      <Route path="/food" element={<div>Питание</div>} />
+      
       <Route path="/profile" 
         element={
           <main>
@@ -166,7 +161,9 @@ export default function App() {
           </main>
         } 
       />
+
       <Route path="/changeShift" element={<NowIDont brigadesProps={brigadesApp}/>}/>
+      <Route path="/allPersons" element={<PersonCart personsMapProps={personsMapApp} brigadesMapProps={brigadesApp}/>} />
 
     </Routes>
 
@@ -175,16 +172,8 @@ export default function App() {
         <CalendarCheck className={isCalendar ? styles["main__active"] : ""}/>
       </Link>
 
-      <Link to="/transport" className={styles["main__bottomIcone"]}>
-        <Bus className={isTransport ? styles["main__active"] : ""}/>
-      </Link>
-
-      <Link to="/study" className={styles["main__bottomIcone"]}>
-        <GraduationCap className={isStudy ? styles["main__active"] : ""}/>
-      </Link>
-
-      <Link to="/food" className={styles["main__bottomIcone"]}>
-        <CookingPot className={isFood ? styles["main__active"] : ""}/>
+      <Link to='/allPersons' className={styles["main__bottomIcone"]}>
+        <Book className={isBook ? styles["main__active"] : ""}/>
       </Link>
 
       <Link to="/profile" className={styles["main__bottomIcone"]}>

@@ -9,7 +9,7 @@ import { store } from '../../store/new-store'
 import { personsMap } from "../persons/persons.selector";
 
 const selectShiftPattern = getShiftsApi.endpoints.getShifts.select();
-const montDay = (state: RootState) => state.date.montDay;
+const montDay = (state: RootState) => state.date.day;
 
 export const shift = createSelector(
   selectShiftPattern,
@@ -30,6 +30,10 @@ export const shift = createSelector(
   }
 )
 
+function toDateKey(d: Date) {
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+}
+
 export const createMonthShift = createSelector(
   
   brigades,
@@ -45,11 +49,9 @@ export const createMonthShift = createSelector(
 
     Array.from(br.values()).forEach((oneBrigade) => {
 
-      const baseDate = oneBrigade.cycle_start_date
-        ? new Date(oneBrigade.cycle_start_date)
-        : new Date();
+      if (!oneBrigade.cycle_start_date) return;
 
-      
+      const baseDate = toDateKey(new Date(oneBrigade.cycle_start_date));
 
       const brigadePattern = (sh.get(oneBrigade.id) ?? []).sort((a,b) => a.day_index - b.day_index);
 
@@ -72,14 +74,18 @@ export const createMonthShift = createSelector(
           map.set(oneBrigade.id, []);
         }
 
+        const dateKey = `${currentDate.getFullYear()}-${String(currentDate.getMonth()+1).padStart(2,'0')}-${String(currentDate.getDate()).padStart(2,'0')}`;
+        console.log(dateKey)
+
         map.get(oneBrigade.id)!.push({
-          id: `${currentDate.toISOString()}-${oneBrigade.id}`,
+          id: `${dateKey}-${oneBrigade.id}`,
           brigade: oneBrigade.id,
-          startDate: currentDate.toISOString().slice(0, 10),
+          startDate: dateKey,
           code: template.code,
           label: template.label,
           startTime: template.start_time,
-          endTime: template.end_time
+          endTime: template.end_time,
+          russianDate: dateKey
         });
       }
     })
@@ -88,7 +94,7 @@ export const createMonthShift = createSelector(
   }
 )
 
-export const shiftSortDates = createSelector(
+export const shiftMap = createSelector(
   createMonthShift,
   (shift) => {
 
@@ -122,7 +128,11 @@ export const shiftSortDates = createSelector(
     
       }
 
-      map.get(shift.startDate)!.push(shift);
+      map.get(shift.startDate)!.push({
+        ...shift,
+        startTime: shift.startTime?.slice(0,5) ?? null,
+        endTime: shift.endTime?.slice(0,5) ?? null,
+      });
     }
 
     return map;
@@ -130,8 +140,10 @@ export const shiftSortDates = createSelector(
   }
 )
 
+
   const stringDate = store.getState().date.day
-  const mapshiftSortDates = shiftSortDates(store.getState())
+  const mapshiftSortDates = shiftMap(store.getState())
+  console.log(mapshiftSortDates.get('2026-03-31'))
   const mapPerson = personsMap(store.getState())
 
   const arr = mapshiftSortDates.get(stringDate) ?? [];

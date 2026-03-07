@@ -143,11 +143,9 @@ export function BrigadeDropdown({people, shift, stringDate, brigadesProps}: Brig
                         </div>
 
                     </div>
-
-                    <div className={styles["article__viewLine"]}></div>
                     
                     <div style={{display: 'flex', justifyContent: 'space-between'}}>
-                        <span>{shift.startDate}</span>
+                        <span>{shift.russianDate}</span>
                         <span>{shift.startTime} - {shift.endTime}</span>
                     </div>
 
