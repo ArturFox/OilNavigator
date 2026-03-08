@@ -77,6 +77,12 @@
         align-items: center;
         gap: rem(10);
     }
+    &__viewTopRighteBlockAlarm,
+    &__viewTopRighteBlockAlarmRed,
+    &__viewTopRighteBlockAlarmYellow,
+    &__viewTopRighteBlockGood {
+        white-space: nowrap;
+    }
 
     &__viewTopRighteBlockAlarm {
         animation: n 2s infinite;
