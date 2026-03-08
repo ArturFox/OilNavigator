@@ -4,6 +4,8 @@ import styles from '../styles/blocks/nowIdont.module.scss'
 import type { BrigadesDto } from "../api/brigades/brigades.dto";
 import { useNavigate } from "react-router-dom";
 import { ArrowBigUp, ArrowLeft } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { getShiftsApi } from "../api/shifts/shifts.api";
 
 interface nowIdontProps {
   brigadesProps: Map<string, BrigadesDto>
@@ -12,6 +14,7 @@ interface nowIdontProps {
 export function NowIDont({brigadesProps}: nowIdontProps) {
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   interface DataType {
     start_time: string, 
@@ -98,6 +101,8 @@ export function NowIDont({brigadesProps}: nowIdontProps) {
     }
 
     console.log("Сохранение завершено");
+    dispatch(getShiftsApi.util.invalidateTags(["Shifts"]));
+    navigate("/");
   }
 
   function goBack() {
@@ -143,6 +148,13 @@ export function NowIDont({brigadesProps}: nowIdontProps) {
         <h2 className={styles['main__title']}>
           Смена
         </h2>
+
+        <button 
+          onClick={() => saveSchedule()}
+          className={styles['main__buttonLeft']}
+        >
+            Сохранить 
+        </button>
 
       </div>
 
@@ -434,15 +446,7 @@ export function NowIDont({brigadesProps}: nowIdontProps) {
         </section>
 
         </div>
-      )}
-
-      <section>
-        <button onClick={() => saveSchedule()}>
-          Сохранить 
-        </button>
-      </section>
-
-            
+      )}    
 
     </main>
   );

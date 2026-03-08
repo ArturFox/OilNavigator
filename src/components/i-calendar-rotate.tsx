@@ -132,7 +132,6 @@ export function ICalendarRotate ({personsMapProps, shiftsMapProps, stringDatePro
 
     function fn (day: string) {
         dispatch(changeDay(day))
-        console.log(day)
     }
 
     function f () {

@@ -7,6 +7,7 @@ import type { ShiftDto } from "./shifts.dto";
 export const getShiftsApi = createApi({
     reducerPath: 'getShiftPattern',
     baseQuery: fakeBaseQuery(),
+    tagTypes: ["Shifts"],
     endpoints: (builder) => ({
         
         getShifts: builder.query<ShiftDto[], void>({
@@ -20,7 +21,9 @@ export const getShiftsApi = createApi({
                 }
 
                 return { data: data ?? []};
-            }
+            },
+
+            providesTags: ["Shifts"]
         })
     })
 })

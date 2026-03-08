@@ -75,7 +75,7 @@ export const createMonthShift = createSelector(
         }
 
         const dateKey = `${currentDate.getFullYear()}-${String(currentDate.getMonth()+1).padStart(2,'0')}-${String(currentDate.getDate()).padStart(2,'0')}`;
-        console.log(dateKey)
+        const dateRussian = `${String(currentDate.getDate()).padStart(2,'0')}-${String(currentDate.getMonth()+1).padStart(2,'0')}-${currentDate.getFullYear()}`;
 
         map.get(oneBrigade.id)!.push({
           id: `${dateKey}-${oneBrigade.id}`,
@@ -85,7 +85,7 @@ export const createMonthShift = createSelector(
           label: template.label,
           startTime: template.start_time,
           endTime: template.end_time,
-          russianDate: dateKey
+          russianDate: dateRussian
         });
       }
     })
@@ -143,7 +143,6 @@ export const shiftMap = createSelector(
 
   const stringDate = store.getState().date.day
   const mapshiftSortDates = shiftMap(store.getState())
-  console.log(mapshiftSortDates.get('2026-03-31'))
   const mapPerson = personsMap(store.getState())
 
   const arr = mapshiftSortDates.get(stringDate) ?? [];

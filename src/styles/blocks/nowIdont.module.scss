@@ -23,6 +23,15 @@
         
     }
 
+    &__buttonLeft {
+        background-color: transparent;
+        color: yellow;
+        border: none;
+        padding: none;
+        position: absolute;
+        right: 0;
+    }
+
     &__arrShift {
         display: flex;
         flex-direction: column;

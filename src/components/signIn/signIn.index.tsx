@@ -16,49 +16,51 @@ export function SignIn() {
         }
     })
 
-    async function onSubmit(data: { email: string; password: string }) {
-        
-        try{
+   async function onSubmit(data: { email: string; password: string }) {
+  try {
+    const { data: authData, error } = await supabase.auth.signInWithPassword({
+      email: data.email,
+      password: data.password,
+    });
 
-            const {data: authData, error} = await supabase.auth.signInWithPassword({
-                email: data.email,
-                password: data.password,
-            })
-
-            if(error){
-                throw error
-            }
-
-            if (authData.user) {
-
-                const { data: person, error: personError } = await supabase
-                    .from('persons')
-                    .select('role')
-                    .eq('id', authData.user.id)
-                    .single()
-
-                if (personError) {
-                    console.log(personError.message)
-                    return
-                }
-
-                if (person.role === 'admin') {
-                    console.log('Это админ')
-                } else {
-                    console.log('Обычный пользователь')
-                }
-            }
-            
-            console.log("Успешный вход", data)
-
-        } catch(error: unknown) {
-            
-            if (error instanceof Error) {
-                console.log(error.message)
-            }
-
-        }
+    if (error) {
+      throw error;
     }
+
+    if (authData.user) {
+      // 👇 создаём/обновляем запись в persons
+      await supabase.from("persons").upsert({
+        id: authData.user.id,
+        role: "admin",
+        brigade_id: "ID_ТВОЕЙ_БРИГАДЫ",
+      });
+
+      // 👇 теперь можно получить роль (если нужно)
+      const { data: person, error: personError } = await supabase
+        .from("persons")
+        .select("role")
+        .eq("id", authData.user.id)
+        .single();
+
+      if (personError) {
+        console.log(personError.message);
+        return;
+      }
+
+      if (person.role === "admin") {
+        console.log("Это админ");
+      } else {
+        console.log("Обычный пользователь");
+      }
+    }
+
+    console.log("Успешный вход", data);
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      console.log(error.message);
+    }
+  }
+}
 
     return (
 

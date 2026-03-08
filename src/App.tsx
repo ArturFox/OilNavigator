@@ -1,10 +1,10 @@
-import { useDispatch, useSelector } from "react-redux";
-import { changeDay, type RootState } from "./store/new-store";
+import { useSelector } from "react-redux";
+import { type RootState } from "./store/new-store";
 import { BrigadeDropdown } from "./components/brigade-dropdown";
 import { ICalendarRotate } from "./components/i-calendar-rotate";
 import styles from './styles/blocks/home.module.scss'
 import { InfoAboutPerson } from "./components/infoAboutPerson";
-import { Book, CalendarCheck, UserPen } from "lucide-react";
+import { CalendarCheck, UserPen } from "lucide-react";
 import { NowIDont } from "./components/nowIDont";
 import { useGetPesonsQuery } from "./api/persons/persons.api";
 import { personsMap } from "./api/persons/persons.selector";
@@ -22,45 +22,29 @@ import { PersonCart } from './components/personCart/personCart.index'
 
 export default function App() {
 
-  const dispatch = useDispatch();
+  const stringDate = useSelector((state: RootState) => state.date.day);
+  const [session, setSession] = useState<Session | null>(null);
+  const [flagArrslakers, setFlagArrslakers] = useState<boolean>(false);
 
-  useGetPesonsQuery(undefined, { refetchOnMountOrArgChange: false });
-  useGetBrigadesQuery(undefined, { refetchOnMountOrArgChange: false });
-  useGetShiftsQuery(undefined, { refetchOnMountOrArgChange: false });
+  useGetPesonsQuery(undefined, {skip: !session });
+  useGetBrigadesQuery(undefined, {skip: !session });
+  useGetShiftsQuery(undefined, {skip: !session });
 
   const personFlag = useSelector((state: RootState) => state.date.personFlag);
   const personsMapApp = useSelector(personsMap);
   const brigadesApp = useSelector(brigades);
   const shiftsMapApp = useSelector(shiftMap);
 
-  const [flagArrslakers, setFlagArrslakers] = useState<boolean>(false);
-
   const location = useLocation();
   const isCalendar = location.pathname === "/";
   const isProfile = location.pathname === "/profile";
-  const isBook = location.pathname === '/allPersons'
-
-
-  
-  const today = new Date();
-  const dateString = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
-  const stringDate = useSelector((state: RootState) => state.date.day);
-
-  useEffect(() => {
-    if (!stringDate) {
-      dispatch(changeDay(dateString));
-    } 
-  }, [stringDate, dateString, dispatch]);
-  
 
   const arr = shiftsMapApp.get(stringDate) ?? [];
 
   const arrSort = arr.filter(f => f.code !== 'О');
   const whoRest = arr.filter(f => f.code === 'О');
-
+  
   // ====== ПРОВЕРКА СЕССИИ ======
-  const [session, setSession] = useState<Session | null>(null);
-
   useEffect(() => {
     supabase.auth.getSession().then(({ data }) => {
       setSession(data.session);
@@ -172,9 +156,7 @@ export default function App() {
         <CalendarCheck className={isCalendar ? styles["main__active"] : ""}/>
       </Link>
 
-      <Link to='/allPersons' className={styles["main__bottomIcone"]}>
-        <Book className={isBook ? styles["main__active"] : ""}/>
-      </Link>
+      
 
       <Link to="/profile" className={styles["main__bottomIcone"]}>
         <UserPen className={isProfile ? styles["main__active"] : ""}/>
