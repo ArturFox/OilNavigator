@@ -77,11 +77,12 @@
         align-items: center;
         gap: rem(10);
     }
+
     &__viewTopRighteBlockAlarm,
     &__viewTopRighteBlockAlarmRed,
     &__viewTopRighteBlockAlarmYellow,
     &__viewTopRighteBlockGood {
-        white-space: nowrap;
+        min-width: rem(150);
     }
 
     &__viewTopRighteBlockAlarm {
