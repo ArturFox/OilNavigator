@@ -18,6 +18,7 @@ import { supabase } from "./supabase";
 import type { Session } from "@supabase/supabase-js";
 import { SignIn } from "./components/signIn/signIn.index";
 import { PersonCart } from './components/personCart/personCart.index'
+import { ChangePerson } from "./components/changePerson/changePerson.index";
 
 
 export default function App() {
@@ -134,6 +135,7 @@ export default function App() {
           </section>
 
           {personFlag && <InfoAboutPerson />}
+          
         </>
       } />
       
@@ -148,6 +150,7 @@ export default function App() {
 
       <Route path="/changeShift" element={<NowIDont brigadesProps={brigadesApp}/>}/>
       <Route path="/allPersons" element={<PersonCart personsMapProps={personsMapApp} brigadesMapProps={brigadesApp}/>} />
+      <Route path="/changePerson" element={<ChangePerson personsMapProps={personsMapApp} brigadesProps={brigadesApp}/>}/>
 
     </Routes>
 

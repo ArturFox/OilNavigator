@@ -9,25 +9,39 @@ import { getShiftsApi } from '../api/shifts/shifts.api'
 const date = createSlice({
   name: 'date',
   initialState: {
-    d: '',
-    personFlag: false,
-    person: {id: '', name: "", surname: "", other_surname: "", discharge: '', brigade_name: '', block: "", job_title: "", phone_number: "", birthday: "", vacation_start: "", vacation_end: "",  },
+
+    person: {
+      id: '',
+      name: '',
+      surname: '',
+      other_surname: '',
+      discharge: 0,
+      brigade_id: null,
+      block: null,
+      job_title: '',
+      phone_number: '',
+      birthday: null,
+      vacation_start: null,
+      vacation_end: null,
+      he_can: null,
+      sick_start: null,
+      sick_end: null,
+      brigade_name: ''
+    },
     day: dateString,
-    p: {id: '', name: "", surname: "", otherSurname: "", discharge: '', brigade: '', block: "", jobTitle: "", phoneNumber: "", birthday: "", vacation: ""  },
-    flag: false,
-    infoPersonBrigadeDropDown: false
+    personFlag: false,
+    changePerson: false
+    
   },
   reducers: {
-    addDate: (state, action) => { state.d = action.payload},
     addPerson: (state, action) => { state.person = action.payload},
-    changePeson: (state, action) => { state.personFlag = action.payload},
-    changeDay: (state, action) => { state.day = action.payload }, 
-    setFlag: (state, action) => { state.flag = action.payload },
-    setInfoPersonBrigadeDropDown: (state, action) => { state.infoPersonBrigadeDropDown = action.payload}
+    setPesonFlag: (state, action) => { state.personFlag = action.payload},
+    changeDay: (state, action) => { state.day = action.payload },
+    setChangePerson: (state, action) => { state.changePerson = action.payload}, 
   }
 })
 
-export const {addDate, addPerson, changePeson, changeDay, setFlag, setInfoPersonBrigadeDropDown} = date.actions
+export const {addPerson, setPesonFlag, changeDay, setChangePerson} = date.actions
 
 export const store = configureStore(
   { 

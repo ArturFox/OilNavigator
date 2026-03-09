@@ -1,0 +1,86 @@
+@use '../helpers/' as *;
+
+.main {
+    display: flex;
+    flex-direction: column;
+    gap: rem(10);
+    height: 100vh;
+    padding-bottom: rem(80);
+    overflow: hidden;
+    
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    
+  }
+
+  &__blockName {
+    display: flex;
+    align-items: center;
+
+    background-color: #393101;
+    min-height: 20vh;
+    border-radius: rem(20);
+  }
+
+  &__nameOne {
+    display: flex;
+    justify-content: center;
+    flex: 1;
+  }
+
+  &__nameTwo {
+    display: flex;
+    justify-content: center;
+    flex: 1;
+  }
+
+  &__blockPersons {
+    display: flex;
+    flex-direction: column;
+    gap: rem(10);
+    overflow: scroll;
+    border-radius: rem(20);
+    background-color: #393101;
+    padding: rem(20);
+  }
+
+  &__blockPersonsSections {
+    display: flex;
+    flex-direction: column;
+    gap: rem(10);    
+    
+  }
+
+  &__blockPersonsArticle {
+    display: flex;
+    flex-direction: column;
+    gap: rem(10);
+    padding: rem(20);
+    background-color: #B8B39A;
+    border-radius: rem(20);
+  }
+
+  &__blockPersonsH4 {
+    display: flex;
+    justify-content: center;
+  }
+
+  &__blockPersonsButton {
+    display: flex;
+    flex-direction: column;
+    gap: rem(10);
+  }
+
+  &__blockPersonsB {
+    display: flex;
+    justify-content: space-between;
+    border-bottom: rem(1) solid black;
+  }
+
+  &__blockPersonsAdd {
+    color: black;
+  }
+
+}

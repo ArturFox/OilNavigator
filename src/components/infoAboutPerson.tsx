@@ -1,28 +1,14 @@
 import { useDispatch, useSelector } from "react-redux"
-import { changePeson, type RootState } from "../store/new-store"
+import { setPesonFlag, type RootState } from "../store/new-store"
 import styles from '../styles/blocks/info-about-person.module.scss'
 import { useEffect } from "react";
+import type { PersonsDto } from "../api/persons/persons.dto";
 
 export function InfoAboutPerson () {
 
     const dispatch = useDispatch();
 
-    interface PersonStore {
-        id: string;
-        name: string;
-        surname: string;
-        other_surname: string;
-        discharge: string;
-        brigade_name: string;
-        block: string;
-        job_title: string;
-        phone_number: string;
-        birthday: string;
-        vacation_start: string;
-        vacation_end: string;
-    }
-
-    const person: PersonStore = useSelector((state: RootState) => state.date.person);
+    const person: PersonsDto = useSelector((state: RootState) => state.date.person);
 
     useEffect(() => {
     document.body.style.overflow = "hidden";
@@ -34,7 +20,7 @@ export function InfoAboutPerson () {
 
 
     function fn () {
-        dispatch(changePeson(false))
+        dispatch(setPesonFlag(false))
     }
 
     return(

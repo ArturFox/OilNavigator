@@ -1,11 +1,12 @@
 import { useEffect, useMemo, useState } from "react";
-import { ArrowDownWideNarrow, OctagonAlert, BadgeCheck, Search, Cake } from "lucide-react";
+import { ArrowDownWideNarrow, OctagonAlert, BadgeCheck, Search, Cake, ArrowRightLeft } from "lucide-react";
 import styles from '../styles/blocks/dropdown.module.scss'
 import { useDispatch, useSelector } from "react-redux";
-import { addPerson, changePeson, setInfoPersonBrigadeDropDown, type RootState } from "../store/new-store";
+import { addPerson, setChangePerson, setPesonFlag, type RootState } from "../store/new-store";
 import type { BrigadesDto } from "../api/brigades/brigades.dto";
 import type { PersonsDto } from "../api/persons/persons.dto";
 import type { SortShift } from "../api/shifts/shifts.dto";
+import { Link } from "react-router-dom";
 
 interface BrigadeDropdownProps {
   people: PersonsDto[];
@@ -13,7 +14,6 @@ interface BrigadeDropdownProps {
   stringDate: string;
   brigadesProps: Map<string,BrigadesDto>
 }
-
 
 export function BrigadeDropdown({people, shift, stringDate, brigadesProps}: BrigadeDropdownProps) {
 
@@ -73,14 +73,19 @@ export function BrigadeDropdown({people, shift, stringDate, brigadesProps}: Brig
     }, [people]);
 
     function fn(p: BrigadesDto){
-        dispatch(changePeson(true))
+        dispatch(setPesonFlag(true))
         dispatch(addPerson(p))
     }
 
-    const k = useSelector((state: RootState) => state.date.infoPersonBrigadeDropDown)
+    
+    const h = useSelector((state: RootState) => state.date.changePerson);
 
-    function fnn(){
-        dispatch(setInfoPersonBrigadeDropDown(!k))
+    function setPerson(p: BrigadesDto){
+        dispatch(setChangePerson(!h))
+         
+        dispatch(addPerson(p));
+           
+        
     }
 
     return (
@@ -178,12 +183,22 @@ export function BrigadeDropdown({people, shift, stringDate, brigadesProps}: Brig
                             {isOnSick && <span className={styles["article__dropdownAlarm"]}>Больничный!</span>}
                             {soonVacation && <span className={styles["article__dropdownAlarmYellow"]}>Приближается отпуск</span>}
 
-                            <button 
-                                className={styles["article__dropdownSearch"]}
-                                onClick={() => fn(person)}
-                            >
-                                    <Search size={16}/>
-                            </button>
+                            <div style={{display: 'flex', gap: '10px'}}>
+
+                                <Link to={'/changePerson'}>
+                                    <button onClick={() => setPerson(person)} className={styles["article__dropdownSearch"]}>
+                                        <ArrowRightLeft size={16}/>
+                                    </button>
+                                </Link>
+
+                                <button 
+                                    className={styles["article__dropdownSearch"]}
+                                    onClick={() => fn(person)}
+                                >
+                                        <Search size={16}/>
+                                </button>
+
+                            </div>
 
                         </div>
 
@@ -198,12 +213,14 @@ export function BrigadeDropdown({people, shift, stringDate, brigadesProps}: Brig
                             Не хватает человека
                         </span>
 
+                        
                         <button 
-                            onClick={() => fnn()}
+                             
                             className={styles["article__dropdownAddButton"]}
                         >
-                                Добавить
+                                Пока нету Добавить
                         </button>
+                        
                     
                     </div>
 
