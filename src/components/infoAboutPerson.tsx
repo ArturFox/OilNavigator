@@ -31,9 +31,12 @@ export function InfoAboutPerson () {
 
                     <div className={styles["section__profile"]} >
 
-                        <span>{person.name}</span>
-                        <span>{person.surname}</span>
-                        <span>{person.other_surname}</span>
+                        <div className={styles["section__profileText"]}>
+                            <span>{person.name}</span>
+                            <span>{person.surname}</span>
+                            <span>{person.other_surname}</span>
+                        </div>
+                        
 
                     </div>
 
@@ -42,6 +45,7 @@ export function InfoAboutPerson () {
                         onClick={(e) => {
                         e.stopPropagation();
                         fn();
+
                     }}
                     >
                         x

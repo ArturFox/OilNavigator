@@ -1,4 +1,4 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import styles from '../../styles/blocks/changePerson.module.scss'
 import type { RootState } from '../../store/new-store';
 import { ArrowLeft, ArrowRightLeft } from 'lucide-react';
@@ -7,6 +7,7 @@ import type { BrigadesDto } from '../../api/brigades/brigades.dto';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { supabase } from '../../supabase';
+import { getPesonsApi } from '../../api/persons/persons.api';
 
 
 interface ChangePersonProps {
@@ -17,6 +18,7 @@ interface ChangePersonProps {
 
 export function ChangePerson ({personsMapProps, brigadesProps}: ChangePersonProps) {
 
+    const dispatch = useDispatch();
     const navigate = useNavigate();
 
     const [selectedPerson, setSelectedPerson] = useState<PersonsDto | null>(null);    
@@ -68,6 +70,8 @@ export function ChangePerson ({personsMapProps, brigadesProps}: ChangePersonProp
         if (addPersonResult.error || deletPersonResult.error) {
             console.error('Ошибка при смене бригад', addPersonResult.error ?? deletPersonResult.error);
         } else {
+            dispatch(getPesonsApi.util.invalidateTags(["Persons"]));
+            navigate('/')
             console.log('Бригады успешно изменены');
         }
         

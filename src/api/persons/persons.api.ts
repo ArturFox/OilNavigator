@@ -7,6 +7,7 @@ import type { PersonsDto } from "./persons.dto";
 export const getPesonsApi = createApi({
     reducerPath: 'getBrigadesApi',
     baseQuery: fakeBaseQuery(),
+    tagTypes: ['Persons'],
     endpoints: (builder) => ({
 
         getPesons: builder.query<PersonsDto[], void>({
@@ -18,7 +19,9 @@ export const getPesonsApi = createApi({
                 }
 
                 return { data: data ?? [] };
-            }
+            },
+
+            providesTags: ['Persons']
         })
     })
 })

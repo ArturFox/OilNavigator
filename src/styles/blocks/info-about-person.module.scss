@@ -33,10 +33,28 @@
     display: flex;
     gap: rem(5);
     font-size: larger;
+    overflow: hidden;
+  }
+
+  &__profileText {
+    display: inline-flex;
+    gap: rem(5);
+    white-space: nowrap;
+    animation: scrollText 8s linear infinite;
+
+    @keyframes scrollText {
+      0% {
+        transform: translateX(100%);
+      }
+      100% {
+        transform: translateX(-100%);
+      }
+    }
   }
 
   &__closeButton {
     background: #B8B39A;
+    color: black;
     border-radius: rem(5);
     border: none;
     cursor: pointer;
