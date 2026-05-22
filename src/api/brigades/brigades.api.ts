@@ -5,7 +5,7 @@ import { supabase } from "../../supabase";
 import type { BrigadesDto } from "./brigades.dto";
 
 export const getBrigadeApi = createApi({
-  reducerPath: 'getBrigade',
+  reducerPath: 'getBrigadesApi',
   baseQuery: fakeBaseQuery(),
   endpoints: (builder) => ({
     getBrigades: builder.query<BrigadesDto[], void>({

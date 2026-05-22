@@ -1,0 +1,58 @@
+@use '../helpers/' as *;
+
+.main {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-areas: 
+        "c1  c2  c3  c4"
+        "c5  ch  ch  c6"
+        "c7  ch  ch  c8"
+        "c9  c10 c11 c12";
+    gap: rem(20);
+    overflow: hidden;
+
+    &__block {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        flex-shrink: 0;
+        color: white;
+        overflow: hidden;
+        
+        @for $i from 1 through 12 {
+            &--#{$i} {
+                grid-area: c#{$i};
+            }
+        }
+    }
+
+    &__circle {
+        width: clamp(rem(40), 8vw, rem(80));
+        min-width: rem(40);
+        min-height: rem(40);
+        background-color: red;
+        border-radius: 50%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-shrink: 0;
+    }
+
+    &__enter-chart {
+        grid-area: ch;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        
+        .circle {
+            width: 100%;
+            aspect-ratio: 1/1;
+            border: 10px solid #333;
+            border-radius: 50%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+}

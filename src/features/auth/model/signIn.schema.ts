@@ -1,6 +1,8 @@
+//src/components/signIn/signIn.schema.ts
+
 import { z } from "zod";
 
-export const signInSchema = z.object({
+export const signInForm = z.object({
   
     email: z.string()
     .trim()
@@ -13,4 +15,4 @@ export const signInSchema = z.object({
     ,
 });
 
-export type SignInSchema = z.infer<typeof signInSchema>;
+export type SignInSchema = z.infer<typeof signInForm>;

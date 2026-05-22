@@ -5,7 +5,7 @@ import { supabase } from "../../supabase";
 import type { ShiftDto } from "./shifts.dto";
 
 export const getShiftsApi = createApi({
-    reducerPath: 'getShiftPattern',
+    reducerPath: 'getShiftsApi',
     baseQuery: fakeBaseQuery(),
     tagTypes: ["Shifts"],
     endpoints: (builder) => ({

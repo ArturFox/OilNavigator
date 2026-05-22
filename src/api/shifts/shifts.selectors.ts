@@ -5,14 +5,10 @@ import { getShiftsApi } from "./shifts.api";
 import {brigades} from "../brigades/brigades.selectors"
 import type { RootState } from "../../store/new-store";
 import type { ShiftDto, SortShift } from "./shifts.dto";
-import { store } from '../../store/new-store' 
-import { personsMap } from "../persons/persons.selector";
 
-const selectShiftPattern = getShiftsApi.endpoints.getShifts.select();
-const montDay = (state: RootState) => state.date.day;
-
+// получу массив объектов расписаний и раскидали по id бригад 
 export const shift = createSelector(
-  selectShiftPattern,
+  getShiftsApi.endpoints.getShifts.select(),
   (result) => {
 
     const map = new Map<string, ShiftDto[]>();
@@ -30,15 +26,23 @@ export const shift = createSelector(
   }
 )
 
+// чтобы при нажатии на день в календаре того же месяца не происходили вычисления двух следующих селекторов 
+// если только пользователь выберит другой месяц, то тогда будет персчет двух следующих селекторов
+const selectMonth = createSelector(
+  (state: RootState) => state.date.day,
+  (day) => day.slice(0, 7)
+);
+
 function toDateKey(d: Date) {
   return new Date(d.getFullYear(), d.getMonth(), d.getDate());
 }
 
+// вычисляем на один месяц расписание для каждой бригады
 export const createMonthShift = createSelector(
   
   brigades,
   shift,
-  montDay,
+  selectMonth,
   (br, sh, mo) => {
 
     const map = new Map<string, SortShift[]>();
@@ -79,7 +83,7 @@ export const createMonthShift = createSelector(
 
         map.get(oneBrigade.id)!.push({
           id: `${dateKey}-${oneBrigade.id}`,
-          brigade: oneBrigade.id,
+          brigadeId: oneBrigade.id,
           startDate: dateKey,
           code: template.code,
           label: template.label,
@@ -94,6 +98,8 @@ export const createMonthShift = createSelector(
   }
 )
 
+
+// на каждый день отсортировали бригады вначале кто ночью потом утром потом вечером и потом кто отдыхает
 export const shiftMap = createSelector(
   createMonthShift,
   (shift) => {
@@ -139,21 +145,3 @@ export const shiftMap = createSelector(
 
   }
 )
-
-
-  const stringDate = store.getState().date.day
-  const mapshiftSortDates = shiftMap(store.getState())
-  const mapPerson = personsMap(store.getState())
-
-  const arr = mapshiftSortDates.get(stringDate) ?? [];
-
-  export const arrSort = arr.filter(f => f.code !== 'О');
-
-  
-
-  export const whoRest = arr.filter(f => f.code === 'О');
-  const personWhoRest = whoRest.flatMap(p =>
-    mapPerson.get(p.brigade) ?? []
-  )
-  const personWhoNotBrigade = mapPerson.get('no_brigade') ?? []
-  export const slackers  = [...personWhoRest, ...personWhoNotBrigade]

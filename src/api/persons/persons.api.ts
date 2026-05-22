@@ -5,7 +5,7 @@ import { supabase } from "../../supabase";
 import type { PersonsDto } from "./persons.dto";
 
 export const getPesonsApi = createApi({
-    reducerPath: 'getBrigadesApi',
+    reducerPath: 'getPersonsApi',
     baseQuery: fakeBaseQuery(),
     tagTypes: ['Persons'],
     endpoints: (builder) => ({
@@ -14,6 +14,7 @@ export const getPesonsApi = createApi({
             
             queryFn: async () => {
                 const { data, error } = await supabase.from("persons").select("*")
+
                 if (error) {
                     return { error };
                 }

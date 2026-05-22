@@ -12,11 +12,16 @@ export interface ShiftDto {
 
 export interface SortShift {
     id: string,
+
+    brigadeId: string, 
+
     code: string, 
     label: string,
+
     startDate: string,
+    
     russianDate: string, 
-    brigade: string, 
+
     startTime: string | null, 
     endTime: string | null,
 }

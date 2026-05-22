@@ -1,60 +1,45 @@
+//src/components/signIn/signIn.index.tsx
+
 import { Factory } from 'lucide-react'
-import styles from '../../styles/blocks/authorization.module.scss'
+import styles from '../../../styles/blocks/authorization.module.scss'
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { supabase } from '../../supabase';
-import { signInSchema } from './signIn.schema';
+import { supabase } from '../../../supabase';
+import { signInForm } from '../model/signIn.schema';
 
-export function SignIn() {
+export function SignPage() {
 
     const form = useForm({
-        resolver: zodResolver(signInSchema),
+
+        resolver: zodResolver(signInForm),
         mode: 'onChange',
         defaultValues: {
             email: '',
             password: ''
         }
+        
     })
 
-   async function onSubmit(data: { email: string; password: string }) {
-  try {
-    const { data: authData, error } = await supabase.auth.signInWithPassword({
-      email: data.email,
-      password: data.password,
-    });
+    async function onSubmit(data: { email: string; password: string }) {
 
-    if (error) {
-      throw error;
+        try {
+
+            const { error } = await supabase.auth.signInWithPassword({
+                email: data.email,
+                password: data.password,
+            });
+
+            if (error) {
+                throw error;
+            }
+            
+        } catch (error: unknown) {
+
+            if (error instanceof Error) {
+                console.log(error.message);
+            }
+        } 
     }
-
-  
-
-    // 👇 теперь можно получить роль (если нужно)
-    const { data: person, error: personError } = await supabase
-    .from("persons")
-    .select("role")
-    .eq("id", authData.user.id)
-    .single();
-
-    if (personError) {
-    console.log(personError.message);
-    return;
-    }
-
-    if (person.role === "admin") {
-    console.log("Это админ");
-    } else {
-    console.log("Обычный пользователь");
-    }
-    
-
-    console.log("Успешный вход", data);
-  } catch (error: unknown) {
-    if (error instanceof Error) {
-      console.log(error.message);
-    }
-  }
-}
 
     return (
 
