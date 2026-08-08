@@ -1,0 +1,65 @@
+@use '../../../styles/helpers/' as *;
+
+.calendar {
+    list-style: none;
+    display: flex;
+    gap: rem(10);
+    overflow: scroll;
+    scrollbar-width: none;
+}
+
+.calendar__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 0 0 rem(40);
+}
+
+.calendar__dayOfWeek {
+    color: var(--textGray);
+}
+
+.calendar__button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    border-radius: rem(10);
+
+    &--todaySelected {
+        background-color: var(--secondColor);
+    }
+
+    &--todayNotSelected {
+        background-color: var(--calendarTodayDat);
+    }
+}
+
+.calendar__day {
+    color: var(--textWhite);
+}
+
+.calendar__exclamation {
+    opacity: 0;
+
+    &--red {
+        opacity: 1;
+        color: var(--redAlarm);
+    }
+
+    &--yellow {
+        opacity: 1;
+        color: var(--yellowAlarm);
+    }
+
+    &--blink {
+        opacity: 1;
+        animation: blink 2s infinite;
+    }
+}
+
+@keyframes blink {
+    0% { color: var(--redAlarm); }
+    50% { color: var(--yellowAlarm); }
+    100% { color: var(--redAlarm); }
+}

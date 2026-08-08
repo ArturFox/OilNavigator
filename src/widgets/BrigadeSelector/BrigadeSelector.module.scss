@@ -1,0 +1,120 @@
+@use '../../styles/helpers/' as *;
+
+.sectionBrigades {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: rem(15);
+        width: 100%;
+
+        &__article {
+            display: flex;
+            flex-direction: column;
+            background-color: #393101;
+            border-radius: rem(20);
+            padding: rem(10);
+            width: 100%;
+
+            &__sectionBlock {
+                display: flex;
+                flex-direction: column;
+                gap: rem(20);
+
+                &__card {
+                    display: flex;
+                    justify-content: space-between;
+                    gap: rem(5);
+                    border-bottom: rem(1) solid black;
+
+                    &__block {
+                        flex: 1;
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        border: rem(2) solid transparent;
+                        padding: rem(2);
+                        border-radius: rem(10);
+                        color: white;
+                        font-size: 14px;
+                        margin-bottom: rem(5);
+
+                        &__pen {
+                            display: flex;
+                            align-items: center;
+                            
+                        }
+
+                        &--active {
+                            background: 
+                                linear-gradient(#393101) padding-box,
+                                linear-gradient(
+                                90deg,
+                                    #ffffff,
+                                    #fefce8,
+                                    #fef9c3,
+                                    #ffffff
+                                ) border-box
+                            ;
+
+                            background-size: 100% 100%, 300% 300%;
+                            animation: borderBrigade 4s linear infinite;
+                            box-shadow:
+                                0 0 10px rgba(99, 102, 241, 0.6),
+                                0 0 20px rgba(99, 102, 241, 0.4),
+                                0 8px 20px rgba(0, 0, 0, 0.4);
+
+                            @keyframes borderBrigade {
+                                0%   { background-position: 0% 50%; }
+                                100% { background-position: 300% 50%; }
+                            }
+                        }
+
+                        &__input {
+                            text-align: center;
+                            border-radius: rem(10);
+                            border: none;
+                            color: black;
+                        }
+
+                        &__button {
+                            color: white;
+                        }
+                    }
+
+                    &__X {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        gap: rem(10);
+                        color: white;
+                        font-size: 14px;
+                        margin-bottom: rem(5);
+                    }
+
+                }
+                
+            }
+
+            &__newBrigade {
+                display: flex;
+                flex-direction: column;
+                margin-top: rem(20);
+                border-bottom: rem(1) solid black;
+
+                &__block {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    margin-bottom: rem(5);
+
+                    &__span {
+                        font-size: 14px;
+                        display: flex;
+                        align-items: center;
+                        color: white;
+                    }
+                }
+
+            }
+        }
+    }

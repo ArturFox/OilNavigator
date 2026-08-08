@@ -1,0 +1,39 @@
+@use '../../../styles/helpers/' as *;
+
+.card {
+    display: flex;
+    flex-direction: column;
+    padding: rem(10);
+    border-radius: rem(20);
+    background-color: var(--secondColor);
+
+    &--isFutureDate {
+      background-color: var(--bgCardBrigadeDropdown);
+    }
+
+    &:has(:focus-visible) {
+        outline: 2px solid var(--textFocusVisible);
+        outline-offset: 2px;
+    }
+
+}
+
+.card__button {
+  margin-bottom: rem(10);
+}
+
+.card__peopleList {
+  display: flex;
+  flex-direction: column;
+  gap: rem(10);
+  overflow: hidden;
+  height: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: height 0.5s ease, opacity 0.5s ease;
+
+  &--open {
+    opacity: 1;
+    pointer-events: auto;;
+  }
+}

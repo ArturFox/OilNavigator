@@ -1,0 +1,81 @@
+@use '../../styles/helpers/' as *;
+
+.main {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: rem(40);
+    gap: rem(30);
+
+    &__block {
+        display: flex;
+        justify-content: space-between;
+        gap: rem(30);
+
+        &__title {
+            font-size: 18px;
+        }
+
+        &__button {
+            border: none;
+            background-color: transparent;
+            color: yellow;
+        }
+    }
+
+    &__titlee {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: 0;
+
+        &__span {
+            text-align: center;
+            font-size: 18px;
+        }
+    }
+
+    &__h4 {
+        text-align: center;
+        color: white;
+        margin: 0;
+        font-size: 18px;
+    }
+
+    &__title {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+
+            &__span {
+                text-align: center;
+                font-size: 18px;
+            }
+        }
+
+    &__save {
+        color: white;
+        font-size: 18px;
+        border: rem(2) solid transparent;
+        border-radius: rem(10);
+        padding: rem(5);
+        cursor: pointer;
+        animation: move 4s linear infinite;
+        background: 
+            linear-gradient(#0f172a, #0f172a) padding-box,
+            linear-gradient(
+                90deg,
+                #FF0D00,
+                #D0006E,
+                #FF7800,
+                #FF0D00
+            ) border-box
+        ;
+                                
+        @keyframes move {
+            0%   { background-position: 0% 50%; }
+            100% { background-position: 300% 50%; }
+        }
+    }
+    
+}

@@ -3,5 +3,6 @@ export interface DayItem {
     weekDay: string
     hasProblem: boolean
     stringDate: string
-    soonVacation: boolean
+    soonVacation: boolean,
+    checkRealMonth: boolean
 }

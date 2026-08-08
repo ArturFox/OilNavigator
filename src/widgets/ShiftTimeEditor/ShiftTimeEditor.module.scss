@@ -1,0 +1,67 @@
+@use '../../styles/helpers/' as *;
+
+.sectionBase {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: rem(15);
+    width: 100%;
+
+    &__article {
+        display: flex;
+        flex-direction: column;
+        gap: rem(20);
+        background-color: #393101;
+        border-radius: rem(20);
+        padding: rem(10);
+        width: 100%;
+
+        &__mainBlock {
+            display: flex;
+            justify-content: space-between;
+            gap: rem(5);
+            border-bottom: rem(1) solid black;
+
+            &__button {
+                flex: 1;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                margin-bottom: rem(5);
+
+                &__block {
+                    display: flex;
+                    justify-content: space-between;
+                    align-items: center;
+                    gap: rem(10);
+                    font-size: 14px;
+                    font-weight: 400;
+                    display: flex;
+                    color: white;
+
+                    &__color {
+                        padding: rem(1);
+                        border-radius: rem(5);
+                    }
+
+                }
+
+                &__timeM {
+                    display: flex;
+                    align-items: center;
+                    color: white;
+                }
+            }
+
+            &__delete {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                color: white;
+                margin-bottom: rem(5);
+            }
+            
+
+        }
+    }
+}

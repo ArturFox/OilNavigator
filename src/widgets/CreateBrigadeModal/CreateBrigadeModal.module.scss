@@ -1,0 +1,63 @@
+@use '../../styles/helpers/' as *;
+
+.newUserX {
+    position: absolute;
+    right: 0;
+    color: black;
+}
+
+.newUserTitle {
+    text-align: center;
+    padding-top: rem(20);
+    padding-left: rem(20);
+    padding-right: rem(20);
+    font-size: rem(18);
+}
+
+.newUserform {
+    display: flex;
+    flex-direction: column;
+    padding: rem(20);
+    gap: rem(20);
+
+    &__newUserNameAndInput {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: rem(16);
+
+        &__name {
+            flex-shrink: 0;
+            white-space: nowrap;
+        }
+
+        &__input {
+            flex: 1;
+            min-width: 0;
+            border: rem(2) solid black;
+            border-radius: rem(10);
+            margin: rem(5);
+
+            &:focus {
+                outline: none;
+            }
+        }
+    }
+
+    &__newUserBlockButton {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        &__newUserButton {
+            color: black;
+            padding: rem(2);
+            border: rem(2) solid black;
+            border-radius: rem(10);
+            font-size: rem(18);
+        }
+    }
+}
+
+
+    

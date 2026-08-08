@@ -1,3 +1,5 @@
+//src/features/auth/model/auth.types.ts
+
 import type { Session } from "@supabase/supabase-js";
 
 export type UserRole = "admin" | "user" | null;

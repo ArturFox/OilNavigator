@@ -1,6 +1,8 @@
+//src/features/auth/model/useAuth.ts
+
 import { useEffect, useState } from "react";
 import type { AuthState, SessionType, UserRole } from "./auth.types";
-import { supabase } from "../../../supabase";
+import { supabase } from "../../../shared/api/supabase/client";
 
 export function useAuth(): AuthState {
 
@@ -41,13 +43,11 @@ export function useAuth(): AuthState {
 
     (async () => {
       const { data } = await supabase.auth.getSession();
-      //console.log('getSession')
       sync(data.session);
     })();
 
     const { data: listener } = supabase.auth.onAuthStateChange(
       async (_, nextSession) => {
-        //console.log('onAuthStateChange')
         sync(nextSession);
       }
     );

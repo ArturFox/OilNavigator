@@ -30,7 +30,6 @@
         width: clamp(rem(40), 8vw, rem(80));
         min-width: rem(40);
         min-height: rem(40);
-        background-color: red;
         border-radius: 50%;
         display: flex;
         justify-content: center;
@@ -53,6 +52,141 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+        }
+    }
+
+    &__openCategori {
+        position: fixed;
+        inset: 0;
+
+        background: rgba(0,0,0,0.5);
+
+        display: flex;
+        justify-content: center;
+        align-items: flex-end;
+
+        z-index: 100;
+    }
+
+    &__modal {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 70vh;
+        background-color: black;
+        border-top-left-radius: rem(20);
+        border-top-right-radius: rem(20);
+
+        margin-bottom: rem(45);
+
+        &__category {
+            flex: 1;
+            display: flex;
+
+            &__divCategory {
+                position: relative;
+                flex: 1;
+                background: green;
+                border-top-left-radius: rem(20);
+                border-top-right-radius: rem(20);
+                display: flex;
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                padding-left: rem(10);
+
+                &__pCategory {
+                    margin: 0;
+                }
+
+                &__lucideReact {
+                    position: absolute;
+                    top: rem(-16);
+                    right: 0;
+                    width: rem(36);
+                    height: rem(36);
+                }
+            }
+
+        }
+
+        &__income {
+            flex: 1;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+
+            &__pIncome {
+                margin: 0;
+                font-size: smaller;
+            }
+
+            &__pNumber {
+                font-size: 25px;
+            }
+            
+        }
+
+        &__notes {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 1px solid white;
+            border-radius: rem(10);
+            margin-left: rem(10);
+            margin-right: rem(10);
+
+            &__textarea {
+                width: 100%;
+                height: 100%;
+                padding-top: rem(20);
+                text-align: center;
+                resize: none;
+                border: none;
+                outline: none;
+                background: transparent;
+                color: white;
+
+                &::placeholder {
+                    color: white;
+                }
+            }
+        }
+
+        &__calculator {
+            flex: 5;
+            margin: rem(10);
+
+            display: grid;
+            gap: rem(10);
+            grid-template-columns: repeat(5, 1fr);
+            grid-template-areas: 
+                "c1   c2   c3   c4  c5"
+                "c6   c7   c8   c9  c10"
+                "c11  c12  c13  c14 ch"
+                "c15  c16  c17  c18 ch";
+           
+            @for $i from 1 through 18 {
+                &__c#{$i} {
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    grid-area: c#{$i};
+                    border: 1px solid white;
+                    border-radius: rem(10);
+                }
+            }
+
+            &__ch {
+                grid-area: ch;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                border-radius: rem(10);
+            }
         }
     }
 }

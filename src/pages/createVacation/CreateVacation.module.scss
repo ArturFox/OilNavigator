@@ -1,0 +1,347 @@
+@use '../../styles/helpers/' as *;
+
+.main {
+
+    display: flex;
+    flex-direction: column;
+    gap: rem(20);
+    padding-bottom: rem(40);
+    
+    
+    
+    &__buttonss { 
+        overflow-x: auto;
+        overflow-y: visible;
+        display: flex;
+        justify-content: space-between;
+        gap: rem(10); 
+        padding-bottom: 300px; 
+        margin-bottom: -300px; 
+
+        &::-webkit-scrollbar{
+            height: 0px;
+        }
+    }
+
+    &__buttons {
+        display: flex;
+        justify-content: space-between;
+        flex-shrink: 0;
+        position: relative;
+
+        &__category {
+            position: relative;
+            padding: rem(5);
+            background-color: #393101;
+            border-radius: rem(5);
+
+            &__categoryButton {
+                display: flex;
+                align-items: center;
+                gap: rem(5);
+                color: white;
+                transition: transform 0.3s ease;
+                
+                &:active {
+                    transform: scale(0.90);
+                }
+
+                &__icone {
+                    color: white;
+                }
+            }
+
+            &__categoryList {
+                position: absolute;
+                z-index: 100;
+                margin-top: rem(10);
+                left: 0;
+                right: 0;
+                background-color: #393101;
+                display: flex;
+                flex-direction: column;
+                gap: rem(10);
+                padding: rem(5);
+
+                &__li {
+
+                    &__button {
+                        color: white;
+                    }
+                }
+            }
+        }
+
+        &__listOpen {
+            position: relative;
+            padding: rem(5);
+            background-color: #393101;
+            border-radius: rem(5);
+
+            &__listOpenButton {
+                display: flex;
+                align-items: center;
+                gap: rem(5);
+                transition: transform 0.3s ease;
+                color: white;
+
+                &:active {
+                    transform: scale(0.90);
+                }
+            }
+
+            &__listOpenList {
+                position: absolute;
+                z-index: 100;
+                max-height: rem(300);
+                overflow-y: auto;
+                margin-top: rem(10);
+                left: 0;
+                right: 0;
+                background-color: #393101;
+                display: flex;
+                flex-direction: column;
+                gap: rem(10);
+                padding: rem(5);
+
+                &__li {
+
+                    &__button {
+                        color: white;
+                    }
+                }
+            }
+        }
+    }
+
+    &__calendar {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: rem(20);
+
+        &__week {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: rem(10);
+
+            &__dayWeek {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+
+                &--colorRed {
+                    color: red;
+                }
+            }
+        }
+
+        &__days {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: rem(10);
+
+            &__day {
+                display: flex;
+                flex-direction: column;
+                background-color: gray;
+                border-radius: rem(5);
+                padding: rem(5);
+                overflow: hidden;
+
+                &__numberDay {
+                    font-size: rem(12);
+                }
+
+                &__people {
+                    flex: 1;
+                    font-size: rem(10);
+                    overflow: hidden;
+                }
+            }
+
+            @media (min-width: 768px) {
+                &__day {
+                    border-radius: rem(10);
+                    padding: rem(10);
+
+                    &__people {
+                        font-size: rem(20);
+                    }
+                }
+            }
+
+        }
+
+        
+    }
+
+    &__annualLeave {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: rem(10);
+        background-color: #393101; 
+        border-radius: rem(10);
+ 
+        &__button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: rem(5);  
+            color: white;
+            transition: transform 0.3s ease;
+            
+            &:active {
+                transform: scale(0.90);
+            }
+        }
+        
+    }
+
+    &__overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,.5);
+
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-end;
+
+        opacity: 0;
+        pointer-events: none; 
+        transition: opacity 0.3s ease;
+
+        &_open {
+            opacity: 1;
+            pointer-events: all;
+
+            .main__overlay__modalWindow {
+                transform: translateY(0);
+            }
+        }
+
+        &__modalWindow {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            gap: rem(10);
+            padding: rem(20);
+            z-index: 100;
+            background: #080628;
+            min-height: 50vh;
+            border-radius: rem(20) rem(20) 0 0;
+            transform: translateY(100%);
+            transition: transform 0.3s ease-out;
+
+            &::before {
+                content: "";
+                position: absolute;
+                top: rem(10);
+                left: 50%;
+                transform: translateX(-50%);
+                width: rem(20);
+                height: rem(3);
+                background-color: white;
+                border-radius: rem(2);
+            }
+
+            &__title {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+
+                &__text {
+                    flex: 1;
+                    font-size: rem(15);
+                    color: white;
+                }
+
+                &__close {
+                    display: flex;
+                    align-items: center;
+                    color: gray;
+                }
+            }
+
+            &__stepper {
+                display: grid;
+                grid-template-columns: repeat(4, 1fr);
+
+                &__item {
+                    position: relative;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    gap: rem(8);
+
+                    &__circle {
+                        position: relative;
+                        z-index: 1;
+                        width: rem(32);
+                        height: rem(32);
+                        border-radius: 50%;
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        font-size: rem(14);
+                        font-weight: 600;
+                        background-color: gray;
+                        color: white;
+
+                    }
+
+                    &__title {
+                        font-size: rem(12);
+                        text-align: center;
+                    }
+
+                    &::after {
+                        content: "";
+                        position: absolute;
+                        top: rem(16);
+                        left: calc(50% + rem(16));
+                        width: calc(100% - #{rem(32)});
+                        height: rem(2);
+                        background: white;
+                    }
+
+                    &--active {
+
+                        .main__overlay__modalWindow__stepper__item__circle {
+                            background: #F4C430;
+                            color: #080628;
+                        }
+
+                        .main__overlay__modalWindow__stepper__item__title {
+                            color: #F4C430;
+                        }
+
+                        &::after {
+                            background: #F4C430;
+                        }
+                    }
+
+                    
+                    &--done {
+
+                        .main__overlay__modalWindow__stepper__item__circle {
+                            background: #2DBE60;
+                        }
+
+                        &::after {
+                            background: #2DBE60;
+                        }
+                    }
+
+                    &:last-child::after {
+                        display: none;
+                    }
+                }
+            }
+            
+        }
+    }
+
+
+}

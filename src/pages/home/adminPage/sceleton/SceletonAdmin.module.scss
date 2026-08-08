@@ -1,0 +1,163 @@
+@use '../../../../styles/helpers/' as *;
+
+.sceleton {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: rem(15);
+    padding-bottom: rem(40);
+}
+
+.calendar {
+    list-style: none;
+    display: flex;
+    gap: rem(10);
+    overflow: scroll;
+    scrollbar-width: none;
+}
+
+.calendar__item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 0 0 rem(40);
+    background-color: var(--secondColor);
+    border-radius: rem(5);
+}
+
+.calendar__dayOfWeek {
+    opacity: 0;
+}
+
+.calendar__button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    border-radius: rem(10);
+}
+
+.calendar__day {
+    opacity: 0;
+}
+
+.calendar__exclamation {
+    opacity: 0;
+}
+
+.sceleton__changeShift {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.sceleton__buttonChangeShift {
+    border-radius: rem(10);
+    padding: rem(5);
+    background-color: var(--secondColor);
+}
+
+.sceleton__buttonText {
+    background-color: var(--thirdColor);
+    border-radius: rem(5);
+}
+
+
+
+
+.sceleton__dropdown {
+    display: flex;
+    flex-direction: column;
+    gap: rem(10);
+}
+
+.sceleton__card {
+    display: flex;
+    flex-direction: column;
+    gap: rem(10);
+    padding: rem(10);
+    border-radius: rem(20);
+    aspect-ratio: 3/1;
+    animation: blinkCard 3s infinite;
+}
+
+.sceleton__cardButton {
+    display: flex;
+    flex-direction: column;
+    gap: rem(5);
+}
+
+.sceleton__viewTop {
+    display: flex;
+    justify-content: space-between;
+    padding-bottom: rem(5);
+    border-bottom: rem(1) solid black;
+}
+
+.sceleton__viewFirstBlock {
+    display: flex;
+    gap: rem(10);
+    min-width: 0;
+}
+
+.sceleton__viewTopIcone {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    aspect-ratio: 1/1;
+    flex: 0 0 rem(40);
+    border-radius: rem(10);
+    user-select: none;
+    animation: blink 3s infinite;
+}
+
+.sceleton__viewTopRighteBlock {
+    display: flex;
+    flex-direction: column;
+    gap: rem(5);
+}
+
+.sceleton__viewTopRighteBlockGood {
+    display: flex;
+    min-width: rem(150);
+    color: transparent;
+    border-radius: rem(5);
+    user-select: none;
+    animation: blink 3s infinite;
+}
+
+.sceleton__viewSecondBlock {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: transparent;
+    user-select: none;
+    border-radius: rem(5);
+    padding-right: rem(5);
+    animation: blink 3s infinite;
+}
+
+.sceleton__russianDate {
+    display: flex;
+    justify-content: space-between;
+    padding-right: rem(5);
+}
+
+.sceleton__russianDate--dateAndTime {
+    user-select: none;
+    border-radius: rem(5);
+    color: transparent;
+    animation: blink 3s infinite;
+}
+
+@keyframes blinkCard {
+    0% {background-color: #393101;}
+    50% {background-color: #393101;}
+    100% {background-color: #393101;}
+}
+
+@keyframes blink {
+    0% {background-color: gray;}
+    50% {background-color: gray;}
+    100% {background-color: gray;}
+}

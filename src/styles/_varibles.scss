@@ -1,1 +1,41 @@
 /*src/assets/styles/_variables.scss*/
+
+:root {
+    --firstColor: #080628;
+    --secondColor: #393101;
+    --thirdColor: #B8B39A;
+
+    --redAlarm: red;
+    --yellowAlarm: yellow;
+    --greenAlarm: green;
+
+    --birthdayStatus: pink;
+
+    //Page AdminHomePage
+    --colorTextButtonAdminHomePage: #7F7F7F;
+    --bgButtonAdminHomePage: #393101;
+    --bgButtonGrayAdminHomePage: #424242;
+
+    //Widget BrigadeDropdown
+    --bgCardBrigadeDropdown: #424242;
+
+    //Widget PersonCard
+    --bgIconPersonCard: #5E5E5E;
+    --colorIconPersonCard: #7F7F7F;
+    --colorTextPersonCard: #7F7F7F;
+
+    //Widget PersonDropdownItem
+    --colorTextPersonDropdownItem: #7F7F7F;
+
+    --calendarTodayDat: #756D4A;
+
+    --textWhite: white;
+    --textBlack: black;
+    --textGray: #B8B39A;
+    --textFocusVisible: green;
+
+    --IconeBottomBar: black;
+    --IconeActiveBottomBar: yellow;
+
+    --borderBottomBrigadeDropdown: black;
+}

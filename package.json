@@ -14,6 +14,7 @@
     "@reduxjs/toolkit": "^2.11.2",
     "@supabase/supabase-js": "^2.98.0",
     "axios": "^1.13.4",
+    "decimal.js": "^10.6.0",
     "lucide-react": "^0.563.0",
     "react": "^19.2.0",
     "react-dnd": "^16.0.1",

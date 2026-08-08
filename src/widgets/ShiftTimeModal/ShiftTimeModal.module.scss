@@ -1,0 +1,58 @@
+@use '../../styles/helpers/' as *;
+
+
+
+.articleOne {
+    height: 20vh;
+    display: flex;
+    align-items: center;
+    border-bottom: rem(1) solid black;
+
+    &__blockStartTime {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: rem(10);
+        flex: 1;
+    }
+
+    &__line {
+        height: 100%;
+        width: rem(1);
+        background-color: black;
+    }
+
+    &__blockEndTime {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: rem(10);
+        flex: 1;
+    }
+}
+
+.articleTwo {
+    display: flex;
+    height: 30vh;
+
+    &__changeTime {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex: 7;
+    }
+
+    &__line {
+        height: 100%;
+        width: rem(1);
+        background-color: black;
+    }
+
+    &__ok {
+        background-color: transparent;
+        border: none;
+        flex: 1;
+    }
+}
+        
+    

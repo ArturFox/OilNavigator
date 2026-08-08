@@ -1,40 +1,57 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
-import { ArrowBigLeft, ArrowBigRight, CalendarCheck, UserPen, Wallet } from "lucide-react";
-import styles from "../../styles/blocks/home.module.scss";
+import { AlignVerticalJustifyStartIcon, ArrowBigLeft, ArrowBigRight, CalendarCheck, Highlighter, UserPen } from "lucide-react";
+import styles from "../layouts/mainLayout.module.scss";
 import { useDispatch, useSelector } from "react-redux";
-import { changeDay, type RootState } from "../../store/new-store";
+import { changeDay, type RootState } from "../store/store";
+import type { UserRole } from "../../features/auth/model/auth.types";
+import { useRef } from "react";
 
-export function MainLayout() {
+interface Props {
+  role: UserRole;
+}
+
+export function MainLayout({role}: Props) {
 
   const dispatch = useDispatch(); 
-  const location = useLocation();
 
+  const location = useLocation();
   const isCalendar: boolean = location.pathname === "/";
   const isProfile: boolean = location.pathname === "/profile";
-  const isWallet: boolean = location.pathname === '/wallet'
+  const isVacation: boolean = location.pathname === '/createVacation'
+  const isScheduleChange: boolean = location.pathname === '/scheduleChangePage'
+  const userChange: boolean = location.pathname === '/userChange'
 
-  // получили сегодняшнию дату
-  const todayString: string = useSelector((state: RootState) => state.date.day);
+  // получаем дату из стора 
+  // управляет датой две стрелки, которые в этом файле,
+  // а так же в следующем файле widget "CalendarAdmin"
+  // если пользователь нажал на карточку даты в widget "CalendarAdmin", то в сторе меняется дата
+  // и засчёт этого динамически отображаются какие бригады работают и отдыхают в widget "BrigadeDropdown" 
+  const dateStore: string = useSelector((state: RootState) => state.date.day);
   
-  const [y,m,d]: number[] = todayString.split('-').map(Number);
-  const today: Date = new Date(y, m - 1, d);
+  // детруктуризация из string в number для создания Date
+  const [y,m]: number[] = dateStore.split('-').map(Number);
+  const selectedDate: Date = new Date(y, m - 1, 1);
 
-  // всегда получаем первый день месяца для того чтобы отображать месяц
-  const currentMonthDate: Date = new Date(
-    today.getFullYear(),
-    today.getMonth(),
+  // всегда получаем первый день месяца для того чтобы отображать на верху экрана название выбранного месяца
+  const firstDaySelectedDate: Date = new Date(
+    selectedDate.getFullYear(),
+    selectedDate.getMonth(),
     1
   );
 
-  const month: string = new Intl.DateTimeFormat('ru-RU', { month: 'long' }).format(currentMonthDate);
+  // создаем это название месяца, где первая буква большая
+  const month: string = new Intl.DateTimeFormat('ru-RU', { month: 'long' }).format(firstDaySelectedDate);
   const monthToUpperCase: string = month[0].toUpperCase() + month.slice(1);
 
-
-  function changeMonth(step: -1 | 1) {
+  // если пользователь нажал на одну из кнопок 
+  // стрелка влево "Предедущий месяц" или срелка вперед "Следующий месяц" 
+  // меняем дату допустим с "2026-08-04" на "2026-09-01"
+  // то есть всегда новый месяц или предедущий или если вернемся обратно на текущий месяц всегда начало даты с 1 числа
+  function changeMonth(step: -1 | 1): void {
 
     const nextDate: Date = new Date(
-      currentMonthDate.getFullYear(),
-      currentMonthDate.getMonth() + step,
+      firstDaySelectedDate.getFullYear(),
+      firstDaySelectedDate.getMonth() + step,
       1
     );
 
@@ -44,37 +61,161 @@ export function MainLayout() {
     
   }
 
+  const heightHeaderRef = useRef<HTMLElement>(null);
+
   return (
 
-    <main className={styles["main"]}>
+    <div className={styles["mainLayout"]}>
 
-      <header className={styles["article__month"]}>
+      {!isScheduleChange && (
 
-        <span>{monthToUpperCase}</span>
+        <header
+          ref={heightHeaderRef} 
+          className={styles["mainLayout__header"]}
+        >
 
-        <div className={styles["article__arrow"]}>
+          <button
+            onClick={() => changeMonth(-1)}
+            aria-label="Предыдущий месяц"
+            type="button"
+          >
+            <ArrowBigLeft aria-hidden="true"/>
+          </button>
 
-            <span onClick={() => changeMonth(-1)}><ArrowBigLeft/></span>
-            <span onClick={() => changeMonth(1)}><ArrowBigRight/></span>
+          <span
+            className={styles["mainLayout__header__title"]}
+          >
+            {monthToUpperCase}
+          </span>
 
-        </div>
+          <button 
+            onClick={() => changeMonth(1)}
+            aria-label="Следующий месяц"
+            type="button"
+          >
+            <ArrowBigRight aria-hidden="true"/>
+          </button>        
 
-      </header>
-
+        </header>
+      )}
+      
       <Outlet />
+      
 
-      <footer className={styles["main__bottomBar"]}>
-        <Link to="/" className={styles["main__bottomIcone"]}>
-          <CalendarCheck className={isCalendar ? styles["main__active"] : ""} />
-        </Link>
-        <Link to="/wallet" className={styles["main__bottomIcone"]}>
-          <Wallet className={isWallet ? styles["main__active"] : ""}/>
-        </Link>
-        <Link to="/profile" className={styles["main__bottomIcone"]}>
-          <UserPen className={isProfile ? styles["main__active"] : ""} />
-        </Link>
+      <footer className={styles["mainLayout__bottomBar"]}>
+        
+        <nav 
+          aria-label="Нижняя навигация"
+        >
+
+          <ul className={styles["mainLayout__bottomBar__ul"]}>
+
+            <li
+              className={styles["mainLayout__bottomBar__ul__li"]}
+            >
+
+              <Link
+                to="/"
+                className={styles["mainLayout__bottomBar__ul__li__bottomIcone"]}
+                aria-label="Календарь"
+                aria-current={isCalendar ? "page" : undefined}
+              >
+
+                <CalendarCheck
+                  className={isCalendar ? styles["mainLayout__bottomBar__ul__li__bottomIcone__active"] : ""}
+                  aria-hidden="true"
+                />
+
+              </Link>
+
+            </li>
+
+            {role === 'admin' && (
+              <li
+                className={styles["mainLayout__bottomBar__ul__li"]}
+              >
+
+                <Link 
+                  to="/scheduleChangePage"
+                  className={styles["mainLayout__bottomBar__ul__li__bottomIcone"]}
+                  aria-label="Изменить расписание"
+                  aria-current={isScheduleChange ? "page" : undefined}
+                >
+
+                  <Highlighter
+                    className={isScheduleChange ? styles["mainLayout__bottomBar__ul__li__bottomIcone__active"] : ""}
+                    aria-hidden="true"
+                  />
+
+                </Link>
+
+              </li>
+            )}
+
+            {role === 'admin' && (
+              <li
+                className={styles["mainLayout__bottomBar__ul__li"]}
+              >
+
+                <Link
+                  to="/createVacation"
+                  className={styles["mainLayout__bottomBar__ul__li__bottomIcone"]}
+                  aria-label="Составить график расписаний"
+                  aria-current={isVacation ? "page" : undefined}
+                >
+
+                  <AlignVerticalJustifyStartIcon
+                    className={isVacation ? styles["mainLayout__bottomBar__ul__li__bottomIcone__active"] : ""}
+                    aria-hidden="true"
+                  />
+
+                </Link>
+              </li>
+            )}
+
+            <li
+              className={styles["mainLayout__bottomBar__ul__li"]}
+            >
+
+              <Link
+                to="/profile"
+                className={styles["mainLayout__bottomBar__ul__li__bottomIcone"]}
+                aria-label="Профиль"
+                aria-current={isProfile ? "page" : undefined}
+              >
+
+                <UserPen
+                  className={isProfile ? styles["mainLayout__bottomBar__ul__li__bottomIcone__active"] : ""}
+                  aria-hidden="true"
+                />
+
+              </Link>
+
+            </li>
+
+            <li>
+
+              <Link
+                to="/userChange"
+                className={styles["mainLayout__bottomBar__ul__li__bottomIcone"]}
+                aria-label="Профиль"
+                aria-current={userChange ? "page" : undefined}
+              >
+
+                <UserPen
+                  className={userChange ? styles["mainLayout__bottomBar__ul__li__bottomIcone__active"] : ""}
+                  aria-hidden="true"
+                />
+              </Link>
+
+            </li>
+
+          </ul>
+
+        </nav>
+
       </footer>
       
-    </main>
+    </div>
   );
 }

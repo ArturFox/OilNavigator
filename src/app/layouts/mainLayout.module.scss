@@ -1,0 +1,84 @@
+//src/app/layouts/mainLayout.module.scss
+
+@use '../../styles/helpers/' as *;
+
+.mainLayout {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  padding: rem(20);
+  gap: rem(20);
+
+  &__header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    &__title {
+      color: var(--textGray);
+      font-size: rem(20);
+    }
+
+    button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border: none;
+      background: transparent;
+      border-radius: rem(10);
+      transition: transform 0.3s ease;
+
+      &:active {
+        transform: scale(0.90);
+      }
+
+      &:focus-visible {
+        outline: rem(3) solid var(--textFocusVisible);
+        outline-offset: rem(4);
+      }
+    }
+  }
+
+  &__bottomBar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background-color: var(--thirdColor);
+    padding: rem(10);
+    z-index: 100;
+
+    &__ul {
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+
+      &__li {
+
+        &__bottomIcone {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          color: var(--IconeBottomBar);
+          text-decoration: none;
+          border-radius: rem(10);
+
+          &:focus-visible {
+            outline: rem(3) solid var(--textFocusVisible);
+            outline-offset: rem(4);
+          }
+
+          &__active {
+            stroke: var(--IconeActiveBottomBar);
+            transition: transform 0.3s ease;
+
+            &:active {
+              transform: scale(0.90);
+            }
+          }
+        }
+      }
+    }
+  }
+
+}

@@ -1,0 +1,96 @@
+@use '../../../../styles/helpers/' as *;
+
+.main{
+    position: relative;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: center;
+    flex: 1;
+    gap: rem(5);
+    padding: rem(5);
+    border-radius: rem(10);
+
+    &--active {
+        background-color: #393101;
+    }
+
+    &--disable {
+        background-color: #444444;
+    }
+
+    &__buttonCategory {
+        display: flex;
+        justify-content: flex-start;
+        transition: transform 0.5s ease;
+        font-size: rem(13);
+
+        &--active {
+            color: white;
+        }
+
+        &:active {
+            transform: scale(0.90);
+        }
+
+        &--disable {
+            color: #2b2b2b;
+            pointer-events: none;
+            cursor: not-allowed;
+
+            &:active {
+                transform: none !important;
+            }
+        }
+        
+    }
+
+    &__categories {
+        position: absolute;
+        top: calc(100% + rem(5));
+        left: 0;
+        right: 0;
+        opacity: 0;
+        pointer-events: none;
+        cursor: not-allowed;
+        transform: translateY(rem(-10));
+        transition: opacity 0.5s ease, transform 0.5s ease;
+        z-index: 100;
+        background-color: #393101;
+        border-radius: rem(5);
+        display: flex;
+        flex-direction: column;
+        gap: rem(10);
+        padding: rem(5);
+
+        &_active {
+            opacity: 1;
+            pointer-events: all;
+            transform: translateY(0);
+        }
+
+        &__buttonCategory {
+            display: flex;
+            justify-content: flex-start;
+            font-size: rem(13);
+            color: white;
+            white-space: nowrap;
+            overflow: hidden;
+
+            &__text {
+                display: flex;
+                flex-direction: column;
+                align-items: flex-start;
+                width: 100%;
+                
+                &::after {
+                    content: '';
+                    height: 2px;
+                    width: 100%;
+                    background-color: black;
+                    transform: scaleY(0.5);
+                    transform-origin: bottom;
+                }
+            }
+        }
+    }
+}

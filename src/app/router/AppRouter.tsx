@@ -1,14 +1,13 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { MainLayout } from "../layouts/MainLayout";
-import { HomePage } from "../../pages/home/ui/HomePage";
 import type { AuthState } from "../../features/auth/model/auth.types";
 import { ProfilePage } from "../../pages/profile/ui/ProfilePage";
-// import { ScheduleChangePage } from "../../pages/schedule-change/ui/ScheduleChangePage";
-// import { PeoplePage } from "../../pages/people/ui/PeoplePage";
-// import { PersonChangePage } from "../../pages/person-change/ui/PersonChangePage";
-import { SignPage } from "../../features/auth/ui/SignInPage";
-import { WalletPage } from "../../pages/wallet/ui/WalletPage";
+import { SignPage } from "../../pages/signIn/SignPage";
+import { HomePage } from "../../pages/home/HomePage";
+import { ScheduleChangePage } from "../../pages/ScheduleChangePage/ScheduleChangePage";
+import { CreateVacation } from "../../pages/createVacation/CreateVacation";
+import { UserChange } from "../../pages/UserChange/ui/UserChange";
 
 interface Props {
 
@@ -18,37 +17,51 @@ interface Props {
 
 export function AppRouter({ auth }: Props) {
 
-    return (
+  return (
 
-      <Routes>
+    <Routes>
 
-        <Route
-          path="/signin"
-          element={auth.session ? <Navigate to="/" replace /> : <SignPage />}
+      <Route
+        path="/signin"
+        element={auth.session ? <Navigate to="/" replace /> : <SignPage />}
+      />
+      
+      <Route
+        path="*"
+        element={
+          <ProtectedRoute auth={auth}>
+            <MainLayout role={auth.role}/>
+          </ProtectedRoute>
+        }
+      >
+
+        <Route 
+          index element={<HomePage role={auth.role} session ={auth.session} />} 
         />
-        
-        <Route
-          path="*"
-          element={
-            <ProtectedRoute auth={auth}>
-              <MainLayout />
-            </ProtectedRoute>
-          }
-        >
-          <Route index element={<HomePage role={auth.role} session ={auth.session} />} />
-          <Route path="wallet" element={<WalletPage/>}/>
-          <Route path="profile" element={<ProfilePage />} />
-          {/* <Route path="changeShift" element={<ScheduleChangePage/>} /> */}
-          {/* <Route
-            path="allPersons"
-            element={<PeoplePage/>}
-          /> */}
-          {/* <Route
-            path="changePerson"
-            element={<PersonChangePage/>}
-          /> */}
-        </Route>
 
-      </Routes>
-    );
-  }
+
+        {auth.role === 'admin' && (
+          <Route
+            path="createVacation"
+            element={<CreateVacation/>}
+          />
+        )}
+
+        {auth.role === "admin" && (
+          <Route
+            path="scheduleChangePage"
+            element={<ScheduleChangePage />}
+          />
+        )}
+
+        <Route path="profile" element={<ProfilePage/>} />
+
+        <Route path="userChange" element={<UserChange/>}/>
+        
+      </Route>
+
+    </Routes>
+
+  );
+  
+}

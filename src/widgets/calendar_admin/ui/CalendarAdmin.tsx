@@ -1,31 +1,30 @@
 import { OctagonAlert } from 'lucide-react'
-import { useDispatch, useSelector } from 'react-redux';
-import { useEffect, useMemo, useRef } from 'react';
-import type { PersonsDto } from '../../../api/persons/persons.dto';
-import type { SortShift } from '../../../api/shifts/shifts.dto';
-import { changeDay, type RootState } from '../../../store/new-store';
+import { useDispatch } from 'react-redux';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { DayItem } from '../model/types';
 import { generateCalendarDays } from '../model/lib/generateCalendarDays';
-import styles from '../../../styles/blocks/calendar.module.scss';
+import styles from '../ui/calendarAdmin.module.scss';
+import type { PersonsDto } from '../../../entities/persons/types/persons.dto';
+import type { SortShift } from '../../../entities/shifts/types/shifts.dto';
+import { changeDay } from '../../../app/store/store';
 
 
 interface peopleMapeProps {
     personsMapProps: Map<string, PersonsDto[]>
     shiftsMapProps: Map<string, SortShift[]>
+    dateStore: string;
+    stringRealDateToday: string;
 }
 
-export function CalendarAdmin ({personsMapProps, shiftsMapProps}: peopleMapeProps) {
+export function CalendarAdmin ({personsMapProps, shiftsMapProps, dateStore, stringRealDateToday}: peopleMapeProps) {
 
     const dispatch = useDispatch();
-
-    const realDateToday: Date = new Date();
-    const stringRealDateToday: string = `${realDateToday.getFullYear()}-${String(realDateToday.getMonth()+1).padStart(2, '0')}-${String(realDateToday.getDate()).padStart(2,'0')}`;
     
-    const dateStore: string = useSelector((state: RootState) => state.date.day);
+    const [userSelect, onUserSelect] = useState<string>(stringRealDateToday);
     
-    const [y,m,d]: number[] = dateStore.split('-').map(Number);
+    const [y,m] = dateStore.split('-').map(Number);
 
-    const dateStoreLocal: Date = new Date(y, m - 1, d);
+    const dateStoreLocal: Date = new Date(y, m - 1, 1);
 
     const daysMonth: number = new Date(
         dateStoreLocal.getFullYear(),
@@ -37,93 +36,125 @@ export function CalendarAdmin ({personsMapProps, shiftsMapProps}: peopleMapeProp
     const month: number = dateStoreLocal.getMonth();
     
     const days: DayItem[] = useMemo(() => {
-        console.log(`Я вызвался`)
+        
         return generateCalendarDays({
             year,
             month,
             daysMonth,
             shiftsMapProps,
-            personsMapProps
+            personsMapProps,
+            stringRealDateToday
         });
-    }, [year, month, daysMonth, shiftsMapProps, personsMapProps])
 
-    function fn (day: string): void {
-        dispatch(changeDay(day))
-    }
+    }, [year, month, daysMonth, shiftsMapProps, personsMapProps])
 
     const todayRef = useRef<HTMLSpanElement | null>(null);
 
     useEffect(() => {
-        todayRef.current?.scrollIntoView({ behavior: 'smooth', block: 'center', inline: 'center' });
-    }, []);
+
+        const [_, month] = stringRealDateToday.split('-').map(Number);
+
+        if(m === month){
+            onUserSelect(stringRealDateToday)
+            dispatch(changeDay(stringRealDateToday))
+        } else{
+            onUserSelect(dateStore)
+        }
+
+        todayRef.current?.scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center',
+            inline: 'center' 
+        }); 
+        
+    }, [m]);
 
     return(
 
-        <article className={styles["article"]}>
+        <ul className={styles['calendar']}>
 
-            <div className={styles["article__blockDays"]}>
+            {days.map((day, index) => (
 
-                {days.map((day, index) => {
+                <li
+                    key={index}
+                    className={styles["calendar__item"]}
+                >
 
-                    const isSelected = dateStore === day.stringDate;
+                    <span className={styles["calendar__dayOfWeek"]}>
+
+                        {day.weekDay}
                     
-                    const isToday = stringRealDateToday === day.stringDate;
-                
-                    return(
-                        <div 
-                            key={index}
-                            className={styles["article__block"]}
+                    </span>
+
+                    <button
+                        type='button'
+                        className={`
+                            ${styles["calendar__button"]}
+                            ${day.checkRealMonth
+                                
+                                ? userSelect === stringRealDateToday
+                                    ? stringRealDateToday === day.stringDate
+                                        ? styles["calendar__button--todaySelected"]
+                                        : ''
+                                    : userSelect === day.stringDate
+                                        ? styles["calendar__button--todaySelected"]
+                                        : stringRealDateToday === day.stringDate
+                                            ? styles["calendar__button--todayNotSelected"]
+                                            : ''
+
+                                : dateStore === day.stringDate
+                                    ? styles["calendar__button--todaySelected"]
+                                    : ''
+                            }
+                        `}
+                        onClick={() => {
+                            dispatch(changeDay(day.stringDate));
+                            onUserSelect(day.stringDate);
+                        }}
+                        aria-label={`День ${day.day}, ${day.weekDay}`}
+                    >
+
+                        <span 
+                            className={styles["calendar__day"]}
+                            ref={
+                                
+                                day.checkRealMonth 
+                                    ? stringRealDateToday === day.stringDate
+                                        ? todayRef
+                                        : undefined
+                                    : dateStore === day.stringDate
+                                        ? todayRef
+                                        : undefined
+                            }
+                        >
+                            {day.day}
+                        </span>
+
+                        <span 
+                            className={`
+                                ${styles["calendar__exclamation"]}
+                                ${
+                                    day.hasProblem && day.soonVacation
+                                        ? styles["calendar__exclamation--blink"]
+                                        : day.hasProblem
+                                            ? styles["calendar__exclamation--red"]
+                                            : day.soonVacation
+                                                ? styles["calendar__exclamation--yellow"]
+                                                : ""
+                                }
+                            `}
                         >
 
-                            <span className={styles["article__dayOfWeek"]}>
+                            <OctagonAlert/>
 
-                                {day.weekDay}
-                            
-                            </span>
+                        </span>
+                    
+                    </button>
 
-                            <div 
-                                className={`
-                                    ${styles["article__dayAndIcone"]}
-                                    ${isSelected 
-                                        ? styles["article__dayAndIcone_alarm"] 
-                                        : isToday 
-                                            ? styles["article__dayAndIcone_today"] 
-                                            : ''
-                                    }
-                                `}
+                </li>
+                
+            ))}          
 
-                                onClick={() => fn(day.stringDate)}
-                            >
-
-                                    <span 
-                                        className={styles["article__day"]}
-                                        ref={isToday ? todayRef : undefined}
-                                    >
-                                            {day.day}
-                                    </span>
-
-                                    <span 
-                                        className={
-                                            day.hasProblem && day.soonVacation
-                                                ? styles["article__exclamation_redAndYellow"]
-                                                : day.hasProblem
-                                                    ? styles["article__exclamation_red"]
-                                                    : day.soonVacation
-                                                        ? styles["article__exclamation_yellow"]
-                                                        : styles['article__exclamation']
-                                        }
-                                    >
-                                        <OctagonAlert/>
-                                    </span>
-                            
-                            </div>
-
-                        </div>
-                    )
-                   
-                })}   
-            </div>         
-
-        </article>
+        </ul>
     )
 }

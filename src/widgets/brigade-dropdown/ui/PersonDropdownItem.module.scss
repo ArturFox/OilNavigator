@@ -1,0 +1,67 @@
+@use '../../../styles/helpers/' as *;
+
+.personDropdownItem {
+    display: flex;
+    justify-content: space-between;
+    padding-right: rem(5);
+    border-bottom: rem(1) solid var(--borderBottomBrigadeDropdown);
+}
+
+.personDropdownItem__personInfo {
+    display: flex;
+    gap: rem(10);
+}
+
+.personDropdownItem__textName {
+    color: var(--textWhite);
+
+    &--gray {
+        color: var(--colorTextPersonDropdownItem);
+    }
+}
+
+.personDropdownItem__textNameAlarm {
+    color: var(--redAlarm);
+}
+
+.personDropdownItem__alarmStatus {
+    color: var(--textWhite);
+    margin-right: rem(10);
+
+    &--red {
+        color: var(--redAlarm);
+    }
+
+    &--yellow {
+        color: var(--yellowAlarm);
+    }
+
+    &--birthday {
+        color: var(--birthdayStatus);
+    }
+
+}
+
+.personDropdownItem__buttons {
+    display: flex;
+    gap: rem(10);
+}
+
+.personDropdownItem__button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--thirdColor);
+
+    &:focus-visible {
+        outline: 1px solid var(--textFocusVisible);
+    }
+}
+
+.personDropdownItem__dropdownAlarm {
+    color: var(--redAlarm);
+}
+
+.personDropdownItem__dropdownAlarmYellow {
+    color: var( --yellowAlarm);
+}

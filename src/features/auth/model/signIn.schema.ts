@@ -1,4 +1,4 @@
-//src/components/signIn/signIn.schema.ts
+//src/features/auth/model/signin.schema.ts
 
 import { z } from "zod";
 

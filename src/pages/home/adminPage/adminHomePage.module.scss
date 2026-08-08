@@ -1,0 +1,67 @@
+@use '../../../styles/helpers/' as *;
+
+.main {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: rem(15);
+    padding-bottom: rem(40);
+
+}
+
+.main__changeShift {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.main__buttonChangeShift {
+    border: none;
+    background-color: var(--bgButtonAdminHomePage);
+    border-radius: rem(10);
+    padding: rem(5);
+    cursor: pointer;
+    color: var(--textGray);
+    transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+
+    &--open {
+        color: var(--textWhite);
+    }
+
+    &--gray {
+        background-color: var(--bgButtonGrayAdminHomePage);
+        color: var(--colorTextButtonAdminHomePage);
+    }
+
+    &:active {
+        transform: scale(0.90);
+    }
+}
+
+.main__dropdown {
+    display: flex;
+    flex-direction: column;
+    gap: rem(10);
+}
+
+.main__list {
+    display: flex;
+    flex-direction: column;
+    gap: rem(10);
+}
+
+.main__shadow {
+    display: flex;
+    flex-direction: column;
+    gap: rem(10);
+    opacity: 0;
+    pointer-events: none;
+    transition: transform 0.5s ease, opacity 0.4s ease;
+    transform: translateX(-100%);
+
+    &--open {
+        opacity: 1;
+        transform: translateX(0);
+        pointer-events: all;
+    }
+}

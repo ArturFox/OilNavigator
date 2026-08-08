@@ -1,20 +1,24 @@
-import type { PersonsDto } from "../../../../api/persons/persons.dto";
-import type { SortShift } from "../../../../api/shifts/shifts.dto";
+import type { PersonsDto } from "../../../../entities/persons/types/persons.dto";
+import type { SortShift } from "../../../../entities/shifts/types/shifts.dto";
 import type { DayItem } from "../types";
-
 
 interface Props {
     year: number,
     month: number,
     daysMonth: number,
     shiftsMapProps: Map<string, SortShift[]>,
-    personsMapProps: Map<string, PersonsDto[]>
+    personsMapProps: Map<string, PersonsDto[]>,
+    stringRealDateToday: string,
 }
 
-export function generateCalendarDays ({ year, month, daysMonth, shiftsMapProps, personsMapProps}: Props): DayItem[] {
-
-    const realDay: Date = new Date();
-    const stringRealDate: string = `${realDay.getFullYear()}-${String(realDay.getMonth()+1).padStart(2,'0')}-${String(realDay.getDate()).padStart(2,'0')}`;
+export function generateCalendarDays ({ 
+    year, 
+    month, 
+    daysMonth, 
+    shiftsMapProps, 
+    personsMapProps,
+    stringRealDateToday
+}: Props): DayItem[] {
 
     return Array.from({ length: daysMonth }, (_, i) => {
 
@@ -35,36 +39,49 @@ export function generateCalendarDays ({ year, month, daysMonth, shiftsMapProps, 
         const stringDate: string = `${year}-${String(month+1).padStart(2,'0')}-${String(dayWeek.getDate()).padStart(2,'0')}`;
         const stringDateSeven: string = `${sevenDayPlus.getFullYear()}-${String(sevenDayPlus.getMonth()+1).padStart(2,'0')}-${String(sevenDayPlus.getDate()).padStart(2,'0')}`; 
 
+        const checkRealMonth: boolean = stringRealDateToday.split('-')[1] === stringDate.split('-')[1];
+
         const shiftsForDay = shiftsMapProps.get(stringDate) ?? [];
         const activeShifts = shiftsForDay.filter(f => f.code !== 'О');
 
-        const isFutureOrToday = stringDate >= stringRealDate;
+        const isFutureOrToday: boolean = stringDate >= stringRealDateToday;
 
-        const hasProblem = isFutureOrToday && (
+        const hasProblem: boolean = isFutureOrToday && (
             
-            activeShifts.some(shift => {
+            activeShifts.some( (shift) => {
 
                 const people = personsMapProps.get(shift.brigadeId) ?? [];
 
-                return people.some(person => {
+                // если в бригаде меньше 7 человек, то это true
+                // и помечаем hasProblem как true что есть ошибка
+                const notHuman: boolean = people.length < 7;
 
-                    const inVacation =
+                if(notHuman){
+                    return true
+                }
+
+                return people.some( (person) => {
+
+                    const inVacation: boolean = Boolean(
                         person.vacation_start &&
                         person.vacation_end &&
                         stringDate >= person.vacation_start &&
-                        stringDate <= person.vacation_end;
+                        stringDate <= person.vacation_end 
+                    );
 
-                    const inSick =
+                    const inSick: boolean = Boolean(
                         person.sick_start &&
                         person.sick_end &&
                         stringDate >= person.sick_start &&
-                        stringDate <= person.sick_end;
+                        stringDate <= person.sick_end
+                    );
 
-                    const inStudy = 
+                    const inStudy: boolean = Boolean(
                         person.study_start &&
                         person.study_end &&
                         stringDate >= person.study_start &&
                         stringDate <= person.study_end
+                    );
 
                     return inVacation || inSick || inStudy;
                 });
@@ -72,23 +89,25 @@ export function generateCalendarDays ({ year, month, daysMonth, shiftsMapProps, 
             })
         )
 
-        const soonVacation = isFutureOrToday && (
+        const soonVacation: boolean = isFutureOrToday && (
             
-            activeShifts.some(shift => {
+            activeShifts.some( (shift) => {
 
                 const people = personsMapProps.get(shift.brigadeId) ?? [];
 
-                return people.some(person => {               
+                return people.some( (person) => {               
 
-                    const vacationSoon = 
+                    const vacationSoon: boolean = Boolean(
                         person.vacation_start &&
                         person.vacation_start > stringDate &&
-                        person.vacation_start <= stringDateSeven;
+                        person.vacation_start <= stringDateSeven
+                    );
 
-                    const studySoon = 
+                    const studySoon: boolean = Boolean (
                         person.study_start &&
                         person.study_start > stringDate &&
-                        person.study_start <= stringDateSeven;
+                        person.study_start <= stringDateSeven
+                    )
 
                     return vacationSoon || studySoon
                 })
@@ -100,7 +119,8 @@ export function generateCalendarDays ({ year, month, daysMonth, shiftsMapProps, 
             weekDay: weekday,
             stringDate,
             hasProblem,
-            soonVacation
+            soonVacation,
+            checkRealMonth,
         };
     });
 
