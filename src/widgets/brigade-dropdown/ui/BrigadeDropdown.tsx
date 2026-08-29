@@ -1,14 +1,15 @@
 import { useMemo, useRef, useState } from "react";
 import styles from '../ui/brigadeDropdown.module.scss';
-import type { PersonsDto } from "../../../entities/persons/types/persons.dto";
+import type { Persons } from "../../../entities/persons/types/persons.dto";
 import type { SortShift } from "../../../entities/shifts/types/shifts.dto";
 import type { BrigadesDto } from "../../../entities/brigades/types/brigades.dto";
-import { getPersonStatus } from "../model/getPersonStatus";
 import { PersonDropdownItem } from "./PersonDropdownItem";
 import { PersonCard } from "./PersonCard";
+import { useCheckPersonStatus } from "../../../features/hooks/useCheckPersonStatus";
+import { ArrowDownWideNarrow } from "lucide-react";
 
 interface Props {
-    people: PersonsDto[];
+    people: Persons[];
     shift: SortShift;
     dateStore: string;
     brigadeProps: BrigadesDto | undefined;
@@ -18,7 +19,7 @@ interface Props {
 export function BrigadeDropdown({people, shift, dateStore, brigadeProps, isFutureDate}: Props) {
 
     // Состояние для открытия списка людей
-    const [open, setOpen] = useState<boolean>(false);
+    const [open, onOpen] = useState<boolean>(false);
 
     // Ref для плавного оькрытия списка людей
     // Мы берем через метод dropdownRef.current?.scrollHeight
@@ -64,28 +65,25 @@ export function BrigadeDropdown({people, shift, dateStore, brigadeProps, isFutur
             }));
         }
 
-        return getPersonStatus(people, dateStore)
+        return useCheckPersonStatus(people, dateStore)
 
     }, [people, dateStore]);
 
     const hasRedAlarm: boolean = peopleWithStatus.some(p => p.redAlarm.length > 0) || notHuman;
     const hasYellowAlarm: boolean = peopleWithStatus.some(p => p.yellowAlarm.length > 0);
-    const hasBirthday: boolean = peopleWithStatus.some(p => p.birthdayStatus.length > 0);
-
+    
     return (
 
         <li
             className={`
                 ${styles['card']}
                 ${!isFutureDate && styles['card--isFutureDate']}    
+                
             `}
         >
 
-            <button
-                type="button"
+            <div
                 className={styles["card__button"]}
-                onClick={() => setOpen(!open)} 
-                aria-expanded={open}
                 aria-controls={`brigade-dropdown-${brigadeProps?.id}`}
                 aria-label={`
                     ${brigadeProps?.name ?? 'Бригада'}. 
@@ -107,7 +105,31 @@ export function BrigadeDropdown({people, shift, dateStore, brigadeProps, isFutur
                     isFutureDate={isFutureDate}
                 />
 
-            </button>
+            </div>
+
+            <div
+                className={`
+                    ${styles["card__arrowDownWideNarrowBlock"]}
+                           
+                `}
+            >
+                <button 
+                    onClick={() => {
+                        onOpen(!open)
+                    }}
+                    className={`
+                        ${styles["card__arrowDownWideNarrow"]}
+                        ${isFutureDate === false && styles["card__arrowDownWideNarrow--gray"]}       
+                    `}
+                    aria-hidden="true"
+                >
+
+                    <ArrowDownWideNarrow
+                        style={{ transform: open ? "rotate(180deg)" : "rotate(0deg)", transition: "0.3s" }}
+                    />
+
+                </button>
+            </div>
 
             <ul 
                 ref={dropdownRef}
@@ -132,6 +154,8 @@ export function BrigadeDropdown({people, shift, dateStore, brigadeProps, isFutur
                     <PersonDropdownItem
                         key={person.id}
                         person={person}
+                        brigadeName={brigadeProps}
+                        shift={shift} 
                         isFutureDate={isFutureDate}
                     />
 

@@ -4,81 +4,192 @@
 
 .mainLayout {
   width: 100%;
+
   display: flex;
   flex-direction: column;
-  padding: rem(20);
   gap: rem(20);
 
-  &__header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  padding: rem(20);
+  padding-bottom: rem(80);
 
-    &__title {
-      color: var(--textGray);
-      font-size: rem(20);
+  overflow: hidden;
+
+}
+
+.mainLayout__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.mainLayout__headerTitle {
+  color: var(--white);
+
+  font-size: rem(20);
+}
+
+.mainLayout__headerButton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+
+  background-color: transparent;
+  color: var(--white);
+
+  border-radius: rem(10);
+  
+  transition: transform 0.3s ease;
+
+  &:active {
+    transform: scale(0.90);
+  }
+
+  &:focus-visible {
+    outline: rem(3) solid var(--textFocusVisible);
+    outline-offset: rem(4);
+  }
+}
+
+.mainLayout__bottomBar {
+  position: fixed;
+
+  bottom: 1%;
+  left: 5%;
+  right: 5%;
+
+  background-color:  var(--blue66);
+
+  border: rem(2) solid var(--blue);
+  border-radius: rem(15);
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  padding-left: rem(10);
+  padding-right: rem(10);
+  padding-bottom: rem(10);
+
+  z-index: 99;
+
+}
+
+.mainLayout__navigateList {
+  
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+}
+
+.mainLayout__navigateItem {
+
+  position: relative;
+
+  width: rem(50);
+
+  padding-top: rem(10);
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+
+    width: rem(30); 
+    
+    height: rem(5); 
+    
+    background-color: var(--white);
+    
+    border-radius: rem(5); 
+
+    opacity: 0;
+
+    transition: opacity 0.3s ease
+  }
+
+  &--active {
+
+    &::after {
+      opacity: 1;
     }
 
-    button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      border: none;
-      background: transparent;
-      border-radius: rem(10);
-      transition: transform 0.3s ease;
+  }
+   
+}
 
-      &:active {
-        transform: scale(0.90);
-      }
+.mainLayout__link {
+  display: flex;
+  flex-direction: column;
 
-      &:focus-visible {
-        outline: rem(3) solid var(--textFocusVisible);
-        outline-offset: rem(4);
-      }
+  align-items: center;
+  gap: rem(6);
+  
+  color: var(--white99);
+  text-decoration: none;
+
+  z-index: 1;
+
+  -webkit-tap-highlight-color: transparent;
+
+  transition: color 0.3s ease; 
+
+  &:focus-visible {
+    outline: rem(3) solid var(--textFocusVisible);
+    outline-offset: rem(4);
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+
+    top: 0;
+    left: 0;
+    right: 0;
+  
+    width: 100%;  
+    height: 32px;     
+    
+    background: conic-gradient(
+      from 135deg at top center, 
+      transparent 0deg,
+      var(--white) 10deg,
+      var(--white) 80deg,
+      transparent 90deg
+    );
+
+    filter: blur(3px);
+
+    z-index: -1;
+
+    opacity: 0;
+    
+    transition: opacity 0.3s ease;
+    
+    transform: translateY(15%);
+  }
+
+  &--active {
+    color: var(--black);
+
+    &::before {
+      opacity: 1; 
     }
   }
 
-  &__bottomBar {
-    position: fixed;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    background-color: var(--thirdColor);
-    padding: rem(10);
-    z-index: 100;
+}
 
-    &__ul {
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
+.mainLayout__icone {
+  z-index: 99;
+      
+  transition: transform 0.3s ease;
 
-      &__li {
-
-        &__bottomIcone {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          color: var(--IconeBottomBar);
-          text-decoration: none;
-          border-radius: rem(10);
-
-          &:focus-visible {
-            outline: rem(3) solid var(--textFocusVisible);
-            outline-offset: rem(4);
-          }
-
-          &__active {
-            stroke: var(--IconeActiveBottomBar);
-            transition: transform 0.3s ease;
-
-            &:active {
-              transform: scale(0.90);
-            }
-          }
-        }
-      }
-    }
+  &:active {
+    transform: scale(0.90);
   }
 
 }

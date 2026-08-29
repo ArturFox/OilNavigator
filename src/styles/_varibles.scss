@@ -1,41 +1,31 @@
 /*src/assets/styles/_variables.scss*/
 
+//background-color: #AC5045; красный 
+//background-color: #658761; зеленый
+//background-color: #C59B27; желтый
+// color: #D6D5D0; белый
+// color: #23211E; черный
+//background-color: #4A6FA5; синий активен
+//background-color: #7093CD; синий светлый мерцание
+// #23211E серый 
+
 :root {
-    --firstColor: #080628;
-    --secondColor: #393101;
-    --thirdColor: #B8B39A;
+    
+    --bgColor: #23211E;
 
-    --redAlarm: red;
-    --yellowAlarm: yellow;
-    --greenAlarm: green;
+    --redAlarm: #FF786B;
+    --yellowAlarm: #FFE054;
+    --greenAlarm: #8AE082;
 
-    --birthdayStatus: pink;
+    --blue: #4A6FA5;
+    --blue99: #4A6FA599;
+    --blue66: #4A6FA566;
 
-    //Page AdminHomePage
-    --colorTextButtonAdminHomePage: #7F7F7F;
-    --bgButtonAdminHomePage: #393101;
-    --bgButtonGrayAdminHomePage: #424242;
+    --white: #D6D5D0;
+    --white99: #D6D5D099;
 
-    //Widget BrigadeDropdown
-    --bgCardBrigadeDropdown: #424242;
+    --black: #23211E;
 
-    //Widget PersonCard
-    --bgIconPersonCard: #5E5E5E;
-    --colorIconPersonCard: #7F7F7F;
-    --colorTextPersonCard: #7F7F7F;
-
-    //Widget PersonDropdownItem
-    --colorTextPersonDropdownItem: #7F7F7F;
-
-    --calendarTodayDat: #756D4A;
-
-    --textWhite: white;
-    --textBlack: black;
-    --textGray: #B8B39A;
     --textFocusVisible: green;
 
-    --IconeBottomBar: black;
-    --IconeActiveBottomBar: yellow;
-
-    --borderBottomBrigadeDropdown: black;
 }

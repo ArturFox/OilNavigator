@@ -2,17 +2,116 @@
 
 import { createSelector } from "@reduxjs/toolkit";
 import { getPesonsApi } from "../../api/getPersons";
-import type { PersonsDto } from "../../types/persons.dto";
+import type { Persons } from "../../types/persons.dto";
+import { mappperPerson } from "../mapper/mapper";
+
+// получаем данные от апи
+// делаем mapper 
+export const personsMapper = createSelector(
+
+    getPesonsApi.endpoints.getPesons.select(),
+
+    (result): Persons[] => {
+        
+        const persons = result.data?.map((person) => mappperPerson(person)) ?? []
+
+        return persons;
+
+    }
+
+);
+
+// Применяется в 
+// Page ReplaceWorker.tsx
+export const arrSortedPeopleByDischarge = createSelector(
+
+    personsMapper,
+
+    (persons): Persons[] => {
+
+        const sortedPersons = [...persons]
+        .sort((a, b) => (
+            b.discharge - a.discharge
+        ));
+
+        return sortedPersons;
+
+    }
+
+)
+
+// 
+export const jobTitlePerson = createSelector(
+
+    personsMapper,
+
+    (result): string[] => {
+
+        const mySet: Set<string> = new Set();
+
+        result.forEach((person) => {
+            
+            if(person.job_title){
+                mySet.add(person.job_title);
+            }
+        });
+
+        return [...mySet];
+    } 
+)
+
+export const blockPerson = createSelector(
+    
+    personsMapper,
+
+    (result): string[] => {
+
+        const mySet: Set<string> = new Set();
+
+        result.forEach((person) => {
+
+            if(person.block){
+                mySet.add(person.block);
+            }
+
+        });
+
+        return [...mySet];
+    }
+)
+
+export const dischargePerson = createSelector(
+
+    personsMapper,
+
+    (result): number[] => {
+
+        const mySet: Set<number> = new Set();
+
+        result.forEach((person) => {
+
+            if(person.discharge){
+                mySet.add(person.discharge);
+            }
+
+        });
+
+        return [...mySet];
+    }
+)
 
 export const personsMap = createSelector(
     
-    getPesonsApi.endpoints.getPesons.select(),
+    personsMapper,
 
-    (result) => {
+    (persons): Map<string, Persons[]>  => {
 
-        const arrSort = [...(result.data ?? [])].sort((a, b) => b.discharge - a.discharge);
+        const arrSort = [...persons]
+        .sort((a, b) => (
+            b.discharge - a.discharge
+        ));
 
-        const map = new Map<string, PersonsDto[]>();
+        const map = new Map<string, Persons[]>();
 
         arrSort.forEach((person) => {
 
@@ -30,11 +129,12 @@ export const personsMap = createSelector(
 )
 
 export const allBlocks = createSelector(
-    getPesonsApi.endpoints.getPesons.select(),
 
-    (result) => {
+    personsMapper,
 
-        const data = [...result.data ?? []];
+    (persons): string[] => {
+
+        const data = [...persons];
 
         const arrBlocks: string[] = [];
 
@@ -48,17 +148,19 @@ export const allBlocks = createSelector(
     }
 )
 
+// Применяется в
+// Page CreateVacantion.tsx
 export const personsVacationMap = createSelector(
 
-    getPesonsApi.endpoints.getPesons.select(),
+    personsMapper,
 
-    (result) => {
+    (persons) => {
 
-        const map = new Map<string, PersonsDto[]>();
+        const map = new Map<string, Persons[]>();
 
-        const persons = result.data ?? [];
+        const data = [...persons];
 
-        persons.forEach((person) => {
+        data.forEach((person) => {
 
             if(!person.vacation_start || !person.vacation_end){
                 return
@@ -85,45 +187,25 @@ export const personsVacationMap = createSelector(
     }
 )
 
-export const personsBlock = createSelector(
+// export const personsBlock = createSelector(
 
-    getPesonsApi.endpoints.getPesons.select(),
+//     getPesonsApi.endpoints.getPesons.select(),
 
-    (result) => {
+//     (result) => {
 
-        const map = new Map<string, PersonsDto[]>();
+//         const map = new Map<string, PersonsDto[]>();
 
-        result.data?.forEach((person) => {
+//         result.data?.forEach((person) => {
 
-            if(!map.has(person.block)){
-                map.set(person.block, []);
-            }
+//             if(!map.has(person.block)){
+//                 map.set(person.block, []);
+//             }
 
-            map.get(person.block)!.push(person);
-        })
+//             map.get(person.block)!.push(person);
+//         })
 
-        return map;
+//         return map;
 
-    }
+//     }
 
-)
-
-export const createVacation = createSelector(
-
-    personsBlock,
-
-    (blocks) => {
-
-        const arr = [...blocks.values()];
-
-        for (let i = 0; i < arr.length; i++) {
-
-            for (let j = 0; j < arr[i].length; j++) {
-
-                const person = arr[i][j];
-
-            }
-
-        }
-    }
-)
+// )

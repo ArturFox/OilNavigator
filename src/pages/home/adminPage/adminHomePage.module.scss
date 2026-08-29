@@ -2,10 +2,10 @@
 
 .main {
     width: 100%;
+
     display: flex;
     flex-direction: column;
     gap: rem(15);
-    padding-bottom: rem(40);
 
 }
 
@@ -17,20 +17,26 @@
 
 .main__buttonChangeShift {
     border: none;
-    background-color: var(--bgButtonAdminHomePage);
+
+    background-color: var(--white);
+     color: var(--black);
+
     border-radius: rem(10);
+
     padding: rem(5);
+
     cursor: pointer;
-    color: var(--textGray);
+
     transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
 
     &--open {
-        color: var(--textWhite);
+        background-color: var(--blue99);
+        color: var(--white);
     }
 
     &--gray {
-        background-color: var(--bgButtonGrayAdminHomePage);
-        color: var(--colorTextButtonAdminHomePage);
+        background-color: var(--white99);
+        color: var(--black);
     }
 
     &:active {
@@ -41,7 +47,7 @@
 .main__dropdown {
     display: flex;
     flex-direction: column;
-    gap: rem(10);
+    gap: rem(15);
 }
 
 .main__list {
@@ -54,14 +60,19 @@
     display: flex;
     flex-direction: column;
     gap: rem(10);
+
     opacity: 0;
+
     pointer-events: none;
+
     transition: transform 0.5s ease, opacity 0.4s ease;
     transform: translateX(-100%);
 
     &--open {
         opacity: 1;
+
         transform: translateX(0);
+        
         pointer-events: all;
     }
 }

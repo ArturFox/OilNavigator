@@ -1,0 +1,316 @@
+@use '../../styles/helpers/' as *;
+
+.replaceWorkerProcess {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    height: rem(200);
+    position: relative;
+}
+
+
+
+// лева карточка
+.replaceWorkerProcess__leftPerson {
+    display: flex;
+    flex-direction: column;
+    gap: rem(10);
+
+    width: 100%;
+
+    padding: rem(5);
+
+    display: flex;
+    flex-direction: column;
+
+    background-color: #658761;
+    
+    clip-path: polygon(
+        0 0,
+        100% 0,
+        75% rem(25),
+        100% rem(50),
+        75% rem(75),
+        100% rem(100),
+        75% rem(125),
+        100% rem(150),
+        75% rem(175),
+        100% rem(200),
+        0 rem(200)
+    );
+
+    transform: translateX(0);
+    transition: transform 0.3s ease;
+
+    border-radius: rem(10);
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+
+    &--red {
+        background-color: #AC5045;
+    }
+
+    &--green {
+        background-color: #658761;
+    }
+
+    &--selected {
+        transform: translateX(13%);
+    }
+
+}
+
+.replaceWorkerProcess__leftPerson__brigadeName {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    
+    width: 75%;
+
+    font-size: rem(14);
+
+    color: #23211E;
+
+    text-decoration: underline;
+    text-decoration-color: #23211E;
+    text-decoration-style: dashed;
+    text-decoration-thickness: rem(2);
+    text-underline-offset: rem(5);
+}
+
+.replaceWorkerProcess__leftPerson__blockPersonInfo {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    
+    width: 75%;
+
+    font-size: rem(16);
+
+    color: #D6D5D0;
+}
+
+.replaceWorkerProcess__leftPerson__blockSurnameName {
+    display: flex;
+    gap: rem(5);
+
+    width: 75%;
+
+    font-size: rem(16);
+
+    color: #D6D5D0;
+    
+}
+
+.replaceWorkerProcess__leftPerson__jobTitleBlock {
+    color: #23211E;
+
+    width: 75%;
+
+    font-size: rem(13);
+}
+
+.replaceWorkerProcess__leftPerson__problem {
+    display: flex;
+    gap: rem(5);
+    font-size: rem(13);
+
+    width: 75%;
+
+    color: #D6D5D0;
+}
+
+.replaceWorkerProcess__leftPerson__titleProblem {
+    color: #23211E;
+}
+
+.replaceWorkerProcess__leftPerson__acceptButton {
+    position: absolute;
+    
+    bottom: 0;
+    left: 0;
+
+    width: max-content;
+    height: rem(25);
+
+    padding: rem(1);
+
+    background-color: #D6D5D0;
+    color: #23211E;
+
+    border-radius: rem(10);
+    border-top-left-radius: 0;
+    border-bottom-right-radius: 0;
+    
+    box-shadow: 0 0 0 rem(10) #23211E;
+}
+
+// права карточка
+.replaceWorkerProcess__rightPerson {
+    display: flex;
+    flex-direction: column;
+    gap: rem(10);
+
+    position: relative;
+
+    width: 100%;
+
+    padding: rem(5);
+
+    display: flex;
+    flex-direction: column;
+
+    background-color: #D6D5D0;
+    
+    clip-path: polygon(
+        100% 0,
+        25% 0,
+        0 rem(25),
+        25% rem(50),
+        0% rem(75),
+        25% rem(100),
+        0% rem(125),
+        25% rem(150),
+        0% rem(175),
+        25% rem(200),
+        100% rem(200)
+    );
+    
+    transform: translateX(0);
+    transition: transform 0.3s ease, color 0.3s ease;
+
+    border-radius: rem(10);
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+
+    &--selected {
+        transform: translateX(-13%);
+        background-color: #4A6FA5;
+    }
+    
+}
+
+.replaceWorkerProcess__rightPerson__brigadeName {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    padding-left: 25%;
+
+    font-size: rem(14);
+
+    color: #23211E;
+
+    text-decoration: underline;
+    text-decoration-color: #23211E;
+    text-decoration-style: dashed;
+    text-decoration-thickness: rem(2);
+    text-underline-offset: rem(5);
+}
+
+.replaceWorkerProcess__rightPerson__blockPersonInfo {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    
+    padding-left: 25%;
+
+    font-size: rem(16);
+
+    color: #D6D5D0;
+}
+
+.replaceWorkerProcess__rightPerson__blockSurnameName {
+    display: flex;
+    justify-content: flex-end;
+    gap: rem(5);
+
+    font-size: rem(16);
+
+    color: #D6D5D0;
+    
+}
+
+.replaceWorkerProcess__rightPerson__otherSurname {
+    display: flex;
+    justify-content: flex-end;
+    gap: rem(5);
+
+    font-size: rem(16);
+
+    color: #D6D5D0;
+}
+
+.replaceWorkerProcess__rightPerson__jobTitleBlock {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    color: #23211E;
+
+    padding-left: 25%;
+
+    font-size: rem(13);
+}
+
+.replaceWorkerProcess__rightPerson__problem {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+
+    gap: rem(5);
+
+    padding-left: 25%;
+
+    font-size: rem(13);
+
+    color: #D6D5D0;
+}
+
+.replaceWorkerProcess__rightPerson__titleProblem {
+    color: #23211E;
+}
+
+.replaceWorkerProcess__rightPerson__dontSelected{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    height: 100%;
+    width: 100%;
+    
+    padding-left: 50%;
+    padding-right: 25%;
+
+    color: #23211E;
+}
+
+.replaceWorkerProcess__acceptButton {
+    position: absolute;
+    
+    bottom: 0;
+    right: 0;
+
+    width: max-content;
+    height: rem(25);
+
+    padding: rem(1);
+
+    background-color: #D6D5D0;
+    color: #23211E;
+
+    border-radius: rem(10);
+    border-top-right-radius: 0;
+    border-bottom-left-radius: 0;
+    
+    box-shadow: 0 0 0 rem(10) #23211E;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+
+    &--selected {
+        opacity: 1;
+        pointer-events: all;
+    }
+}

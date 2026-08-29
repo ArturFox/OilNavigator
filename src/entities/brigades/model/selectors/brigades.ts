@@ -1,6 +1,34 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { getBrigadeApi } from "../../api/getBrigades";
-import type { BrigadesDto } from "../../types/brigades.dto";
+import type { Brigade, BrigadesDto } from "../../types/brigades.dto";
+import { mapperBrigades } from "../mapper";
+
+export const brigadesMapper = createSelector(
+
+  getBrigadeApi.endpoints.getBrigades.select(),
+
+  (result): Brigade[] => {
+
+    const brigades = result.data?.map((brigade) => mapperBrigades(brigade)) ?? [];
+
+    return brigades;
+
+  }
+)
+
+export const brigadesSortArr = createSelector(
+
+  brigadesMapper,
+
+  (result): Brigade[] => {
+
+    const brigadesSortArr = [...(result ?? [])].sort((a,b) => a.number_brigade - b.number_brigade);
+
+    return brigadesSortArr;
+
+  }
+
+)
 
 export const brigadesMap = createSelector(
   getBrigadeApi.endpoints.getBrigades.select(),

@@ -9,7 +9,7 @@ import { brigadesMap } from "../../../entities/brigades/model/selectors/brigades
 import { shiftMap } from "../../../entities/shifts/model/selectors/shifts";
 import type { SortShift } from "../../../entities/shifts/types/shifts.dto";
 import type { BrigadesDto } from "../../../entities/brigades/types/brigades.dto";
-import type { PersonsDto } from "../../../entities/persons/types/persons.dto";
+import type { Persons } from "../../../entities/persons/types/persons.dto";
 import type { RootState } from "../../../app/store/store";
 import { CalendarAdmin } from "../../../widgets/calendar_admin/ui/CalendarAdmin";
 import { BrigadeDropdown } from "../../../widgets/brigade-dropdown/ui/BrigadeDropdown";
@@ -34,7 +34,7 @@ export function AdminHomePage() {
     const dateStore: string = useSelector((state: RootState) => state.date.day);
  
     // люди где они уже отсортированы кто в какой бригаде 
-    const personsMapApp = useSelector(personsMap) as Map<string, PersonsDto[]>;
+    const personsMapApp = useSelector(personsMap) as Map<string, Persons[]>;
 
     // бригады какие вообще есть
     const brigadesApp = useSelector(brigadesMap) as Map<string, BrigadesDto>;

@@ -67,37 +67,42 @@ export function MainLayout({role}: Props) {
 
     <div className={styles["mainLayout"]}>
 
-      {!isScheduleChange && (
+      
 
-        <header
-          ref={heightHeaderRef} 
-          className={styles["mainLayout__header"]}
-        >
-
-          <button
-            onClick={() => changeMonth(-1)}
-            aria-label="Предыдущий месяц"
-            type="button"
+      {userChange === true || isScheduleChange
+        ? null
+        : <header
+            ref={heightHeaderRef} 
+            className={styles["mainLayout__header"]}
           >
-            <ArrowBigLeft aria-hidden="true"/>
-          </button>
 
-          <span
-            className={styles["mainLayout__header__title"]}
-          >
-            {monthToUpperCase}
-          </span>
+            <button
+              className={styles["mainLayout__headerButton"]}
+              onClick={() => changeMonth(-1)}
+              aria-label="Предыдущий месяц"
+              type="button"
+            >
+              <ArrowBigLeft aria-hidden="true"/>
+            </button>
 
-          <button 
-            onClick={() => changeMonth(1)}
-            aria-label="Следующий месяц"
-            type="button"
-          >
-            <ArrowBigRight aria-hidden="true"/>
-          </button>        
+            <span
+              className={styles["mainLayout__headerTitle"]}
+            >
+              {monthToUpperCase}
+            </span>
 
-        </header>
-      )}
+            <button 
+              className={styles["mainLayout__headerButton"]}
+              onClick={() => changeMonth(1)}
+              aria-label="Следующий месяц"
+              type="button"
+            >
+              <ArrowBigRight aria-hidden="true"/>
+            </button>        
+
+          </header>
+      }
+    
       
       <Outlet />
       
@@ -108,22 +113,33 @@ export function MainLayout({role}: Props) {
           aria-label="Нижняя навигация"
         >
 
-          <ul className={styles["mainLayout__bottomBar__ul"]}>
+          <ul className={styles["mainLayout__navigateList"]}>
 
             <li
-              className={styles["mainLayout__bottomBar__ul__li"]}
+              className={`
+                ${styles["mainLayout__navigateItem"]}
+                ${isCalendar && styles["mainLayout__navigateItem--active"]}  
+              `}
             >
 
               <Link
                 to="/"
-                className={styles["mainLayout__bottomBar__ul__li__bottomIcone"]}
+                className={`
+                  ${styles["mainLayout__link"]}
+                  ${isCalendar && styles["mainLayout__link--active"]}  
+                `}
                 aria-label="Календарь"
                 aria-current={isCalendar ? "page" : undefined}
+                
               >
 
                 <CalendarCheck
-                  className={isCalendar ? styles["mainLayout__bottomBar__ul__li__bottomIcone__active"] : ""}
+                  className={isCalendar 
+                    ? styles["mainLayout__icone"] 
+                    : ""
+                  }
                   aria-hidden="true"
+                  
                 />
 
               </Link>
@@ -132,18 +148,27 @@ export function MainLayout({role}: Props) {
 
             {role === 'admin' && (
               <li
-                className={styles["mainLayout__bottomBar__ul__li"]}
+                className={`
+                  ${styles["mainLayout__navigateItem"]}
+                  ${isScheduleChange && styles["mainLayout__navigateItem--active"]}  
+                `}
               >
 
                 <Link 
                   to="/scheduleChangePage"
-                  className={styles["mainLayout__bottomBar__ul__li__bottomIcone"]}
+                  className={`
+                    ${styles["mainLayout__link"]}
+                    ${isScheduleChange && styles["mainLayout__link--active"]}  
+                  `}
                   aria-label="Изменить расписание"
                   aria-current={isScheduleChange ? "page" : undefined}
                 >
 
                   <Highlighter
-                    className={isScheduleChange ? styles["mainLayout__bottomBar__ul__li__bottomIcone__active"] : ""}
+                    className={isCalendar 
+                      ? styles["mainLayout__icone"] 
+                      : ""
+                    } 
                     aria-hidden="true"
                   />
 
@@ -152,40 +177,30 @@ export function MainLayout({role}: Props) {
               </li>
             )}
 
-            {role === 'admin' && (
-              <li
-                className={styles["mainLayout__bottomBar__ul__li"]}
-              >
-
-                <Link
-                  to="/createVacation"
-                  className={styles["mainLayout__bottomBar__ul__li__bottomIcone"]}
-                  aria-label="Составить график расписаний"
-                  aria-current={isVacation ? "page" : undefined}
-                >
-
-                  <AlignVerticalJustifyStartIcon
-                    className={isVacation ? styles["mainLayout__bottomBar__ul__li__bottomIcone__active"] : ""}
-                    aria-hidden="true"
-                  />
-
-                </Link>
-              </li>
-            )}
+            
 
             <li
-              className={styles["mainLayout__bottomBar__ul__li"]}
+              className={`
+                ${styles["mainLayout__navigateItem"]}
+                ${isProfile && styles["mainLayout__navigateItem--active"]}  
+              `}
             >
 
               <Link
                 to="/profile"
-                className={styles["mainLayout__bottomBar__ul__li__bottomIcone"]}
+                className={`
+                  ${styles["mainLayout__link"]}
+                  ${isProfile && styles["mainLayout__link--active"]}  
+                `}
                 aria-label="Профиль"
                 aria-current={isProfile ? "page" : undefined}
               >
 
                 <UserPen
-                  className={isProfile ? styles["mainLayout__bottomBar__ul__li__bottomIcone__active"] : ""}
+                  className={isCalendar 
+                    ? styles["mainLayout__icone"] 
+                    : ""
+                  }
                   aria-hidden="true"
                 />
 
@@ -193,19 +208,31 @@ export function MainLayout({role}: Props) {
 
             </li>
 
-            <li>
+            <li
+              className={`
+                ${styles["mainLayout__navigateItem"]}
+                ${userChange && styles["mainLayout__navigateItem--active"]}  
+              `}
+            >
 
               <Link
-                to="/userChange"
-                className={styles["mainLayout__bottomBar__ul__li__bottomIcone"]}
+                to="/profile"
+                className={`
+                  ${styles["mainLayout__link"]}
+                  ${userChange && styles["mainLayout__link--active"]}  
+                `}
                 aria-label="Профиль"
                 aria-current={userChange ? "page" : undefined}
               >
 
                 <UserPen
-                  className={userChange ? styles["mainLayout__bottomBar__ul__li__bottomIcone__active"] : ""}
+                  className={userChange 
+                    ? styles["mainLayout__icone"] 
+                    : ""
+                  }
                   aria-hidden="true"
                 />
+
               </Link>
 
             </li>

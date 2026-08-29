@@ -1,26 +1,25 @@
 import { useEffect, useState } from 'react';
 import styles from './PersonDropdownItem.module.scss';
 import { ArrowRightLeft, Plus, Search } from "lucide-react";
-import type { PersonsDto } from '../../../entities/persons/types/persons.dto';
-
-interface PersonStatus {
-  redAlarm: string[];
-  yellowAlarm: string[];
-  birthdayStatus: string[];
-}
-
-type PersonDtoWithStatus = PersonsDto & PersonStatus;
+import { useNavigate } from 'react-router-dom';
+import type { BrigadesDto } from '../../../entities/brigades/types/brigades.dto';
+import type { SortShift } from '../../../entities/shifts/types/shifts.dto';
+import type { PersonsWithStatus } from '../../../entities/persons/types/persons.dto';
 
 interface Props {
-  person?: PersonDtoWithStatus;
+  person?: PersonsWithStatus;
   isFutureDate?: boolean;
+  brigadeName?: BrigadesDto | undefined;
+  shift?: SortShift;
 }
 
-export function PersonDropdownItem ({person, isFutureDate}:Props) {
+export function PersonDropdownItem ({person, isFutureDate, brigadeName, shift}:Props) {
+
+    const navigate = useNavigate();
 
     const [currentProblem, setCurrentProblem] = useState<number>(0);
 
-    if(!person){
+    if(!person || !brigadeName || !shift){
 
         return (
             
@@ -58,7 +57,7 @@ export function PersonDropdownItem ({person, isFutureDate}:Props) {
         )
     }
 
-    const arrProblem = [
+    const arrProblem: string[] = [
         ...person.redAlarm,
         ...person.yellowAlarm,
     ];
@@ -113,35 +112,47 @@ export function PersonDropdownItem ({person, isFutureDate}:Props) {
         
             </div>
 
-            {arrProblem.length > 0 && (
-                <div>
-                    <span
-                        className={`
-                            ${styles["personDropdownItem__alarmStatus"]}
-                            ${["Отпуск", "Больничный", "Обучение"].includes(arrProblem[currentProblem])
-                                ? styles["personDropdownItem__alarmStatus--red"]
-                                : ["Скоро отпуск", "Скоро обучение"].includes(arrProblem[currentProblem])
-                                    ? styles["personDropdownItem__alarmStatus--yellow"]
-                                    : arrProblem[currentProblem] === "ДР"
-                                        ? styles["personDropdownItem__alarmStatus--birthday"]
-                                        : ''
-                            }    
-                        `}
-
+            {arrProblem.length > 0 
+                ? (
+                    <div
+                        className={styles["personDropdownItem__alarmBlock"]}
                     >
-                        {arrProblem[currentProblem]}
-                    </span>
-
-                    {problemsCount && (
                         <span
-                            className={styles["personDropdownItem__textName"]}
-                        >
-                            ({arrProblem.length})
-                        </span>
-                    )}
-                </div>
+                            className={`
+                                ${styles["personDropdownItem__alarmStatus"]}
+                                ${["Отпуск", "Больничный", "Обучение"].includes(arrProblem[currentProblem])
+                                    ? styles["personDropdownItem__alarmStatus--red"]
+                                    : ["Скоро отпуск", "Скоро обучение"].includes(arrProblem[currentProblem])
+                                        ? styles["personDropdownItem__alarmStatus--yellow"]
+                                        : arrProblem[currentProblem] === "ДР"
+                                            ? styles["personDropdownItem__alarmStatus--birthday"]
+                                            : ''
+                                }    
+                            `}
 
-            )}
+                        >
+                            {arrProblem[currentProblem]}
+                        </span>
+
+                        {problemsCount && (
+                            <span
+                                className={styles["personDropdownItem__textName"]}
+                            >
+                                ({arrProblem.length})
+                            </span>
+                        )}
+                    </div>
+                )
+                : (
+                    <div
+                        className={styles["personDropdownItem__alarmBlock"]}
+                    >
+
+                    </div>
+                )
+                
+
+            }
 
             <div className={styles["personDropdownItem__buttons"]}>
 
@@ -149,6 +160,15 @@ export function PersonDropdownItem ({person, isFutureDate}:Props) {
                     className={styles["personDropdownItem__button"]}
                     type="button"
                     aria-label={`Заменить ${person.name}`}
+                    onClick={() => navigate('/userChange', {
+                        state: {
+                            person,
+                            brigadeName,
+                            shift,
+                            arrProblem
+                        },
+                    })}
+                    disabled={isFutureDate === false}
                 >
                     
                     <ArrowRightLeft 
@@ -162,6 +182,7 @@ export function PersonDropdownItem ({person, isFutureDate}:Props) {
                     className={styles["personDropdownItem__button"]}
                     type="button"
                     aria-label={`Узнать информацию про ${person.name}`}
+                    disabled={isFutureDate === false}
                 >
                     <Search 
                         size={16}

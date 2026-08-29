@@ -1,13 +1,13 @@
-import type { PersonsDto } from "../../../../entities/persons/types/persons.dto";
-import type { SortShift } from "../../../../entities/shifts/types/shifts.dto";
-import type { DayItem } from "../types";
+import type { Persons } from "../../../entities/persons/types/persons.dto";
+import type { SortShift } from "../../../entities/shifts/types/shifts.dto";
+import type { DayItem } from "./types";
 
 interface Props {
     year: number,
     month: number,
     daysMonth: number,
     shiftsMapProps: Map<string, SortShift[]>,
-    personsMapProps: Map<string, PersonsDto[]>,
+    personsMapProps: Map<string, Persons[]>,
     stringRealDateToday: string,
 }
 
@@ -124,4 +124,4 @@ export function generateCalendarDays ({
         };
     });
 
-}
+} 

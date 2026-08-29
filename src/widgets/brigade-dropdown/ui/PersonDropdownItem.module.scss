@@ -2,22 +2,31 @@
 
 .personDropdownItem {
     display: flex;
-    justify-content: space-between;
-    padding-right: rem(5);
-    border-bottom: rem(1) solid var(--borderBottomBrigadeDropdown);
+    gap: rem(10);
+
+    width: 100%;
+
+    border-bottom: rem(1) solid var(--black);
+
 }
 
 .personDropdownItem__personInfo {
     display: flex;
     gap: rem(10);
+
+    width: 40%;
 }
 
 .personDropdownItem__textName {
-    color: var(--textWhite);
+    color: var(--white);
 
     &--gray {
-        color: var(--colorTextPersonDropdownItem);
+        color: var(--black);
     }
+}
+
+.personDropdownItem__alarmBlock {
+    width: 40%;
 }
 
 .personDropdownItem__textNameAlarm {
@@ -26,7 +35,7 @@
 
 .personDropdownItem__alarmStatus {
     color: var(--textWhite);
-    margin-right: rem(10);
+    
 
     &--red {
         color: var(--redAlarm);
@@ -45,13 +54,23 @@
 .personDropdownItem__buttons {
     display: flex;
     gap: rem(10);
+
+    width: 20%;
 }
 
 .personDropdownItem__button {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: var(--thirdColor);
+
+    flex: 1;
+
+    color: var(--black);
+    background-color: var(--white);
+
+    border-radius: rem(10);
+    border-top-left-radius: 0;
+    border-bottom-right-radius: 0;
 
     &:focus-visible {
         outline: 1px solid var(--textFocusVisible);

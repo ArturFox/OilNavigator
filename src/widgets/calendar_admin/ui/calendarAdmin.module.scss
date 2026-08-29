@@ -2,8 +2,10 @@
 
 .calendar {
     list-style: none;
+
     display: flex;
     gap: rem(10);
+
     overflow: scroll;
     scrollbar-width: none;
 }
@@ -12,31 +14,34 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    
     flex: 0 0 rem(40);
 }
 
 .calendar__dayOfWeek {
-    color: var(--textGray);
+    color: var(--white99);
 }
 
 .calendar__button {
     display: flex;
     flex-direction: column;
     align-items: center;
+
     width: 100%;
+
     border-radius: rem(10);
 
     &--todaySelected {
-        background-color: var(--secondColor);
+        background-color: var(--blue99);
     }
 
     &--todayNotSelected {
-        background-color: var(--calendarTodayDat);
+        background-color: var(--white99);
     }
 }
 
 .calendar__day {
-    color: var(--textWhite);
+    color: var(--white);
 }
 
 .calendar__exclamation {
@@ -54,12 +59,13 @@
 
     &--blink {
         opacity: 1;
-        animation: blink 2s infinite;
-    }
-}
 
-@keyframes blink {
-    0% { color: var(--redAlarm); }
-    50% { color: var(--yellowAlarm); }
-    100% { color: var(--redAlarm); }
+        animation: blink 2s infinite;
+
+        @keyframes blink {
+            0% { color: var(--redAlarm); }
+            50% { color: var(--yellowAlarm); }
+            100% { color: var(--redAlarm); }
+        }
+    }
 }

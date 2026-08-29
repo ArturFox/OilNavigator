@@ -8,26 +8,32 @@
 .personCard__header {
     display: flex;
     justify-content: space-between;
+
     padding-bottom: rem(5);
-    border-bottom: rem(1) solid var(--borderBottomBrigadeDropdown);
+
+    border-bottom: rem(3) solid var(--black);
 }
 
 .personCard__mainInfo {
-    flex: 1;
     display: flex;
     gap: rem(10);
+
+    width: 80%;
 }
 
 .personCard__icon {
     display: flex;
     justify-content: center;
     align-items: center;
+
     flex: 0 0 rem(55);
-    border-radius: rem(10);
-    background-color: var(--thirdColor);
+
+    border-radius: rem(15);
+
+    background-color: var(--black);
 
     &--gray {
-        background-color: var(--bgIconPersonCard);
+        background-color: var(--black);
     }
 
 }
@@ -64,7 +70,7 @@
     }
 
      &--gray {
-        color: var(--colorTextPersonCard);
+        color: var(--white99);
     }
 }
 
@@ -76,10 +82,11 @@
 
 .personCard__brigadeName {
     display: inline-flex;
-    color: var(--textWhite);
+
+    color: var(--white);
 
     &--gray {
-        color: var(--colorIconPersonCard);
+        color: var(--black);
     }
 }
 
@@ -116,26 +123,17 @@
     }
 
     &--gray {
-        color: var(--colorTextPersonCard);
-    }
-}
-
-.personCard__arrowDownWideNarrow {
-    display: flex;
-    align-items: center;
-    color: var(--textWhite);
-    
-    &--gray {
-        color: var(--colorTextPersonCard);
+        color: var(--white);
     }
 }
 
 .personCard__russianDate {
     display: flex;
     justify-content: space-between;
-    color: var(--textWhite);
+
+    color: var(--white);
 
     &--gray {
-        color: var(--colorTextPersonCard);
+        color: var(--black);
     }
 }

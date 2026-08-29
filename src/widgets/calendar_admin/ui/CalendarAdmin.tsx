@@ -2,15 +2,15 @@ import { OctagonAlert } from 'lucide-react'
 import { useDispatch } from 'react-redux';
 import { useEffect, useMemo, useRef, useState } from 'react';
 import type { DayItem } from '../model/types';
-import { generateCalendarDays } from '../model/lib/generateCalendarDays';
 import styles from '../ui/calendarAdmin.module.scss';
-import type { PersonsDto } from '../../../entities/persons/types/persons.dto';
+import type { Persons } from '../../../entities/persons/types/persons.dto';
 import type { SortShift } from '../../../entities/shifts/types/shifts.dto';
 import { changeDay } from '../../../app/store/store';
+import { generateCalendarDays } from '../model/generateCalendarDays';
 
 
 interface peopleMapeProps {
-    personsMapProps: Map<string, PersonsDto[]>
+    personsMapProps: Map<string, Persons[]>
     shiftsMapProps: Map<string, SortShift[]>
     dateStore: string;
     stringRealDateToday: string;

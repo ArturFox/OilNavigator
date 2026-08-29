@@ -131,20 +131,6 @@ export function PersonCard ({
 
                 </div>
 
-                <div 
-                    className={`
-                        ${styles["personCard__arrowDownWideNarrow"]}
-                        ${!isFutureDate && styles["personCard__arrowDownWideNarrow--gray"]}    
-                    `}
-                    aria-hidden="true"
-                >
-
-                    <ArrowDownWideNarrow 
-                        style={{ transform: open ? "rotate(180deg)" : "rotate(0deg)", transition: "0.3s" }}
-                    />
-
-                </div>
-
             </div>
 
             <div className={`

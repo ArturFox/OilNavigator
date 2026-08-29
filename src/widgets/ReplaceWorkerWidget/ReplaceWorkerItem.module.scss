@@ -1,0 +1,169 @@
+@use '../../styles/helpers/' as *;
+
+//background-color: #AC5045; красный 
+//background-color: #658761; зеленый
+//background-color: #C59B27; желтый
+// color: #D6D5D0; белый
+// color: #23211E; черный
+//background-color: #4A6FA5; синий активен
+//background-color: #7093CD; синий светлый мерцание
+// #23211E серый 
+.replaceWorkerItem {
+  position: relative;
+
+  height: rem(100);
+  width: 100%;
+
+  list-style: none;
+  background-color: #658761;
+  border-radius: rem(10);
+
+  
+
+  &--redAlarm {
+    background-color: #AC5045;
+  }
+}
+
+.replaceWorkerItem__info {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: rem(55);
+  width: calc(100% - 23%);
+  padding: rem(10);
+}
+
+.replaceWorkerItem__info-name {
+  color: #D6D5D0;
+  font-size: rem(20);
+  white-space: nowrap;
+  
+}
+
+.replaceWorkerItem__status {
+  display: flex;
+  flex-direction: column;
+  margin-left: 23%;
+  width: 77%;
+  padding-right: rem(10);
+  padding-left: rem(10);
+}
+
+.replaceWorkerItem__jobTitle {
+  font-size: rem(16);
+  white-space: nowrap;
+  overflow: hidden;
+  color: #23211E;
+}
+
+.replaceWorkerItem__problem {
+  font-size: rem(16);
+  white-space: nowrap;
+  overflow: hidden;
+  color: #23211E;
+}
+
+.replaceWorkerItem__buttonSelect {
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  background-color: #23211E;
+
+  width: 20%;
+  height: rem(30);
+
+  border-radius: rem(10);
+  border-top-left-radius: 0;
+  border-bottom-right-radius: 0;
+
+  box-shadow: 0 0 0 rem(10) #23211E;
+
+  z-index: 99;
+
+}
+
+.replaceWorkerItem__buttonPress {
+  width: 100%;
+  height: rem(30);
+  
+  overflow: hidden;
+
+  font-size: rem(14);
+
+  color: #23211E;
+  background-color: #D6D5D0;
+
+  border-radius: rem(10);
+  border-top-left-radius: 0;
+  border-bottom-right-radius: 0;
+
+  transition: transform 0.3s ease;
+
+  &:active {
+    transform: scale(0.90);
+  }
+
+  &--selected {
+    animation: pressed 1.5s infinite ease;
+
+    @keyframes pressed {
+      0% {
+        background-color: #4A6FA5;
+      }
+
+      50% {
+        background-color: #7093CD;
+      }
+
+      100% {
+        background-color: #4A6FA5;
+      }
+    }
+    
+  }
+
+}
+
+.replaceWorkerItem__buttonMore {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+
+  background-color: #23211E;
+
+  width: 20%;
+  height: rem(30);
+
+  border-radius: rem(10);
+  border-bottom-right-radius: 0;
+  border-top-left-radius: 0;
+
+  box-shadow: 0 0 0 rem(10) #23211E;
+
+  z-index: 99;
+}
+
+.replaceWorkerItem__button2 {
+  width: 100%;
+  height: rem(30);
+
+  overflow: hidden;
+
+  font-size: rem(12);
+
+  color: #23211E;
+  background-color: #D6D5D0;
+
+  border-radius: rem(10);
+  border-top-left-radius: 0;
+  border-bottom-right-radius: 0;
+
+  transition: transform 0.3s ease;
+
+  &:active {
+    transform: scale(0.90);
+  }
+
+}
