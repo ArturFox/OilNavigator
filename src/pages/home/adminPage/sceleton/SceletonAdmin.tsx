@@ -65,7 +65,11 @@ export function SceletonAdmin () {
                     <button className={styles["sceleton__buttonChangeShift"]}>
 
                         <span className={styles["sceleton__buttonText"]}>
-                            Все бригады
+
+                            <span className={styles["sceleton__text"]}>
+                                Все бригады
+                            </span>
+
                         </span>
                     </button>
     
@@ -89,7 +93,6 @@ export function SceletonAdmin () {
 
                                                 <div className={styles["sceleton__viewTopIcone"]}>
 
-                                                    <div className={styles["sceleton__viewTopIcone"]}/>
 
                                                 </div>
 

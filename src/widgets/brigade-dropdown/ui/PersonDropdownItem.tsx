@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import type { BrigadesDto } from '../../../entities/brigades/types/brigades.dto';
 import type { SortShift } from '../../../entities/shifts/types/shifts.dto';
 import type { PersonsWithStatus } from '../../../entities/persons/types/persons.dto';
+import { ModalCenterWindow } from '../../../shared/ui/Modal/ModalCenterWindow/ModalCenterWindow';
 
 interface Props {
   person?: PersonsWithStatus;
@@ -13,11 +14,19 @@ interface Props {
   shift?: SortShift;
 }
 
-export function PersonDropdownItem ({person, isFutureDate, brigadeName, shift}:Props) {
+export function PersonDropdownItem (
+    {
+        person, 
+        isFutureDate, 
+        brigadeName, 
+        shift
+    }:Props
+) {
 
     const navigate = useNavigate();
 
-    const [currentProblem, setCurrentProblem] = useState<number>(0);
+    const [currentProblem, onCurrentProblem] = useState<number>(0);
+    const [modalCenter, onModalCenter] = useState<boolean>(false);
 
     if(!person || !brigadeName || !shift){
 
@@ -74,7 +83,7 @@ export function PersonDropdownItem ({person, isFutureDate, brigadeName, shift}:P
 
         const interval = setInterval(() => {
 
-            setCurrentProblem((prev) => (prev + 1) % arrProblem.length);
+            onCurrentProblem((prev) => (prev + 1) % arrProblem.length);
         
         }, 1500);
 
@@ -182,6 +191,7 @@ export function PersonDropdownItem ({person, isFutureDate, brigadeName, shift}:P
                     className={styles["personDropdownItem__button"]}
                     type="button"
                     aria-label={`Узнать информацию про ${person.name}`}
+                    onClick={() => onModalCenter(!modalCenter)}
                     disabled={isFutureDate === false}
                 >
                     <Search 
@@ -191,6 +201,12 @@ export function PersonDropdownItem ({person, isFutureDate, brigadeName, shift}:P
                 </button>
 
             </div>
+
+            <ModalCenterWindow
+                person={person}
+                modalCenter={modalCenter}
+                onModalCenter={onModalCenter}
+            />
 
         </li>
         

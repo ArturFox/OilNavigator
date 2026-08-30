@@ -2,7 +2,7 @@ import { Menu, Search } from 'lucide-react';
 import styles from './ReplaceWorker.module.scss';
 import { useSelector } from 'react-redux';
 import { useGetPesonsQuery } from '../../../entities/persons/api/getPersons';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import type { PersonsWithStatus } from '../../../entities/persons/types/persons.dto';
 import { ReplaceWorkerProcess } from '../../../widgets/ReplaceWorkerWidget/ReplaceWorkerProcess';
 import { ReplaceWorkerItem } from '../../../widgets/ReplaceWorkerWidget/ReplaceWorkerItem';
@@ -58,8 +58,8 @@ export function ReplaseWorker () {
     // положили этого человека в state: {} от navigate
     // и вытаскиваем эти данные 
     const location = useLocation();
-    const person = location.state?.person as PersonsWithStatus;
-    const arrProblem = location.state.arrProblem as string[];
+    const personToReplace = location.state?.person as PersonsWithStatus;
+    const arrProblemPersonToReplace = location.state.arrProblem as string[];
     const brigadeName = location.state.brigadeName as BrigadesDto;
     const shift = location.state.shift as SortShift;
 
@@ -137,8 +137,8 @@ export function ReplaseWorker () {
             
             <ReplaceWorkerProcess
                 selectedPerson={selectedPerson}
-                person={person}
-                arrProblem={arrProblem}
+                person={personToReplace}
+                arrProblem={arrProblemPersonToReplace}
                 brigadeName={brigadeName}
                 shift={shift}
             />
@@ -254,6 +254,7 @@ export function ReplaseWorker () {
                         <ReplaceWorkerItem
                             key={person.id}
                             person={person}
+                            personToReplace={personToReplace}
                             selected={selected}
                             onSelected={onSelected}
                             onSelectedPerson={onSelectedPerson}

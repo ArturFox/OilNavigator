@@ -21,8 +21,9 @@
     flex-direction: column;
     align-items: center;
     flex: 0 0 rem(40);
-    background-color: var(--secondColor);
+    background-color: var(--blue99);
     border-radius: rem(5);
+    animation: blinkCard 3s infinite;
 }
 
 .calendar__dayOfWeek {
@@ -54,16 +55,20 @@
 .sceleton__buttonChangeShift {
     border-radius: rem(10);
     padding: rem(5);
-    background-color: var(--secondColor);
+    background-color: var(--blue99);
+    
 }
 
 .sceleton__buttonText {
-    background-color: var(--thirdColor);
     border-radius: rem(5);
+    animation: blinkCard 3s infinite;
 }
 
-
-
+.sceleton__text {
+    color: transparent;
+    animation: blink 3s infinite;
+    border-radius: rem(5);
+}
 
 .sceleton__dropdown {
     display: flex;
@@ -91,13 +96,14 @@
     display: flex;
     justify-content: space-between;
     padding-bottom: rem(5);
-    border-bottom: rem(1) solid black;
+    border-bottom: rem(3) solid var(--black);
 }
 
 .sceleton__viewFirstBlock {
     display: flex;
     gap: rem(10);
     min-width: 0;
+    
 }
 
 .sceleton__viewTopIcone {
@@ -151,13 +157,13 @@
 }
 
 @keyframes blinkCard {
-    0% {background-color: #393101;}
-    50% {background-color: #393101;}
-    100% {background-color: #393101;}
+    0% {background-color: var(--blue99);}
+    50% {background-color: var(--blue66);}
+    100% {background-color: var(--blue99);}
 }
 
 @keyframes blink {
-    0% {background-color: gray;}
-    50% {background-color: gray;}
-    100% {background-color: gray;}
+    0% {background-color: var(--white99);}
+    50% {background-color: var(--white66);}
+    100% {background-color: var(--white99);}
 }

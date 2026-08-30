@@ -2,6 +2,8 @@ import styles from './ReplaceWorkerProcess.module.scss';
 import type { Persons, PersonsWithStatus } from '../../entities/persons/types/persons.dto';
 import type { BrigadesDto } from '../../entities/brigades/types/brigades.dto';
 import type { SortShift } from '../../entities/shifts/types/shifts.dto';
+import { ModalCenterWindow } from '../../shared/ui/Modal/ModalCenterWindow/ModalCenterWindow';
+import { useState } from 'react';
 
 interface Props {
     selectedPerson: Persons | null;
@@ -11,8 +13,17 @@ interface Props {
     shift: SortShift;
 }
 
-export function ReplaceWorkerProcess ({selectedPerson, person, arrProblem, brigadeName, shift}:Props) {
+export function ReplaceWorkerProcess (
+    {
+        selectedPerson, 
+        person, 
+        arrProblem, 
+        brigadeName, 
+        shift,
+    }:Props
+) {
 
+    const [modalCenter, onModalCenter] = useState<boolean>(false);
 
     return(
 
@@ -44,14 +55,13 @@ export function ReplaceWorkerProcess ({selectedPerson, person, arrProblem, briga
                     className={styles["replaceWorkerProcess__leftPerson__blockPersonInfo"]}
                 >
 
-                    <div
-                        className={styles["replaceWorkerProcess__leftPerson__blockSurnameName"]}
+                    <span
+                        className={styles["replaceWorkerProcess__leftPerson__surnameName"]}
                     >
 
-                        <span>{person.surname}</span>
-                        <span>{person.name}</span>
+                        {person.surname} {person.name}
 
-                    </div>
+                    </span>
 
                     <span>
                         {person.other_surname}
@@ -61,7 +71,7 @@ export function ReplaceWorkerProcess ({selectedPerson, person, arrProblem, briga
 
                 
                 <span
-                    className={styles["replaceWorkerProcess__leftPerson__jobTitleBlock"]}
+                    className={styles["replaceWorkerProcess__leftPerson__blockJobTitle"]}
                 >
                     {person.job_title} / {person.block}
                 </span>
@@ -96,6 +106,7 @@ export function ReplaceWorkerProcess ({selectedPerson, person, arrProblem, briga
                     className={`
                         ${styles["replaceWorkerProcess__leftPerson__acceptButton"]}
                     `}
+                    onClick={() => onModalCenter(!modalCenter)}
                 >
                     Подробнее
                 </button>
@@ -120,14 +131,13 @@ export function ReplaceWorkerProcess ({selectedPerson, person, arrProblem, briga
                                 className={styles["replaceWorkerProcess__rightPerson__blockPersonInfo"]}
                             >
 
-                                <div
-                                    className={styles["replaceWorkerProcess__rightPerson__blockSurnameName"]}
+                                <span
+                                    className={styles["replaceWorkerProcess__rightPerson__surnameName"]}
                                 >
 
-                                    <span>{selectedPerson.surname}</span>
-                                    <span>{selectedPerson.name}</span>
+                                    {selectedPerson.surname} {selectedPerson.name}
 
-                                </div>
+                                </span>
 
                                 <span
                                     className={styles["replaceWorkerProcess__rightPerson__otherSurname"]}
@@ -138,11 +148,17 @@ export function ReplaceWorkerProcess ({selectedPerson, person, arrProblem, briga
                             </div>
 
                 
-                            <span
-                                className={styles["replaceWorkerProcess__rightPerson__jobTitleBlock"]}
+                            <div
+                                className={styles["replaceWorkerProcess__rightPerson__blockJobTitle"]}
                             >
-                                {selectedPerson.job_title} / {selectedPerson.block}
-                            </span>
+                                
+                                <span
+                                    className={styles["replaceWorkerProcess__rightPerson__blockJobTitleText"]}
+                                >
+                                    {selectedPerson.job_title} / {selectedPerson.block}
+                                </span>
+
+                            </div>
                 
 
                             <div
@@ -164,7 +180,9 @@ export function ReplaceWorkerProcess ({selectedPerson, person, arrProblem, briga
                                             </span>
                                         ))
                                     ) : (
-                                        <span>нету</span>
+                                        <span>
+                                            нету
+                                        </span>
                                     )
                                 }
 
@@ -187,6 +205,13 @@ export function ReplaceWorkerProcess ({selectedPerson, person, arrProblem, briga
                 </button>
 
             </article>
+
+            <ModalCenterWindow
+                modalCenter={modalCenter}
+                onModalCenter={onModalCenter}
+                person={person}
+                arrProblem={arrProblem}
+            />
 
         </section>
     )
