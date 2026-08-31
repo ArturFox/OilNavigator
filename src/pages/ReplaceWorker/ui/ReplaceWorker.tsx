@@ -4,7 +4,6 @@ import { useSelector } from 'react-redux';
 import { useGetPesonsQuery } from '../../../entities/persons/api/getPersons';
 import { useState } from 'react';
 import type { PersonsWithStatus } from '../../../entities/persons/types/persons.dto';
-import { ReplaceWorkerProcess } from '../../../widgets/ReplaceWorkerWidget/ReplaceWorkerProcess';
 import { ReplaceWorkerItem } from '../../../widgets/ReplaceWorkerWidget/ReplaceWorkerItem';
 import { blockPerson, dischargePerson, jobTitlePerson, personsMapper } from '../../../entities/persons/model/selectors/persons';
 import { useLocation } from 'react-router-dom';
@@ -15,6 +14,7 @@ import type { RootState } from '../../../app/store/store';
 import { Modal } from '../../../shared/ui/Modal/Modal';
 import { brigadesSortArr } from '../../../entities/brigades/model/selectors/brigades';
 import { useGetBrigadesQuery } from '../../../entities/brigades/api/getBrigades';
+import { ReplaceWorkerProcess } from '../../../widgets/ReplaceWorkerWidget/ReplaceWorkerProcess/ReplaceWorkerProcess';
 
 export interface filterSelected {
     brigadesId: string[];
@@ -40,6 +40,7 @@ export function ReplaseWorker () {
     // нажать на день в календаре, где при нажатии сразу в dateStore кладется выбранный день
     // нажал на пользователя которого надо заменить и мы в этом окне с датой в которой надо кого поменять
     const dateStore: string = useSelector((state: RootState) => state.date.day);
+    const russianDate: string = `${dateStore.slice(8, 10)}-${dateStore.slice(5,7)}-${dateStore.slice(0,4)}`
     
     // только для визуального эффекта в widget ReplaceWorkerItem
     // при нажатии на item пользователя
@@ -104,7 +105,6 @@ export function ReplaseWorker () {
                 dischargeMatch
             );
 
-             
         }
 
         const searchWords = inputText
@@ -134,11 +134,28 @@ export function ReplaseWorker () {
         <main
             className={styles["userChange"]}
         >
+
+            <h4
+                className={styles["userChange__dateStore"]}
+            >
+                <span
+                    className={styles["userChange__dateStore--text"]}
+                >
+                    Замена сотрудника на:
+                </span>
+
+                <span
+                    className={styles["userChange__dateStore--date"]}
+                >
+                    {russianDate}
+                </span>
+
+            </h4>
             
             <ReplaceWorkerProcess
                 selectedPerson={selectedPerson}
-                person={personToReplace}
-                arrProblem={arrProblemPersonToReplace}
+                personToReplace={personToReplace}
+                arrProblemPersonToReplace={arrProblemPersonToReplace}
                 brigadeName={brigadeName}
                 shift={shift}
             />

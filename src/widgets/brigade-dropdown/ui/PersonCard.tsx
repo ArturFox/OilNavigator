@@ -5,7 +5,6 @@ import type { SortShift } from '../../../entities/shifts/types/shifts.dto';
 interface Props {
     hasRedAlarm: boolean;
     hasYellowAlarm: boolean;
-    open: boolean;
     shift: SortShift;
     brigadeName?: string;
     isFutureDate: boolean;
@@ -13,8 +12,7 @@ interface Props {
 
 export function PersonCard ({
     hasRedAlarm, 
-    hasYellowAlarm, 
-    open, 
+    hasYellowAlarm,  
     shift, 
     brigadeName,
     isFutureDate
@@ -134,12 +132,19 @@ export function PersonCard ({
             </div>
 
             <div className={`
-                    ${styles["personCard__russianDate"]}
-                    ${!isFutureDate && styles["personCard__russianDate--gray"]}
-                `}>
-                <span>{shift.russianDate}</span>
-                <span>{shift.startTime} - {shift.endTime}</span>
-             </div>
+                ${styles["personCard__russianDate"]}
+                ${!isFutureDate && styles["personCard__russianDate--gray"]}
+            `}>
+
+                <span>
+                    {shift.russianDate}
+                </span>
+
+                <span>
+                    {shift.startTime} - {shift.endTime}
+                </span>
+
+            </div>
 
         </div>
     )

@@ -7,6 +7,27 @@
     padding-bottom: rem(40);
 }
 
+.userChange__dateStore {
+    display: flex;
+    align-items: center;
+    gap: rem(5);
+    
+    flex-wrap: wrap;
+
+    &--text {
+
+        color: var(--white99);
+
+    }
+
+    &--date {
+
+        color: var(--blue);
+
+        white-space: nowrap;
+    }
+}
+
 .userChange__filters {
     display: flex;
     align-items: center;
@@ -25,7 +46,7 @@
 
     gap: rem(5);
 
-    background-color: #D6D5D0;
+    background-color: var(--white);
 
     border-radius: rem(10);
     border-top-left-radius: 0;
@@ -39,7 +60,7 @@
     display: flex;
     align-items: center;
     
-    color: #23211E;
+    color: var(--black);
 }
 
 .userChange__search-input {
@@ -72,8 +93,8 @@
 
     padding: rem(5);
 
-    color: #23211E;
-    background-color: #D6D5D0;
+    color: var(--black);
+    background-color: var(--white);
 
 }
 
@@ -81,11 +102,11 @@
     display: flex;
     align-items: center;
 
-    color: #D6D5D0;
+    color: var(--white);
 }
 
 .userChange__buttonFilter-text {
-    color: #D6D5D0;
+    color: var(--white);
 }
 
 .userChange__buttonsCategoryes {
@@ -116,9 +137,14 @@
     font-weight: 500;
 
     border-radius: rem(5);
-    color: #8E8C89;
-    background-color: #4A6FA566;
-    border: rem(2) solid #4A6FA5;
+
+    padding: rem(5);
+
+    color: var(--white99);
+
+    background-color: var(--blue66);
+
+    border: rem(2) solid var(--blue);
 }
 
 .userChange__peopleList {

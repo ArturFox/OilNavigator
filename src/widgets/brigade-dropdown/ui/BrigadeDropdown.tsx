@@ -99,7 +99,6 @@ export function BrigadeDropdown({people, shift, dateStore, brigadeProps, isFutur
                 <PersonCard
                     hasRedAlarm={hasRedAlarm}
                     hasYellowAlarm={hasYellowAlarm}
-                    open={open}
                     shift={shift}
                     brigadeName={brigadeProps?.name ?? 'Такой бригады нету'}
                     isFutureDate={isFutureDate}

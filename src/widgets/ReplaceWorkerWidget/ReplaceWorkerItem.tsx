@@ -104,7 +104,9 @@ export function ReplaceWorkerItem (
                                 personToReplace.he_can &&
                                 personToReplace.he_can?.length > 0
                             ) {
-                                blockSame = personToReplace.he_can.includes(block);
+                                let shortPersonToReplace = personToReplace.block.toLowerCase();
+                                let shortPerson = block.toLowerCase();
+                                blockSame = shortPersonToReplace === shortPerson;
                             } else {
                                 blockSame = false;
                             }

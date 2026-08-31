@@ -208,35 +208,6 @@ export function MainLayout({role}: Props) {
 
             </li>
 
-            <li
-              className={`
-                ${styles["mainLayout__navigateItem"]}
-                ${userChange && styles["mainLayout__navigateItem--active"]}  
-              `}
-            >
-
-              <Link
-                to="/profile"
-                className={`
-                  ${styles["mainLayout__link"]}
-                  ${userChange && styles["mainLayout__link--active"]}  
-                `}
-                aria-label="Профиль"
-                aria-current={userChange ? "page" : undefined}
-              >
-
-                <UserPen
-                  className={userChange 
-                    ? styles["mainLayout__icone"] 
-                    : ""
-                  }
-                  aria-hidden="true"
-                />
-
-              </Link>
-
-            </li>
-
           </ul>
 
         </nav>
