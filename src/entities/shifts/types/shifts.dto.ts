@@ -1,5 +1,7 @@
 //src/types/shifts.dto.ts
 
+import type { Persons } from "../../persons/types/persons.dto";
+
 export interface ShiftDto {
     id: string;
     brigade_id: string;
@@ -33,4 +35,6 @@ export interface SortShift {
 
     startTime: string | null, 
     endTime: string | null,
+
+    peopleOnThisDay: Persons[]
 }

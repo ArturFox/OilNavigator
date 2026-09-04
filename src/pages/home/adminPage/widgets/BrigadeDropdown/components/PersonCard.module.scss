@@ -1,0 +1,139 @@
+@use '../../../../../../styles/helpers/' as *;
+
+.personCard {
+    display: flex;
+    flex-direction: column;
+    gap: rem(20);
+}
+.personCard__header {
+    display: flex;
+    justify-content: space-between;
+
+    padding-bottom: rem(5);
+
+    border-bottom: rem(3) solid var(--black);
+}
+
+.personCard__mainInfo {
+    display: flex;
+    gap: rem(10);
+
+    width: 80%;
+}
+
+.personCard__icon {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    flex: 0 0 rem(55);
+
+    border-radius: rem(15);
+
+    background-color: var(--black);
+
+    &--gray {
+        background-color: var(--black);
+    }
+
+}
+
+.personCard__statusIcon {
+
+    &--mixed {
+
+        animation: colorChange 2s infinite;
+
+        @keyframes colorChange {
+            0% {
+                color: var(--redAlarm);
+            }
+            50% {
+                color: var(--yellowAlarm);
+            }
+            100% {
+                color: var(--redAlarm);
+            }
+        }
+    }
+
+    &--red {
+        color: var(--redAlarm);
+    }
+
+    &--yellow {
+        color: var(--yellowAlarm);
+    }
+
+    &--green {
+        color: var(--greenAlarm);
+    }
+
+     &--gray {
+        color: var(--white99);
+    }
+}
+
+.personCard__statusTextBlock {
+    display: flex;
+    flex-direction: column;
+    gap: rem(5);
+}
+
+.personCard__brigadeName {
+    display: inline-flex;
+
+    color: var(--white);
+
+    &--gray {
+        color: var(--black);
+    }
+}
+
+.personCard__textStatus {
+    display: inline-flex;
+
+    &--mixed {
+
+        animation: n 2s infinite;
+
+        @keyframes n {
+            0% {
+                color: var(--redAlarm);
+            }
+            50% {
+                color: var(--yellowAlarm);
+            }
+            100% {
+                color: var(--redAlarm);
+            }
+        }
+    }
+
+    &--red {
+        color: var(--redAlarm);
+    }
+
+    &--yellow {
+        color: var(--yellowAlarm);
+    }
+
+    &--green {
+        color: var(--greenAlarm);
+    }
+
+    &--gray {
+        color: var(--white);
+    }
+}
+
+.personCard__russianDate {
+    display: flex;
+    justify-content: space-between;
+
+    color: var(--white);
+
+    &--gray {
+        color: var(--black);
+    }
+}

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import styles from './adminHomePage.module.scss';
+import styles from './AdminHomePage.module.scss';
 import { useGetPesonsQuery } from "../../../entities/persons/api/getPersons";
 import { useGetBrigadesQuery } from "../../../entities/brigades/api/getBrigades";
 import { useGetShiftsQuery } from "../../../entities/shifts/api/getShifts";
@@ -11,9 +11,10 @@ import type { SortShift } from "../../../entities/shifts/types/shifts.dto";
 import type { BrigadesDto } from "../../../entities/brigades/types/brigades.dto";
 import type { Persons } from "../../../entities/persons/types/persons.dto";
 import type { RootState } from "../../../app/store/store";
-import { CalendarAdmin } from "../../../widgets/calendar_admin/ui/CalendarAdmin";
-import { BrigadeDropdown } from "../../../widgets/brigade-dropdown/ui/BrigadeDropdown";
 import { SceletonAdmin } from "./sceleton/SceletonAdmin";
+import { useGetPersonReplacementQuery } from "../../../entities/personReplacement/api/getPersonReplacement";
+import { BrigadeDropdown } from "./widgets/BrigadeDropdown/BrigadeDropdown";
+import { CalendarAdmin } from "./widgets/CalendarAdmin/CalendarAdmin";
 
 export function AdminHomePage() {
 
@@ -21,7 +22,8 @@ export function AdminHomePage() {
     const personsQuery = useGetPesonsQuery();
     const brigadesQuery = useGetBrigadesQuery();
     const shiftsQuery = useGetShiftsQuery();
-    
+    const personsReplacement = useGetPersonReplacementQuery();
+
     // состояние для открытия карточек бригад которые отдыхают
     const [flagArrslakers, setFlagArrslakers] = useState<boolean>(false);
 
@@ -41,7 +43,7 @@ export function AdminHomePage() {
 
     // расписание в нем алгоритм записывает по дням какая бригада
     // работает утром, вечером, ночью, отдыхает всё в одном дне 
-    const shiftsMapApp = useSelector(shiftMap) as Map<string, SortShift[]>;
+    const shiftsMapApp = useSelector(shiftMap);
 
     // вытащили расписание бригад в конкретный день
     // если пользователь нажал на две стрелки в файле "MainLayout" покажется на первое число
@@ -121,8 +123,7 @@ export function AdminHomePage() {
                         <BrigadeDropdown
                             key={s.id} 
                             shift={s} 
-                            dateStore={dateStore}
-                            people={personsMapApp.get(s.brigadeId) ?? []} 
+                            dateStore={dateStore} 
                             brigadeProps={brigadesApp.get(s.brigadeId)}
                             isFutureDate={isFutureDate}
                         />
@@ -143,7 +144,6 @@ export function AdminHomePage() {
                         <BrigadeDropdown
                             key={s.id}
                             shift={s}
-                            people={personsMapApp.get(s.brigadeId) ?? []}
                             dateStore={dateStore}
                             brigadeProps={brigadesApp.get(s.brigadeId)}
                             isFutureDate={isFutureDate}

@@ -1,0 +1,126 @@
+@use '../../../../styles/helpers/' as *;
+
+.replaceWorkerFilters {
+    display: flex;
+    flex-direction: column;
+    gap: rem(10);
+}
+
+.replaceWorkerFilters__form {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: rem(5);
+
+    margin-top: rem(10);
+}
+
+.replaceWorkerFilters__search {
+    display: flex;
+    align-items: center;
+
+    flex: 1;
+
+    gap: rem(5);
+
+    background-color: var(--white);
+
+    border-radius: rem(10);
+    border-top-left-radius: 0;
+    border-bottom-right-radius: 0;
+
+    padding: rem(5);
+
+}
+
+.replaceWorkerFilters__search-icon {
+    display: flex;
+    align-items: center;
+    
+    color: var(--black);
+}
+
+.replaceWorkerFilters__search-input {
+    width: 100%;
+
+    border-radius: rem(5);
+    border-top-left-radius: 0;
+    border-bottom-right-radius: 0;
+
+    background-color: inherit;
+    border: none;
+
+    &:focus {
+        outline: none;
+        
+    }
+
+}
+
+.replaceWorkerFilters__button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    gap: rem(5);
+
+    border-radius: rem(10);
+    border-top-left-radius: 0;
+    border-bottom-right-radius: 0;
+
+    padding: rem(5);
+
+    color: var(--black);
+    background-color: var(--white);
+
+}
+
+.replaceWorkerFilters__button-icon {
+    display: flex;
+    align-items: center;
+
+    color: var(--black);
+}
+
+.replaceWorkerFilters__button-text {
+    color: var(--black);
+}
+
+.replaceWorkerFilters__categories {
+    display: flex;
+
+    flex-wrap: wrap;
+
+
+    gap: rem(5);
+}
+
+.replaceWorkerFilters__categories-block {
+    display: flex;
+    gap: rem(5);
+}
+
+.replaceWorkerFilters__categories-button {
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    
+    min-height: 30px; 
+    min-width: 55px;
+
+    font-size: 14px;
+
+    font-weight: 500;
+
+    border-radius: rem(5);
+
+    padding: rem(5);
+
+    color: var(--white99);
+
+    background-color: var(--blue66);
+
+    border: rem(2) solid var(--blue);
+}

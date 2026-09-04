@@ -3,6 +3,7 @@ import { getShiftsApi } from '../../entities/shifts/api/getShifts';
 import { getPesonsApi } from '../../entities/persons/api/getPersons';
 import { getBrigadeApi } from '../../entities/brigades/api/getBrigades';
 import { getWalletsApi } from '../../entities/wallets/api/getWallets';
+import { getPersonReplacementApi } from '../../entities/personReplacement/api/getPersonReplacement';
 
 const today = new Date();
 const dateString: string = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
@@ -58,6 +59,7 @@ export const store = configureStore(
       [getPesonsApi.reducerPath]: getPesonsApi.reducer,
       [getBrigadeApi.reducerPath]: getBrigadeApi.reducer,
       [getWalletsApi.reducerPath]: getWalletsApi.reducer,
+      [getPersonReplacementApi.reducerPath]: getPersonReplacementApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware()
@@ -65,6 +67,7 @@ export const store = configureStore(
         .concat(getPesonsApi.middleware)
         .concat(getBrigadeApi.middleware)
         .concat(getWalletsApi.middleware)
+        .concat(getPersonReplacementApi.middleware)
   }
 )
 

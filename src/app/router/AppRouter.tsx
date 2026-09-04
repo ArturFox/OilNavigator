@@ -6,7 +6,7 @@ import { ProfilePage } from "../../pages/profile/ui/ProfilePage";
 import { SignPage } from "../../pages/signIn/SignPage";
 import { HomePage } from "../../pages/home/HomePage";
 import { ScheduleChangePage } from "../../pages/ScheduleChangePage/ScheduleChangePage";
-import { ReplaseWorker } from "../../pages/ReplaceWorker/ui/ReplaceWorker";
+import { ReplaseWorker } from "../../pages/ReplaceWorker/ReplaseWorker";
 
 interface Props {
 

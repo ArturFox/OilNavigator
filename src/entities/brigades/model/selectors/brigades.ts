@@ -38,10 +38,10 @@ export const brigadesMap = createSelector(
 
     const map = new Map<string, BrigadesDto>();
 
-    sortBrigades?.forEach((f) => {
+    sortBrigades?.forEach((b) => {
 
-      if(!map.has(f.id)){
-        map.set(f.id, f)
+      if(!map.has(b.id)){
+        map.set(b.id, b)
       }
 
     })

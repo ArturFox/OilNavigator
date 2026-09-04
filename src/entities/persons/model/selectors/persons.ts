@@ -21,6 +21,7 @@ export const personsMapper = createSelector(
 
 );
 
+
 // Применяется в 
 // Page ReplaceWorker.tsx
 export const arrSortedPeopleByDischarge = createSelector(
@@ -106,8 +107,7 @@ export const personsMap = createSelector(
 
     (persons): Map<string, Persons[]>  => {
 
-        const arrSort = [...persons]
-        .sort((a, b) => (
+        const arrSort = [...persons].sort((a, b) => (
             b.discharge - a.discharge
         ));
 
@@ -186,26 +186,3 @@ export const personsVacationMap = createSelector(
         return map;
     }
 )
-
-// export const personsBlock = createSelector(
-
-//     getPesonsApi.endpoints.getPesons.select(),
-
-//     (result) => {
-
-//         const map = new Map<string, PersonsDto[]>();
-
-//         result.data?.forEach((person) => {
-
-//             if(!map.has(person.block)){
-//                 map.set(person.block, []);
-//             }
-
-//             map.get(person.block)!.push(person);
-//         })
-
-//         return map;
-
-//     }
-
-// )
