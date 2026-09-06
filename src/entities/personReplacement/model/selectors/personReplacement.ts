@@ -11,8 +11,6 @@ export const personsReplacementMapper = createSelector(
         
         const persons = result.data?.map((person) => mappperPersonReplacement(person)) ?? []
 
-        console.log(persons)
-
         return persons;
 
     }

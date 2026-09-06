@@ -8,7 +8,7 @@ interface Props {
     selected: string;
     onSelected: (value: string) => void;
     onSelectedPerson: (value: PersonsWithStatus | null) => void;
-    personToReplace: PersonsWithStatus;
+    personToReplace: PersonsWithStatus | undefined;
 }
 
 export function ReplaceWorkerItem (

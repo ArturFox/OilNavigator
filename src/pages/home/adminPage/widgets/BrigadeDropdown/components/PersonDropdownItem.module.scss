@@ -8,6 +8,11 @@
 
     border-bottom: rem(1) solid var(--black);
 
+    &-notHuman{
+        justify-content: space-between;
+        gap: 0;
+    }
+
 }
 
 .personDropdownItem__personInfo {
@@ -15,6 +20,10 @@
     gap: rem(10);
 
     width: 40%;
+
+    &-notHuman {
+        width: 100%;
+    }
 }
 
 .personDropdownItem__textName {
@@ -22,6 +31,10 @@
 
     &--gray {
         color: var(--black);
+    }
+
+    &--notHuman {
+        color: var(--redAlarm);
     }
 }
 

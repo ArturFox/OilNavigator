@@ -4,7 +4,7 @@ import { MainLayout } from "../layouts/MainLayout";
 import type { AuthState } from "../../features/auth/model/auth.types";
 import { ProfilePage } from "../../pages/profile/ui/ProfilePage";
 import { SignPage } from "../../pages/signIn/SignPage";
-import { HomePage } from "../../pages/home/HomePage";
+import { HomePage } from "../../pages/Home/HomePage";
 import { ScheduleChangePage } from "../../pages/ScheduleChangePage/ScheduleChangePage";
 import { ReplaseWorker } from "../../pages/ReplaceWorker/ReplaseWorker";
 

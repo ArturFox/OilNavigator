@@ -1,9 +1,7 @@
-import { useMemo, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import styles from './BrigadeDropdown.module.scss';
 import type { SortShift } from "../../../../../entities/shifts/types/shifts.dto";
-import type { BrigadesDto } from "../../../../../entities/brigades/types/brigades.dto";
-import type { Persons } from "../../../../../entities/persons/types/persons.dto";
-import { useCheckPersonStatus } from "../../../../../features/hooks/useCheckPersonStatus";
+import type { PersonsWithStatus } from "../../../../../entities/persons/types/persons.dto";
 import { ArrowDownWideNarrow } from "lucide-react";
 import { PersonCard } from "./components/PersonCard";
 import { PersonDropdownItem } from "./components/PersonDropdownItem";
@@ -11,20 +9,17 @@ import { PersonDropdownItem } from "./components/PersonDropdownItem";
 interface Props {
     shift: SortShift;
     dateStore: string;
-    brigadeProps: BrigadesDto | undefined;
-    isFutureDate: boolean
 }
 
 export function BrigadeDropdown(
     { 
         shift, 
         dateStore, 
-        brigadeProps, 
-        isFutureDate
     }: Props
 ) {
 
-    const people: Persons[] = shift.peopleOnThisDay;
+    // вытаскиваем массив людей именно кто работает в этот день
+    const people: PersonsWithStatus[] = shift.peopleOnThisDay;
 
     // Состояние для открытия списка людей
     const [open, onOpen] = useState<boolean>(false);
@@ -35,66 +30,26 @@ export function BrigadeDropdown(
     // То есть в DOM он есть просто обрезан, но мы сразу положили его реальную высоту 
     // если сделать фиксированную высоту через max-height, то может терятся плавность
     const dropdownRef = useRef<HTMLUListElement>(null);
+    
 
-    // Если в бригаде меньше 7 человек, то это true
-    // и покажем в интерфейсе сколько человек не хваатает 
-    let notHuman: boolean;
-    let howManyNotHuman: number;
-
-    if(isFutureDate){
-        notHuman = people.length < 7;
-        howManyNotHuman = 7 - people.length;
-    } else {
-        notHuman = false
-        howManyNotHuman = 0
-    }
-
-    // Тут передаем людей из одной бригады и дату из стора.
-    // Для каждого сотрудника вычисляем его текущие статусы.
-    // redAlarm:
-    // - находится в отпуске;
-    // - находится на больничном;
-    // - находится на обучении.
-    // yellowAlarm:
-    // - отпуск начнется в течение следующих 7 дней;
-    // - обучение начнется в течение следующих 7 дней.
-    // birthdayStatus:
-    // - день рождения совпадает с выбранной датой.
-    // В результате получаем новый массив, где к каждому объекту
-    // сотрудника добавляются поля redAlarm, yellowAlarm и birthdayStatus.
-    const peopleWithStatus = useMemo(() => {
-
-        if (!isFutureDate) {
-            return people.map((person) => ({
-                ...person,
-                redAlarm: [],
-                yellowAlarm: [],
-                birthdayStatus: [],
-            }));
-        }
-
-        return useCheckPersonStatus(people, dateStore)
-
-    }, [people, dateStore]);
-
-    const hasRedAlarm: boolean = peopleWithStatus.some(p => p.redAlarm.length > 0) || notHuman;
-    const hasYellowAlarm: boolean = peopleWithStatus.some(p => p.yellowAlarm.length > 0);
+    const hasRedAlarm: boolean = people.some(p => p.redAlarm.length > 0) || shift.notHuman;
+    const hasYellowAlarm: boolean = people.some(p => p.yellowAlarm.length > 0);
     
     return (
 
         <li
             className={`
                 ${styles['card']}
-                ${!isFutureDate && styles['card--isFutureDate']}    
+                ${!shift.isFutureDate && styles['card--isFutureDate']}    
                 
             `}
         >
 
             <div
                 className={styles["card__button"]}
-                aria-controls={`brigade-dropdown-${brigadeProps?.id}`}
+                aria-controls={`brigade-dropdown-${shift.brigade?.id}`}
                 aria-label={`
-                    ${brigadeProps?.name ?? 'Бригада'}. 
+                    ${shift.brigade?.name ?? 'Бригада'}. 
                     ${
                         hasRedAlarm || hasYellowAlarm
                             ? 'Есть проблемы.'
@@ -108,8 +63,8 @@ export function BrigadeDropdown(
                     hasRedAlarm={hasRedAlarm}
                     hasYellowAlarm={hasYellowAlarm}
                     shift={shift}
-                    brigadeName={brigadeProps?.name ?? 'Такой бригады нету'}
-                    isFutureDate={isFutureDate}
+                    brigadeName={shift.brigade?.name ?? 'Такой бригады нету'}
+                    isFutureDate={shift.isFutureDate}
                 />
 
             </div>
@@ -126,7 +81,7 @@ export function BrigadeDropdown(
                     }}
                     className={`
                         ${styles["card__arrowDownWideNarrow"]}
-                        ${isFutureDate === false && styles["card__arrowDownWideNarrow--gray"]}       
+                        ${shift.isFutureDate === false && styles["card__arrowDownWideNarrow--gray"]}       
                     `}
                     aria-hidden="true"
                 >
@@ -153,28 +108,28 @@ export function BrigadeDropdown(
                         : "0px",
                     }
                 }
-                aria-label={`Сотрудники бригады ${brigadeProps?.name}`}
+                aria-label={`Сотрудники бригады ${shift.brigade?.name}`}
             >
 
-                {peopleWithStatus.map((person) => (
+                {people.map((person) => (
 
                     <PersonDropdownItem
                         key={person.id}
                         person={person}
-                        brigadeName={brigadeProps}
                         shift={shift} 
-                        isFutureDate={isFutureDate}
+                        isFutureDate={shift.isFutureDate}
                     />
 
                 ))}
 
-                {notHuman && isFutureDate && (
+                {shift.notHuman && shift.isFutureDate && (
 
-                
-                    Array.from({length: howManyNotHuman}).map((_, index) => (
+                    Array.from({length: shift.howManyNotHuman}).map((_, index) => (
+
                         <PersonDropdownItem 
                             key={`${index}+Нету человека`}
                         />
+                        
                     ))
                     
                 )}

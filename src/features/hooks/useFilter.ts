@@ -3,7 +3,7 @@ import type { PersonsWithStatus } from "../../entities/persons/types/persons.dto
 
 interface Props {
     peopleWithStatus: PersonsWithStatus[];
-    personToReplace: PersonsWithStatus;
+    personToReplace: PersonsWithStatus | undefined;
 }
 
 export interface FilterSelected {
@@ -34,6 +34,10 @@ export function useFilter (
     const filteredPeople = useMemo(() => {
 
         return peopleWithStatus.filter((person) => {
+
+            if(!personToReplace){
+                return true
+            }
             
             if (person.id === personToReplace.id) {
                 return false;

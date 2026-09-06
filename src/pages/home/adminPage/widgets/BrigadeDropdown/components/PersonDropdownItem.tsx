@@ -3,22 +3,21 @@ import styles from './PersonDropdownItem.module.scss';
 import { ArrowRightLeft, Plus, Search } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 import type { PersonsWithStatus } from '../../../../../../entities/persons/types/persons.dto';
-import type { BrigadesDto } from '../../../../../../entities/brigades/types/brigades.dto';
+import type { Brigade } from '../../../../../../entities/brigades/types/brigades.dto';
 import type { SortShift } from '../../../../../../entities/shifts/types/shifts.dto';
 import { ModalCenterWindow } from '../../../../../../shared/ui/Modal/ModalCenterWindow/ModalCenterWindow';
 
 interface Props {
   person?: PersonsWithStatus;
   isFutureDate?: boolean;
-  brigadeName?: BrigadesDto | undefined;
+  brigade?: Brigade | undefined;
   shift?: SortShift;
 }
 
 export function PersonDropdownItem (
     {
         person, 
-        isFutureDate, 
-        brigadeName, 
+        isFutureDate,  
         shift
     }:Props
 ) {
@@ -28,22 +27,32 @@ export function PersonDropdownItem (
     const [currentProblem, onCurrentProblem] = useState<number>(0);
     const [modalCenter, onModalCenter] = useState<boolean>(false);
 
-    if(!person || !brigadeName || !shift){
+    if(!person || !shift){
 
         return (
             
             <li
-                className={styles["personDropdownItem"]}
+                className={`
+                    ${styles["personDropdownItem"]}
+                    ${styles["personDropdownItem-notHuman"]}
+                `}
             >
 
-                <div className={styles["personDropdownItem__personInfo"]}>
-                
-                    <span
-                        className={styles["personDropdownItem__textNameAlarm"]}
-                    >
-                        Не хватает человека
-                    </span>
+                <div 
+                    className={`
+                        ${styles["personDropdownItem__personInfo"]}
+                        ${styles["personDropdownItem__personInfo-notHuman"]}
+                    `}
+                >
             
+                    <span
+                        className={`
+                            ${styles["personDropdownItem__textName--notHuman"]}
+                        `}
+                    >
+                        Не хватает 
+                    </span>
+
                 </div>
 
                 <div className={styles["personDropdownItem__buttons"]}>
@@ -52,6 +61,11 @@ export function PersonDropdownItem (
                         className={styles["personDropdownItem__button"]}
                         type="button"
                         aria-label={`Не хватает человека`}
+                        onClick={() => {
+                            navigate('/userChange')
+                            console.log('zzz')
+                        }}
+                        disabled={isFutureDate === false}
                     >
                         <Plus 
                             size={16}
@@ -172,9 +186,8 @@ export function PersonDropdownItem (
                     onClick={() => navigate('/userChange', {
                         state: {
                             person,
-                            brigadeName,
                             shift,
-                            arrProblem
+                            arrProblem,
                         },
                     })}
                     disabled={isFutureDate === false}

@@ -4,6 +4,8 @@ export interface PersonReplacementDto {
     person_id: string;
     replacement_person_id: string;
     created_at: string;
+    replacement_brigade_id: string
+    person_brigade_id: string;
 }
 
 export interface PersonReplacementMapper {
@@ -12,4 +14,6 @@ export interface PersonReplacementMapper {
     personId: string;
     replacementPersonId: string;
     createdAt: string;
+    replacement_brigade_id: string;
+    person_brigade_id: string;
 }

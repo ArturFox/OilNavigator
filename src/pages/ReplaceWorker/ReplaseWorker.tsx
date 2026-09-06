@@ -1,13 +1,12 @@
-import { Menu, Search } from 'lucide-react';
 import { useSelector } from 'react-redux';
-import { useMemo, useState } from 'react';
+import { useState } from 'react';
 import { useLocation } from 'react-router-dom';
 import { useGetPesonsQuery } from '../../entities/persons/api/getPersons';
 import { useGetBrigadesQuery } from '../../entities/brigades/api/getBrigades';
 import { blockPerson, dischargePerson, jobTitlePerson, personsMapper } from '../../entities/persons/model/selectors/persons';
 import { brigadesSortArr } from '../../entities/brigades/model/selectors/brigades';
 import type { RootState } from '../../app/store/store';
-import type { Brigade, BrigadesDto } from '../../entities/brigades/types/brigades.dto';
+import type { Brigade } from '../../entities/brigades/types/brigades.dto';
 import type { PersonsWithStatus } from '../../entities/persons/types/persons.dto';
 import type { SortShift } from '../../entities/shifts/types/shifts.dto';
 import { useCheckPersonStatus } from '../../features/hooks/useCheckPersonStatus';
@@ -17,6 +16,7 @@ import { ReplaceWorkerItem } from './widgets/ReplaceWorkerItem/ReplaceWorkerItem
 import { ReplaceWorkerProcess } from './widgets/ReplaceWorkerProcess/ReplaceWorkerProcess';
 import { useFilter } from '../../features/hooks/useFilter';
 import { ReplaceWorkerFilters } from './widgets/ReplaceWorkerFilters/ReplaceWorkerFilters';
+import { supabase } from '../../shared/api/supabase/client';
 
 export function ReplaseWorker () {
 
@@ -35,6 +35,7 @@ export function ReplaseWorker () {
     // нажать на день в календаре, где при нажатии сразу в dateStore кладется выбранный день
     // нажал на пользователя которого надо заменить и мы в этом окне с датой в которой надо кого поменять
     const dateStore: string = useSelector((state: RootState) => state.date.day);
+    console.log(dateStore)
     const russianDate: string = `${dateStore.slice(8, 10)}-${dateStore.slice(5,7)}-${dateStore.slice(0,4)}`
     
     // только для визуального эффекта в widget ReplaceWorkerItem
@@ -54,10 +55,16 @@ export function ReplaseWorker () {
     // положили этого человека в state: {} от navigate
     // и вытаскиваем эти данные 
     const location = useLocation();
-    const personToReplace = location.state?.person as PersonsWithStatus;
-    const arrProblemPersonToReplace = location.state.arrProblem as string[];
-    const brigadeName = location.state.brigadeName as BrigadesDto;
-    const shift = location.state.shift as SortShift;
+
+    let personToReplace: PersonsWithStatus | undefined;
+    let arrProblemPersonToReplace: string[] = [];
+    let shift: SortShift | undefined;
+
+    if (location.state) {
+        personToReplace = location.state.person;
+        arrProblemPersonToReplace = (location.state.arrProblem ?? []);
+        shift = location.state.shift;
+    }
 
     const peopleWithStatus: PersonsWithStatus[] = useCheckPersonStatus(people, dateStore);
 
@@ -75,6 +82,54 @@ export function ReplaseWorker () {
         peopleWithStatus,
         personToReplace
     });
+
+    async function ap(selectedHuman: PersonsWithStatus): Promise<void> {
+
+        if(personToReplace){
+
+            const { data, error } = await supabase
+            .from('person_replacements')
+            .insert([
+                {
+                    date: dateStore,
+
+                    //человек которого меняют
+                    person_id: personToReplace?.id,
+                    person_brigade_id: shift?.brigadeId,
+
+                    // человек на которого меняют 
+                    replacement_person_id: selectedHuman?.id,
+                    replacement_brigade_id: selectedPerson?.brigade_id,
+                }
+            ]);
+
+            if (error) {
+                console.error('Ошибка при отправке запроса:', error.message);
+                return;
+            }
+
+            console.log('Данные успешно добавлены:', data);
+
+        } else {
+            const { data, error } = await supabase
+            .from('person_replacements')
+            .insert([
+                {
+                    date: dateStore,
+                    person_id: null,
+                    replacement_person_id: selectedHuman?.id
+                }
+            ]);
+
+            if (error) {
+                console.error('Ошибка при отправке запроса:', error.message);
+                return;
+            }
+
+            console.log('Данные успешно добавлены:', data);
+        }
+
+    }
 
     
     return (
@@ -104,6 +159,7 @@ export function ReplaseWorker () {
                 selectedPerson={selectedPerson}
                 personToReplace={personToReplace}
                 arrProblemPersonToReplace={arrProblemPersonToReplace}
+                ap={ap}
             />
 
             <ReplaceWorkerFilters

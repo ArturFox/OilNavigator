@@ -4,11 +4,13 @@ import type { PersonsWithStatus } from "../../../../../entities/persons/types/pe
 
 interface Props {
     selectedPerson: PersonsWithStatus | null;
+    ap: (selectedHuman: PersonsWithStatus) => Promise<void>;
 }
 
 export function RightCard (
     {
         selectedPerson,
+        ap
     }: Props
 ) {
 
@@ -159,6 +161,11 @@ export function RightCard (
                     ${styles["rightCard__acceptButton"]}
                     ${selectedPerson !== null && styles["rightCard__acceptButton--selected"]}
                 `}
+                onClick={() => {
+                    if(selectedPerson){
+                        ap(selectedPerson)
+                    }
+                }}
             >
                 Применить
             </button>

@@ -1,7 +1,6 @@
 import { OctagonAlert } from 'lucide-react'
 import { useDispatch } from 'react-redux';
 import { useEffect, useMemo, useRef, useState } from 'react';
-import type { Persons } from '../../../../../entities/persons/types/persons.dto';
 import type { SortShift } from '../../../../../entities/shifts/types/shifts.dto';
 import { changeDay } from '../../../../../app/store/store';
 import styles from './CalendarAdmin.module.scss';
@@ -10,13 +9,12 @@ import type { DayItem } from '../../types/dayItem.type';
 
 
 interface peopleMapeProps {
-    personsMapProps: Map<string, Persons[]>
-    shiftsMapProps: Map<string, SortShift[]>
+    shifts: Map<string, SortShift[]>
     dateStore: string;
     stringRealDateToday: string;
 }
 
-export function CalendarAdmin ({personsMapProps, shiftsMapProps, dateStore, stringRealDateToday}: peopleMapeProps) {
+export function CalendarAdmin ({ shifts, dateStore, stringRealDateToday}: peopleMapeProps) {
 
     const dispatch = useDispatch();
     
@@ -41,12 +39,11 @@ export function CalendarAdmin ({personsMapProps, shiftsMapProps, dateStore, stri
             year,
             month,
             daysMonth,
-            shiftsMapProps,
-            personsMapProps,
+            shifts,
             stringRealDateToday
         });
 
-    }, [year, month, daysMonth, shiftsMapProps, personsMapProps])
+    }, [year, month, daysMonth, shifts, stringRealDateToday])
 
     const todayRef = useRef<HTMLSpanElement | null>(null);
 
@@ -71,90 +68,94 @@ export function CalendarAdmin ({personsMapProps, shiftsMapProps, dateStore, stri
 
     return(
 
-        <ul className={styles['calendar']}>
+        <section>
 
-            {days.map((day, index) => (
+            <ul className={styles['calendar']}>
 
-                <li
-                    key={index}
-                    className={styles["calendar__item"]}
-                >
+                {days.map((day, index) => (
 
-                    <span className={styles["calendar__dayOfWeek"]}>
-
-                        {day.weekDay}
-                    
-                    </span>
-
-                    <button
-                        type='button'
-                        className={`
-                            ${styles["calendar__button"]}
-                            ${day.checkRealMonth
-                                
-                                ? userSelect === stringRealDateToday
-                                    ? stringRealDateToday === day.stringDate
-                                        ? styles["calendar__button--todaySelected"]
-                                        : ''
-                                    : userSelect === day.stringDate
-                                        ? styles["calendar__button--todaySelected"]
-                                        : stringRealDateToday === day.stringDate
-                                            ? styles["calendar__button--todayNotSelected"]
-                                            : ''
-
-                                : dateStore === day.stringDate
-                                    ? styles["calendar__button--todaySelected"]
-                                    : ''
-                            }
-                        `}
-                        onClick={() => {
-                            dispatch(changeDay(day.stringDate));
-                            onUserSelect(day.stringDate);
-                        }}
-                        aria-label={`День ${day.day}, ${day.weekDay}`}
+                    <li
+                        key={index}
+                        className={styles["calendar__item"]}
                     >
 
-                        <span 
-                            className={styles["calendar__day"]}
-                            ref={
-                                
-                                day.checkRealMonth 
-                                    ? stringRealDateToday === day.stringDate
-                                        ? todayRef
-                                        : undefined
-                                    : dateStore === day.stringDate
-                                        ? todayRef
-                                        : undefined
-                            }
-                        >
-                            {day.day}
+                        <span className={styles["calendar__dayOfWeek"]}>
+
+                            {day.weekDay}
+                        
                         </span>
 
-                        <span 
+                        <button
+                            type='button'
                             className={`
-                                ${styles["calendar__exclamation"]}
-                                ${
-                                    day.hasProblem && day.soonVacation
-                                        ? styles["calendar__exclamation--blink"]
-                                        : day.hasProblem
-                                            ? styles["calendar__exclamation--red"]
-                                            : day.soonVacation
-                                                ? styles["calendar__exclamation--yellow"]
-                                                : ""
+                                ${styles["calendar__button"]}
+                                ${day.checkRealMonth
+                                    
+                                    ? userSelect === stringRealDateToday
+                                        ? stringRealDateToday === day.stringDate
+                                            ? styles["calendar__button--todaySelected"]
+                                            : ''
+                                        : userSelect === day.stringDate
+                                            ? styles["calendar__button--todaySelected"]
+                                            : stringRealDateToday === day.stringDate
+                                                ? styles["calendar__button--todayNotSelected"]
+                                                : ''
+
+                                    : dateStore === day.stringDate
+                                        ? styles["calendar__button--todaySelected"]
+                                        : ''
                                 }
                             `}
+                            onClick={() => {
+                                dispatch(changeDay(day.stringDate));
+                                onUserSelect(day.stringDate);
+                            }}
+                            aria-label={`День ${day.day}, ${day.weekDay}`}
                         >
 
-                            <OctagonAlert/>
+                            <span 
+                                className={styles["calendar__day"]}
+                                ref={
+                                    
+                                    day.checkRealMonth 
+                                        ? stringRealDateToday === day.stringDate
+                                            ? todayRef
+                                            : undefined
+                                        : dateStore === day.stringDate
+                                            ? todayRef
+                                            : undefined
+                                }
+                            >
+                                {day.day}
+                            </span>
 
-                        </span>
+                            <span 
+                                className={`
+                                    ${styles["calendar__exclamation"]}
+                                    ${
+                                        day.hasProblem && day.soonVacation
+                                            ? styles["calendar__exclamation--blink"]
+                                            : day.hasProblem
+                                                ? styles["calendar__exclamation--red"]
+                                                : day.soonVacation
+                                                    ? styles["calendar__exclamation--yellow"]
+                                                    : ""
+                                    }
+                                `}
+                            >
+
+                                <OctagonAlert/>
+
+                            </span>
+                        
+                        </button>
+
+                    </li>
                     
-                    </button>
+                ))}          
 
-                </li>
-                
-            ))}          
+            </ul>
 
-        </ul>
+        </section>
     )
 }

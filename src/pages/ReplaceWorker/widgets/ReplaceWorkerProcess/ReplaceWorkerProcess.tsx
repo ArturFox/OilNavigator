@@ -7,15 +7,17 @@ import { useState } from 'react';
 
 interface Props {
     selectedPerson: PersonsWithStatus | null;
-    personToReplace: PersonsWithStatus;
+    personToReplace: PersonsWithStatus | undefined;
     arrProblemPersonToReplace: string[];
+    ap: (selectedHuman: PersonsWithStatus) => Promise<void>;
 }
 
 export function ReplaceWorkerProcess (
     {
         selectedPerson, 
         personToReplace,   
-        arrProblemPersonToReplace
+        arrProblemPersonToReplace,
+        ap
     }:Props
 ) {
 
@@ -41,13 +43,16 @@ export function ReplaceWorkerProcess (
 
             <RightCard
                 selectedPerson={selectedPerson}
+                ap={ap}
             />
 
-            <ModalCenterWindow
-                modalCenter={modalCenter}
-                onModalCenter={onModalCenter}
-                person={personToReplace}
-            />
+            {personToReplace && (
+                <ModalCenterWindow
+                    modalCenter={modalCenter}
+                    onModalCenter={onModalCenter}
+                    person={personToReplace}
+                />
+            )}
 
         </section>
     )

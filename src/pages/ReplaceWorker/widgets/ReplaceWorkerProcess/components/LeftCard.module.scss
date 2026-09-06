@@ -57,6 +57,11 @@
         transform: translateX(8%);
     }
 
+    &--notHuman {
+        justify-content: center;
+        background-color: var(--redBlack);
+    }
+
 }
 
 .leftCard__blockBrigadeName {
@@ -203,4 +208,13 @@
     border-bottom-right-radius: 0;
     
     box-shadow: 0 0 0 rem(10) var(--black);
+}
+
+.leftCard__dontSelected{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    color: var(--black);
 }

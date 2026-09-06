@@ -1,8 +1,19 @@
 //src/types/shifts.dto.ts
 
-import type { Persons } from "../../persons/types/persons.dto";
+import type { Brigade } from "../../brigades/types/brigades.dto";
+import type { PersonsWithStatus } from "../../persons/types/persons.dto";
 
 export interface ShiftDto {
+    id: string;
+    brigade_id: string;
+    day_index: number;
+    start_time: string | null;
+    end_time: string | null;
+    label: string;
+    code: string
+}
+
+export interface Shift {
     id: string;
     brigade_id: string;
     day_index: number;
@@ -24,7 +35,7 @@ export interface AddShiftDto {
 export interface SortShift {
     id: string,
 
-    brigadeId: string, 
+    brigade: Brigade, 
 
     code: string, 
     label: string,
@@ -36,5 +47,9 @@ export interface SortShift {
     startTime: string | null, 
     endTime: string | null,
 
-    peopleOnThisDay: Persons[]
+    peopleOnThisDay: PersonsWithStatus[],
+
+    isFutureDate: boolean,
+    notHuman: boolean,
+    howManyNotHuman: number
 }

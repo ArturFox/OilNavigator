@@ -4,17 +4,13 @@ import styles from './AdminHomePage.module.scss';
 import { useGetPesonsQuery } from "../../../entities/persons/api/getPersons";
 import { useGetBrigadesQuery } from "../../../entities/brigades/api/getBrigades";
 import { useGetShiftsQuery } from "../../../entities/shifts/api/getShifts";
-import { personsMap } from "../../../entities/persons/model/selectors/persons";
-import { brigadesMap } from "../../../entities/brigades/model/selectors/brigades";
-import { shiftMap } from "../../../entities/shifts/model/selectors/shifts";
 import type { SortShift } from "../../../entities/shifts/types/shifts.dto";
-import type { BrigadesDto } from "../../../entities/brigades/types/brigades.dto";
-import type { Persons } from "../../../entities/persons/types/persons.dto";
 import type { RootState } from "../../../app/store/store";
-import { SceletonAdmin } from "./sceleton/SceletonAdmin";
 import { useGetPersonReplacementQuery } from "../../../entities/personReplacement/api/getPersonReplacement";
-import { BrigadeDropdown } from "./widgets/BrigadeDropdown/BrigadeDropdown";
+import { SceletonAdmin } from "./sceleton/SceletonAdmin";
 import { CalendarAdmin } from "./widgets/CalendarAdmin/CalendarAdmin";
+import { BrigadeDropdown } from "./widgets/BrigadeDropdown/BrigadeDropdown";
+import { sortShiftMap } from "./model/selectorsAdminPage";
 
 export function AdminHomePage() {
 
@@ -22,7 +18,7 @@ export function AdminHomePage() {
     const personsQuery = useGetPesonsQuery();
     const brigadesQuery = useGetBrigadesQuery();
     const shiftsQuery = useGetShiftsQuery();
-    const personsReplacement = useGetPersonReplacementQuery();
+    const personsReplacementQuery = useGetPersonReplacementQuery();
 
     // состояние для открытия карточек бригад которые отдыхают
     const [flagArrslakers, setFlagArrslakers] = useState<boolean>(false);
@@ -34,21 +30,15 @@ export function AdminHomePage() {
     // если пользователь нажал на карточку даты в widget "CalendarAdmin", то в сторе меняется дата
     // и засчёт этого динамически отображаются какие бригады работают и отдыхают в widget "BrigadeDropdown" 
     const dateStore: string = useSelector((state: RootState) => state.date.day);
- 
-    // люди где они уже отсортированы кто в какой бригаде 
-    const personsMapApp = useSelector(personsMap) as Map<string, Persons[]>;
-
-    // бригады какие вообще есть
-    const brigadesApp = useSelector(brigadesMap) as Map<string, BrigadesDto>;
 
     // расписание в нем алгоритм записывает по дням какая бригада
     // работает утром, вечером, ночью, отдыхает всё в одном дне 
-    const shiftsMapApp = useSelector(shiftMap);
+    const shiftsMap = useSelector(sortShiftMap);
 
     // вытащили расписание бригад в конкретный день
     // если пользователь нажал на две стрелки в файле "MainLayout" покажется на первое число
     // либо нажал на карточку даты в widget "CalendarAdmin", покажатся бригады в выбраный день
-    const shiftsToday: SortShift[] = shiftsMapApp.get(dateStore) ?? [];
+    const shiftsToday: SortShift[] = shiftsMap.get(dateStore) ?? [];
 
     // отсортировали кто работает 
     const shiftsWhoWorkToday: SortShift[] = shiftsToday.filter(s => s.code !== "О");
@@ -60,13 +50,13 @@ export function AdminHomePage() {
     const realDateToday: Date = new Date();
     const stringRealDateToday: string = `${realDateToday.getFullYear()}-${String(realDateToday.getMonth()+1).padStart(2, '0')}-${String(realDateToday.getDate()).padStart(2,'0')}`;
 
-    // сравниваем пользователь в widget CalendarAdmin 
-    // выбрал дату которая ровна сегодняшней или больше тогда true
-    // если выбрал не сегодня а меньше тогда false и будет серый цвет
-    const isFutureDate: boolean = dateStore >= stringRealDateToday;
-
     // пока от хуков не придет ответ показываем скелетон
-    if(personsQuery.isLoading || brigadesQuery.isLoading || shiftsQuery.isLoading){
+    if(
+        personsQuery.isLoading || 
+        brigadesQuery.isLoading || 
+        shiftsQuery.isLoading ||
+        personsReplacementQuery.isLoading 
+    ){
     
         return (
             <>
@@ -80,16 +70,11 @@ export function AdminHomePage() {
 
         <main className={styles["main"]}>
             
-            <section>
-
-                <CalendarAdmin
-                    personsMapProps={personsMapApp} 
-                    shiftsMapProps={shiftsMapApp} 
-                    dateStore={dateStore}
-                    stringRealDateToday={stringRealDateToday}
-                />
-
-            </section>
+            <CalendarAdmin 
+                shifts={shiftsMap} 
+                dateStore={dateStore}
+                stringRealDateToday={stringRealDateToday}
+            />
 
             <section 
                 className={styles["main__changeShift"]}
@@ -100,7 +85,7 @@ export function AdminHomePage() {
                     className={`
                         ${styles["main__buttonChangeShift"]}
                         ${flagArrslakers && styles["main__buttonChangeShift--open"]}
-                        ${!isFutureDate && styles["main__buttonChangeShift--gray"]}    
+   
                     `}
                     type="button"
                     aria-expanded={flagArrslakers}
@@ -124,8 +109,6 @@ export function AdminHomePage() {
                             key={s.id} 
                             shift={s} 
                             dateStore={dateStore} 
-                            brigadeProps={brigadesApp.get(s.brigadeId)}
-                            isFutureDate={isFutureDate}
                         />
 
                     ))}
@@ -145,8 +128,6 @@ export function AdminHomePage() {
                             key={s.id}
                             shift={s}
                             dateStore={dateStore}
-                            brigadeProps={brigadesApp.get(s.brigadeId)}
-                            isFutureDate={isFutureDate}
                         />
                         
                     ))}

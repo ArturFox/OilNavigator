@@ -1,4 +1,3 @@
-import type { Persons } from "../../../../entities/persons/types/persons.dto";
 import type { SortShift } from "../../../../entities/shifts/types/shifts.dto";
 import type { DayItem } from "../types/dayItem.type";
 
@@ -6,8 +5,7 @@ interface Props {
     year: number,
     month: number,
     daysMonth: number,
-    shiftsMapProps: Map<string, SortShift[]>,
-    personsMapProps: Map<string, Persons[]>,
+    shifts: Map<string, SortShift[]>,
     stringRealDateToday: string,
 }
 
@@ -15,8 +13,7 @@ export function generateCalendarDays ({
     year, 
     month, 
     daysMonth, 
-    shiftsMapProps, 
-    personsMapProps,
+    shifts, 
     stringRealDateToday
 }: Props): DayItem[] {
 
@@ -41,7 +38,7 @@ export function generateCalendarDays ({
 
         const checkRealMonth: boolean = stringRealDateToday.split('-')[1] === stringDate.split('-')[1];
 
-        const shiftsForDay = shiftsMapProps.get(stringDate) ?? [];
+        const shiftsForDay = shifts.get(stringDate) ?? [];
         const activeShifts = shiftsForDay.filter(f => f.code !== 'О');
 
         const isFutureOrToday: boolean = stringDate >= stringRealDateToday;
@@ -50,7 +47,7 @@ export function generateCalendarDays ({
             
             activeShifts.some( (shift) => {
 
-                const people = personsMapProps.get(shift.brigadeId) ?? [];
+                const people = shift.peopleOnThisDay ?? [];
 
                 // если в бригаде меньше 7 человек, то это true
                 // и помечаем hasProblem как true что есть ошибка
@@ -91,9 +88,9 @@ export function generateCalendarDays ({
 
         const soonVacation: boolean = isFutureOrToday && (
             
-            activeShifts.some( (shift) => {
+            activeShifts.some((shift) => {
 
-                const people = personsMapProps.get(shift.brigadeId) ?? [];
+                const people = shift.peopleOnThisDay ?? [];
 
                 return people.some( (person) => {               
 
