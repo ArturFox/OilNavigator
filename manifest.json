@@ -1,0 +1,8 @@
+{
+  "name": "Нефте Навигатор",
+  "short_name": "Нефте Навигатор",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#ffffff"
+}
