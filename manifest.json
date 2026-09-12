@@ -1,7 +1,7 @@
 {
   "name": "Нефте Навигатор",
   "short_name": "Нефте Навигатор",
-  "start_url": "/",
+  "start_url": "/OilNavigator/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#ffffff"
