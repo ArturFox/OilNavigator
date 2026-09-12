@@ -3,22 +3,24 @@ import styles from './PersonDropdownItem.module.scss';
 import { ArrowRightLeft, Plus, Search } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 import type { PersonsWithStatus } from '../../../../../../entities/persons/types/persons.dto';
-import type { Brigade } from '../../../../../../entities/brigades/types/brigades.dto';
-import type { SortShift } from '../../../../../../entities/shifts/types/shifts.dto';
 import { ModalCenterWindow } from '../../../../../../shared/ui/Modal/ModalCenterWindow/ModalCenterWindow';
+import type { SortShift } from '../../../../../../entities/shifts/types/shifts.dto';
 
 interface Props {
-  person?: PersonsWithStatus;
-  isFutureDate?: boolean;
-  brigade?: Brigade | undefined;
-  shift?: SortShift;
+  personWhoWasReplacedId?: PersonsWithStatus;
+  isFutureDate: boolean;
+  startDate: string;
+  personWhoWasReplacedBrigadeId: string;
+  shiftsToday: SortShift[]
 }
 
 export function PersonDropdownItem (
     {
-        person, 
-        isFutureDate,  
-        shift
+        personWhoWasReplacedId, 
+        isFutureDate,
+        startDate,
+        personWhoWasReplacedBrigadeId,
+        shiftsToday
     }:Props
 ) {
 
@@ -27,7 +29,9 @@ export function PersonDropdownItem (
     const [currentProblem, onCurrentProblem] = useState<number>(0);
     const [modalCenter, onModalCenter] = useState<boolean>(false);
 
-    if(!person || !shift){
+    if(!personWhoWasReplacedId){
+
+        const personNull = null;
 
         return (
             
@@ -62,14 +66,20 @@ export function PersonDropdownItem (
                         type="button"
                         aria-label={`Не хватает человека`}
                         onClick={() => {
-                            navigate('/userChange')
-                            console.log('zzz')
+                            navigate('/userChange', {
+                                state: {
+                                    personNull,
+                                    startDate,
+                                    personWhoWasReplacedBrigadeId,
+                                    shiftsToday
+                                },
+                            })
                         }}
                         disabled={isFutureDate === false}
                     >
                         <Plus 
                             size={16}
-                            aria-hidden={true}
+                            
                         />
                     </button>
 
@@ -81,8 +91,8 @@ export function PersonDropdownItem (
     }
 
     const arrProblem: string[] = [
-        ...person.redAlarm,
-        ...person.yellowAlarm,
+        ...personWhoWasReplacedId.redAlarm,
+        ...personWhoWasReplacedId.yellowAlarm,
     ];
 
     let problemsCount: boolean = false;
@@ -121,7 +131,7 @@ export function PersonDropdownItem (
                         ${!isFutureDate && styles["personDropdownItem__textName--gray"]}
                     `}
                 >
-                    {person.surname}
+                    {personWhoWasReplacedId.surname}
                 </span>
 
                 <span
@@ -130,7 +140,7 @@ export function PersonDropdownItem (
                         ${!isFutureDate && styles["personDropdownItem__textName--gray"]}    
                     `}
                 >
-                    {person.name}
+                    {personWhoWasReplacedId.name}
                 </span>
         
             </div>
@@ -182,12 +192,14 @@ export function PersonDropdownItem (
                 <button
                     className={styles["personDropdownItem__button"]}
                     type="button"
-                    aria-label={`Заменить ${person.name}`}
+                    aria-label={`Заменить ${personWhoWasReplacedId.name}`}
                     onClick={() => navigate('/userChange', {
                         state: {
-                            person,
-                            shift,
+                            personWhoWasReplacedId,
                             arrProblem,
+                            startDate,
+                            personWhoWasReplacedBrigadeId,
+                            shiftsToday
                         },
                     })}
                     disabled={isFutureDate === false}
@@ -203,7 +215,7 @@ export function PersonDropdownItem (
                 <button 
                     className={styles["personDropdownItem__button"]}
                     type="button"
-                    aria-label={`Узнать информацию про ${person.name}`}
+                    aria-label={`Узнать информацию про ${personWhoWasReplacedId.name}`}
                     onClick={() => onModalCenter(!modalCenter)}
                     disabled={isFutureDate === false}
                 >
@@ -216,7 +228,7 @@ export function PersonDropdownItem (
             </div>
 
             <ModalCenterWindow
-                person={person}
+                person={personWhoWasReplacedId}
                 modalCenter={modalCenter}
                 onModalCenter={onModalCenter}
             />

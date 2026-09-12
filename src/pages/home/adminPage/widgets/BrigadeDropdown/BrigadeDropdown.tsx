@@ -8,13 +8,13 @@ import { PersonDropdownItem } from "./components/PersonDropdownItem";
 
 interface Props {
     shift: SortShift;
-    dateStore: string;
+    shiftsToday: SortShift[];
 }
 
 export function BrigadeDropdown(
     { 
         shift, 
-        dateStore, 
+        shiftsToday,
     }: Props
 ) {
 
@@ -30,17 +30,16 @@ export function BrigadeDropdown(
     // То есть в DOM он есть просто обрезан, но мы сразу положили его реальную высоту 
     // если сделать фиксированную высоту через max-height, то может терятся плавность
     const dropdownRef = useRef<HTMLUListElement>(null);
-    
 
-    const hasRedAlarm: boolean = people.some(p => p.redAlarm.length > 0) || shift.notHuman;
-    const hasYellowAlarm: boolean = people.some(p => p.yellowAlarm.length > 0);
+    const hasRedAlarm: boolean = shift.hasRedAlarm;
+    const hasYellowAlarm: boolean = shift.hasYellowAlarm;
     
     return (
 
         <li
             className={`
                 ${styles['card']}
-                ${!shift.isFutureDate && styles['card--isFutureDate']}    
+                ${shift.isFutureDate && styles['card--isFutureDate']}    
                 
             `}
         >
@@ -63,8 +62,6 @@ export function BrigadeDropdown(
                     hasRedAlarm={hasRedAlarm}
                     hasYellowAlarm={hasYellowAlarm}
                     shift={shift}
-                    brigadeName={shift.brigade?.name ?? 'Такой бригады нету'}
-                    isFutureDate={shift.isFutureDate}
                 />
 
             </div>
@@ -83,7 +80,6 @@ export function BrigadeDropdown(
                         ${styles["card__arrowDownWideNarrow"]}
                         ${shift.isFutureDate === false && styles["card__arrowDownWideNarrow--gray"]}       
                     `}
-                    aria-hidden="true"
                 >
 
                     <ArrowDownWideNarrow
@@ -115,9 +111,11 @@ export function BrigadeDropdown(
 
                     <PersonDropdownItem
                         key={person.id}
-                        person={person}
-                        shift={shift} 
-                        isFutureDate={shift.isFutureDate}
+                        personWhoWasReplacedId={person}
+                        isFutureDate={shift.isFutureDate} 
+                        startDate={shift.startDate}
+                        personWhoWasReplacedBrigadeId={shift.brigade.id}
+                        shiftsToday={shiftsToday}
                     />
 
                 ))}
@@ -128,6 +126,10 @@ export function BrigadeDropdown(
 
                         <PersonDropdownItem 
                             key={`${index}+Нету человека`}
+                            isFutureDate={shift.isFutureDate}
+                            startDate={shift.startDate}
+                            personWhoWasReplacedBrigadeId={shift.brigade.id}
+                            shiftsToday={shiftsToday}
                         />
                         
                     ))

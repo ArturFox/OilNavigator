@@ -1,5 +1,5 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
-import { AlignVerticalJustifyStartIcon, ArrowBigLeft, ArrowBigRight, CalendarCheck, Highlighter, UserPen } from "lucide-react";
+import { ArrowBigLeft, ArrowBigRight, CalendarCheck, Highlighter, UserPen } from "lucide-react";
 import styles from "../layouts/mainLayout.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { changeDay, type RootState } from "../store/store";
@@ -17,7 +17,6 @@ export function MainLayout({role}: Props) {
   const location = useLocation();
   const isCalendar: boolean = location.pathname === "/";
   const isProfile: boolean = location.pathname === "/profile";
-  const isVacation: boolean = location.pathname === '/createVacation'
   const isScheduleChange: boolean = location.pathname === '/scheduleChangePage'
   const userChange: boolean = location.pathname === '/userChange'
 

@@ -7,7 +7,7 @@ interface Props {
     onModalCenter: (modalCenter: boolean) => void;
     person: PersonsWithStatus;
     arrProblem?: string[];
-    personToReplace?: PersonsWithStatus;
+    personToReplace?: PersonsWithStatus | null;
 }
 
 export function ModalCenterWindow (
@@ -67,7 +67,7 @@ export function ModalCenterWindow (
                         Бригада:
                     </h5>
                     <span>
-                        {person.brigade_name}
+                        {person.brigade_name?.number_brigade}
                     </span>
                 </div>
 

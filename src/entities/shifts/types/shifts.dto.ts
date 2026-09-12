@@ -33,23 +33,29 @@ export interface AddShiftDto {
 }
 
 export interface SortShift {
-    id: string,
+    id: string;
 
-    brigade: Brigade, 
+    brigade: Brigade; 
 
-    code: string, 
-    label: string,
+    code: string;
+    label: string;
 
-    startDate: string,
+    startDate: string;
     
-    russianDate: string, 
+    russianDate: string;
 
-    startTime: string | null, 
-    endTime: string | null,
+    startTime: string | null;
+    endTime: string | null;
 
-    peopleOnThisDay: PersonsWithStatus[],
+    peopleOnThisDay: PersonsWithStatus[];
 
-    isFutureDate: boolean,
-    notHuman: boolean,
-    howManyNotHuman: number
+    isFutureDate: boolean;
+
+    notHuman: boolean;
+    howManyNotHuman: number;
+
+    weekday: string;
+
+    hasRedAlarm: boolean,
+    hasYellowAlarm: boolean,
 }

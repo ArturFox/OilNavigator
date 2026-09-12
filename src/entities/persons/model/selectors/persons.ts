@@ -41,66 +41,6 @@ export const arrSortedPeopleByDischarge = createSelector(
 
 )
 
-// 
-export const jobTitlePerson = createSelector(
-
-    personsMapper,
-
-    (result): string[] => {
-
-        const mySet: Set<string> = new Set();
-
-        result.forEach((person) => {
-            
-            if(person.job_title){
-                mySet.add(person.job_title);
-            }
-        });
-
-        return [...mySet];
-    } 
-)
-
-export const blockPerson = createSelector(
-    
-    personsMapper,
-
-    (result): string[] => {
-
-        const mySet: Set<string> = new Set();
-
-        result.forEach((person) => {
-
-            if(person.block){
-                mySet.add(person.block);
-            }
-
-        });
-
-        return [...mySet];
-    }
-)
-
-export const dischargePerson = createSelector(
-
-    personsMapper,
-
-    (result): number[] => {
-
-        const mySet: Set<number> = new Set();
-
-        result.forEach((person) => {
-
-            if(person.discharge){
-                mySet.add(person.discharge);
-            }
-
-        });
-
-        return [...mySet];
-    }
-)
-
 export const personsMap = createSelector(
     
     personsMapper,

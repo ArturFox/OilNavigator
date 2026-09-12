@@ -71,7 +71,7 @@ export function AdminHomePage() {
         <main className={styles["main"]}>
             
             <CalendarAdmin 
-                shifts={shiftsMap} 
+                shiftsMap={shiftsMap} 
                 dateStore={dateStore}
                 stringRealDateToday={stringRealDateToday}
             />
@@ -107,8 +107,8 @@ export function AdminHomePage() {
                         
                         <BrigadeDropdown
                             key={s.id} 
-                            shift={s} 
-                            dateStore={dateStore} 
+                            shift={s}  
+                            shiftsToday={shiftsToday}
                         />
 
                     ))}
@@ -127,7 +127,7 @@ export function AdminHomePage() {
                         <BrigadeDropdown
                             key={s.id}
                             shift={s}
-                            dateStore={dateStore}
+                            shiftsToday={shiftsToday}
                         />
                         
                     ))}

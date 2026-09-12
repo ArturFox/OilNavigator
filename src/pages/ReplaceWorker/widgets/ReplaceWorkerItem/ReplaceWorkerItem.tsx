@@ -1,5 +1,7 @@
+import type { Brigade } from '../../../../entities/brigades/types/brigades.dto';
 import type { PersonsWithStatus } from '../../../../entities/persons/types/persons.dto';
 import { ModalCenterWindow } from '../../../../shared/ui/Modal/ModalCenterWindow/ModalCenterWindow';
+import type { SelectedPerson } from '../../types/typeReplaseWorker';
 import styles from './ReplaceWorkerItem.module.scss';
 import { useEffect, useState } from 'react';
 
@@ -7,8 +9,9 @@ interface Props {
     person: PersonsWithStatus;
     selected: string;
     onSelected: (value: string) => void;
-    onSelectedPerson: (value: PersonsWithStatus | null) => void;
-    personToReplace: PersonsWithStatus | undefined;
+    onSelectedPerson: (value: SelectedPerson) => void;
+    personToReplace: PersonsWithStatus | null;
+    b: Brigade;
 }
 
 export function ReplaceWorkerItem (
@@ -17,7 +20,8 @@ export function ReplaceWorkerItem (
         selected, 
         onSelected, 
         onSelectedPerson,
-        personToReplace
+        personToReplace,
+        b
     }: Props
 ) {
 
@@ -55,10 +59,10 @@ export function ReplaceWorkerItem (
 
     return(
 
-        <li
+        <div
             className={`
                 ${styles["replaceWorkerItem"]}    
-                ${person.redAlarm.length > 0 && styles["replaceWorkerItem--redAlarm"]}
+                ${ person.redAlarm.length > 0 && styles["replaceWorkerItem--redAlarm"]}
             `}
         >
 
@@ -127,7 +131,7 @@ export function ReplaceWorkerItem (
                     <div
                         className={styles["replaceWorkerItem__heCanBlock"]}
                     >
-                        {person.he_can?.map((block, index) => {
+                        {person.he_can?.map((block) => {
 
                             let blockSame: boolean;
 
@@ -174,10 +178,16 @@ export function ReplaceWorkerItem (
 
                         if(selected === person.id){
                             onSelected('')
-                            onSelectedPerson(null)
+                            onSelectedPerson({
+                                personObj: null,
+                                brigade: null
+                            })
                         }else {
                             onSelected(person.id)
-                            onSelectedPerson(person)
+                            onSelectedPerson({
+                                personObj: person,
+                                brigade: b
+                            })
                         }
                         
                     }}
@@ -210,6 +220,6 @@ export function ReplaceWorkerItem (
                 personToReplace = {personToReplace}
             />
 
-        </li>
+        </div>
     )
 }

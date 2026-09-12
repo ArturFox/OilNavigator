@@ -31,5 +31,37 @@
 .userChange__peopleList {
     display: flex;
     flex-direction: column;
+    gap: rem(20);
+}
+
+.userChange__peopleItem {
+    display: flex;
+    flex-direction: column;
     gap: rem(10);
+}
+
+.userChange__peopleTitle {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    color: var(--white99);
+
+    &--curentBrigade {
+
+        white-space: nowrap;
+
+        overflow: hidden;
+
+        &--notView {
+            display: none
+        }
+    }
+}
+
+.userChange__peopleBlock {
+    display: flex;
+    flex-direction: column;
+    gap: rem(15);
 }

@@ -28,9 +28,9 @@ export function WalletPage() {
   const onlyYearAndMonth: string = selectedDate.split('-').slice(0, 2).join('-');
 
   const { data: categories, isLoading: isCatLoading } = useGetCategoriesQuery();
-  const { data: expenses, isLoading: isExpLoading } = useGetExpensesQuery(onlyYearAndMonth);
+  const { isLoading: isExpLoading } = useGetExpensesQuery(onlyYearAndMonth);
   const { data: income, isLoading: isIncomeLoading } = useGetIncomeQuery();
-  const { data: earnings, isLoading: isEarningsLoading } = useGetEarningsQuery(onlyYearAndMonth);
+  const { isLoading: isEarningsLoading } = useGetEarningsQuery(onlyYearAndMonth);
 
   const f = useSelector(categoriestTotalSum(onlyYearAndMonth));
   const g = useSelector(incomeTotalSum(onlyYearAndMonth));

@@ -21,8 +21,6 @@ export const getPersonReplacementApi = createApi({
                     return { error };
                 }
 
-                console.log(data)
-
                 return { data: data ?? [] };
 
             },

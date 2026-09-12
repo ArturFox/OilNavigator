@@ -1,7 +1,7 @@
 import { Menu, Search } from "lucide-react";
 import styles from './ReplaceWorkerFilters.module.scss';
-import type { FilterSelected } from "../../../../features/hooks/useFilter";
 import type { Brigade } from "../../../../entities/brigades/types/brigades.dto";
+import type { FilterSelected } from "../../types/typeReplaseWorker";
 
 interface Props {
     inputText: string;

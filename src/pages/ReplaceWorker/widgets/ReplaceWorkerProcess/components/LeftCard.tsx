@@ -1,10 +1,11 @@
 import { useEffect, useState } from 'react';
 import styles from './LeftCard.module.scss';
 import type { PersonsWithStatus } from '../../../../../entities/persons/types/persons.dto';
+import type { SelectedPerson } from '../../../types/typeReplaseWorker';
 
 interface Props {
-    selectedPerson: PersonsWithStatus | null;
-    personToReplace: PersonsWithStatus | undefined;
+    selectedPerson: SelectedPerson;
+    personToReplace: PersonsWithStatus | null;
     arrProblemPersonToReplace: string[];
     modalCenter: boolean;
     onModalCenter: (modalCenter: boolean) => void;
@@ -47,7 +48,9 @@ export function LeftCard (
                         className={`
                             ${styles["leftCard"]}
 
-                            ${selectedPerson && styles["leftCard--selected"]}
+                            ${(selectedPerson.brigade && selectedPerson.personObj) 
+                                && styles["leftCard--selected"]
+                            }
 
                             ${personToReplace.redAlarm.length > 0 &&
                             personToReplace.yellowAlarm.length > 0 
@@ -62,7 +65,7 @@ export function LeftCard (
                     >
                         <h3 className={styles["leftCard__blockBrigadeName"]}>
                             <span>
-                                Бригада {personToReplace.brigade_name}
+                                Бригада {personToReplace.brigade_name?.number_brigade}
                             </span>
                         </h3>
 
@@ -120,7 +123,9 @@ export function LeftCard (
                         className={`
                             ${styles["leftCard"]}
                             ${styles["leftCard--notHuman"]}
-                            ${selectedPerson && styles["leftCard--selected"]}
+                            ${(selectedPerson.brigade && selectedPerson.personObj) 
+                                && styles["leftCard--selected"]
+                            }
                         `}
                     >
 

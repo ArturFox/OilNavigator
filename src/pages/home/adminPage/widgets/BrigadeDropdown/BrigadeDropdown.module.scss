@@ -12,10 +12,10 @@
   border-radius: rem(20);
   border-top-right-radius: 0;
 
-  background-color: var(--blue99);
+  background-color: var(--white99);
 
   &--isFutureDate {
-    background-color: var(--white99);
+    background-color: var(--blue99);
   }
 
   &:has(:focus-visible) {

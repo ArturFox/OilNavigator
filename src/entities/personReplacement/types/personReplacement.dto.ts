@@ -1,19 +1,23 @@
 export interface PersonReplacementDto {
     id: string;
     date: string;
-    person_id: string;
-    replacement_person_id: string;
     created_at: string;
-    replacement_brigade_id: string
-    person_brigade_id: string;
+
+    person_who_was_replaced_id: string | null;
+    person_who_was_replaced_brigade_id: string;
+
+    person_replaced_id: string
+    person_replaced_brigade_id: string | null;
 }
 
 export interface PersonReplacementMapper {
     id: string;
     date: string;
-    personId: string;
-    replacementPersonId: string;
-    createdAt: string;
-    replacement_brigade_id: string;
-    person_brigade_id: string;
+    created_at: string;
+
+    personWhoWasReplacedId: string | null;
+    personWhoWasReplacedBrigadeId: string;
+
+    personReplacedId: string;
+    personReplacedBrigadeId: string | null;
 }

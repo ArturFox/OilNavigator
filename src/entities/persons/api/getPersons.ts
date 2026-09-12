@@ -14,7 +14,19 @@ export const getPesonsApi = createApi({
             
             queryFn: async () => {
 
-                const { data, error } = await supabase.from("persons").select("*")
+                console.log("🔥 GET PERSON REPLACEMENT ЗАПРОС");
+
+                const { data, error } = await supabase
+                .from("persons")
+                .select(`
+                    *,
+                    brigade_name:brigades (
+                        number_brigade
+                    )
+                `);
+
+                console.log("🔥 GET PERSON REPLACEMENT DATA:", data);
+
 
                 if (error) {
                     return { error };

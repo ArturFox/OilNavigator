@@ -6,16 +6,12 @@ interface Props {
     hasRedAlarm: boolean;
     hasYellowAlarm: boolean;
     shift: SortShift;
-    brigadeName?: string;
-    isFutureDate: boolean;
 }
 
 export function PersonCard ({
     hasRedAlarm, 
     hasYellowAlarm,  
     shift, 
-    brigadeName,
-    isFutureDate
 }: Props) {
 
     return (
@@ -31,11 +27,11 @@ export function PersonCard ({
                     <div 
                         className={`
                             ${styles["personCard__icon"]}
-                            ${!isFutureDate && styles["personCard__icon--gray"]}    
+                            ${!shift.isFutureDate && styles["personCard__icon--gray"]}    
                         `}
                         aria-hidden="true"
                     >
-                        {isFutureDate 
+                        {shift.isFutureDate 
                             ? hasRedAlarm && hasYellowAlarm
                                 ?   <OctagonAlert 
                                         className={styles["personCard__statusIcon--mixed"]}
@@ -69,16 +65,16 @@ export function PersonCard ({
                         <span 
                             className={`
                                 ${styles["personCard__brigadeName"]}
-                                ${!isFutureDate && styles["personCard__brigadeName--gray"]}    
+                                ${!shift.isFutureDate && styles["personCard__brigadeName--gray"]}    
                             `}
                         >
 
-                            {brigadeName}
+                            {shift.brigade?.name ?? 'Такой бригады нету'}
 
                         </span>
                         
                         
-                        {isFutureDate 
+                        {shift.isFutureDate 
                             ? hasRedAlarm && hasYellowAlarm
 
                                 ? (
@@ -133,7 +129,7 @@ export function PersonCard ({
 
             <div className={`
                 ${styles["personCard__russianDate"]}
-                ${!isFutureDate && styles["personCard__russianDate--gray"]}
+                ${!shift.isFutureDate && styles["personCard__russianDate--gray"]}
             `}>
 
                 <span>

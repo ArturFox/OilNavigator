@@ -1,8 +1,8 @@
 export interface DayItem {
     day: number
     weekDay: string
-    hasProblem: boolean
+    hasRedAlarm: boolean
     stringDate: string
-    soonVacation: boolean,
+    hasYellowAlarm: boolean,
     checkRealMonth: boolean
 }

@@ -1,6 +1,6 @@
 import { OctagonAlert } from 'lucide-react'
 import { useDispatch } from 'react-redux';
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import type { SortShift } from '../../../../../entities/shifts/types/shifts.dto';
 import { changeDay } from '../../../../../app/store/store';
 import styles from './CalendarAdmin.module.scss';
@@ -8,48 +8,29 @@ import { generateCalendarDays } from '../../model/generateCalendarDays';
 import type { DayItem } from '../../types/dayItem.type';
 
 
-interface peopleMapeProps {
-    shifts: Map<string, SortShift[]>
+interface Props {
+    shiftsMap: Map<string, SortShift[]>
     dateStore: string;
     stringRealDateToday: string;
 }
 
-export function CalendarAdmin ({ shifts, dateStore, stringRealDateToday}: peopleMapeProps) {
+export function CalendarAdmin ({ shiftsMap, dateStore, stringRealDateToday}: Props) {
 
     const dispatch = useDispatch();
     
     const [userSelect, onUserSelect] = useState<string>(stringRealDateToday);
     
-    const [y,m] = dateStore.split('-').map(Number);
-
-    const dateStoreLocal: Date = new Date(y, m - 1, 1);
-
-    const daysMonth: number = new Date(
-        dateStoreLocal.getFullYear(),
-        dateStoreLocal.getMonth() + 1,
-        0
-    ).getDate();
-
-    const year: number = dateStoreLocal.getFullYear();
-    const month: number = dateStoreLocal.getMonth();
-    
-    const days: DayItem[] = useMemo(() => {
-        
-        return generateCalendarDays({
-            year,
-            month,
-            daysMonth,
-            shifts,
-            stringRealDateToday
-        });
-
-    }, [year, month, daysMonth, shifts, stringRealDateToday])
+    const days: DayItem[] = generateCalendarDays({
+        shiftsMap,
+        stringRealDateToday,
+    });
 
     const todayRef = useRef<HTMLSpanElement | null>(null);
 
-    useEffect(() => {
+    const [, month] = stringRealDateToday.split('-').map(Number);
+    const [, m] = dateStore.split('-').map(Number);
 
-        const [_, month] = stringRealDateToday.split('-').map(Number);
+    useEffect(() => {
 
         if(m === month){
             onUserSelect(stringRealDateToday)
@@ -64,7 +45,8 @@ export function CalendarAdmin ({ shifts, dateStore, stringRealDateToday}: people
             inline: 'center' 
         }); 
         
-    }, [m]);
+    }, [month, m]);
+
 
     return(
 
@@ -133,11 +115,11 @@ export function CalendarAdmin ({ shifts, dateStore, stringRealDateToday}: people
                                 className={`
                                     ${styles["calendar__exclamation"]}
                                     ${
-                                        day.hasProblem && day.soonVacation
+                                        day.hasRedAlarm && day.hasYellowAlarm
                                             ? styles["calendar__exclamation--blink"]
-                                            : day.hasProblem
+                                            : day.hasRedAlarm
                                                 ? styles["calendar__exclamation--red"]
-                                                : day.soonVacation
+                                                : day.hasYellowAlarm
                                                     ? styles["calendar__exclamation--yellow"]
                                                     : ""
                                     }

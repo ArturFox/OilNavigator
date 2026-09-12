@@ -5,11 +5,13 @@ export function mappperPersonReplacement (personReplacement: PersonReplacementDt
     return {
         id: personReplacement.id,
         date: personReplacement.date,
-        personId: personReplacement.person_id,
-        replacementPersonId: personReplacement.replacement_person_id,
-        createdAt: personReplacement.created_at,
-        replacement_brigade_id: personReplacement.replacement_brigade_id,
-        person_brigade_id: personReplacement.person_brigade_id,
+        created_at: personReplacement.created_at,
+
+        personWhoWasReplacedId: personReplacement.person_who_was_replaced_id,
+        personWhoWasReplacedBrigadeId: personReplacement.person_who_was_replaced_brigade_id,
+
+        personReplacedId: personReplacement.person_replaced_id,
+        personReplacedBrigadeId: personReplacement.person_replaced_brigade_id
     }
 
 }

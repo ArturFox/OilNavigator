@@ -1,13 +1,14 @@
 import type { PersonsWithStatus } from '../../../../entities/persons/types/persons.dto';
 import { ModalCenterWindow } from '../../../../shared/ui/Modal/ModalCenterWindow/ModalCenterWindow';
+import type { SelectedPerson } from '../../types/typeReplaseWorker';
 import { LeftCard } from './components/LeftCard';
 import { RightCard } from './components/RightCard';
 import styles from './ReplaceWorkerProcess.module.scss';
 import { useState } from 'react';
 
 interface Props {
-    selectedPerson: PersonsWithStatus | null;
-    personToReplace: PersonsWithStatus | undefined;
+    selectedPerson: SelectedPerson;
+    personToReplace: PersonsWithStatus | null;
     arrProblemPersonToReplace: string[];
     ap: (selectedHuman: PersonsWithStatus) => Promise<void>;
 }

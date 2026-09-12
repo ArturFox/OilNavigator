@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import styles from './RightCard.module.scss';
 import type { PersonsWithStatus } from "../../../../../entities/persons/types/persons.dto";
+import type { SelectedPerson } from "../../../types/typeReplaseWorker";
 
 interface Props {
-    selectedPerson: PersonsWithStatus | null;
+    selectedPerson: SelectedPerson;
     ap: (selectedHuman: PersonsWithStatus) => Promise<void>;
 }
 
@@ -18,13 +19,12 @@ export function RightCard (
 
     let arrProblemSelectedPerson: string[] = [];
 
-    if(selectedPerson) {
+    if(selectedPerson.personObj) {
         arrProblemSelectedPerson = [
-            ...selectedPerson.redAlarm,
-            ...selectedPerson.yellowAlarm
+            ...selectedPerson.personObj.redAlarm,
+            ...selectedPerson.personObj.yellowAlarm
         ]
     }
-    console.log(arrProblemSelectedPerson)
 
     let problemsMoreThatOne: boolean = false;
 
@@ -54,11 +54,11 @@ export function RightCard (
             className={`
                 ${styles["rightCard"]}
 
-                ${selectedPerson && styles["rightCard--selected"]}
+                ${selectedPerson.personObj && styles["rightCard--selected"]}
                 
             `}
         >
-            {selectedPerson 
+            {selectedPerson.personObj
 
                 ?   
                 <>
@@ -68,7 +68,7 @@ export function RightCard (
 
                         <span>
 
-                            Бригада {selectedPerson.brigade_name}
+                            Бригада {selectedPerson.brigade?.number_brigade}
 
                         </span>
 
@@ -82,14 +82,14 @@ export function RightCard (
                             className={styles["rightCard__surnameName"]}
                         >
 
-                            {selectedPerson.surname} {selectedPerson.name}
+                            {selectedPerson.personObj?.surname} {selectedPerson.personObj?.name}
 
                         </span>
 
                         <span
                             className={styles["rightCard__otherSurname"]}
                         >
-                            {selectedPerson.other_surname}
+                            {selectedPerson.personObj?.other_surname}
                         </span>
 
                     </div>
@@ -106,7 +106,7 @@ export function RightCard (
                         <span
                             className={styles["rightCard__jobText"]}
                         >
-                            {selectedPerson.job_title} / {selectedPerson.block}
+                            {selectedPerson.personObj?.job_title} / {selectedPerson.personObj?.block}
                         </span>
 
                     </div>
@@ -162,8 +162,8 @@ export function RightCard (
                     ${selectedPerson !== null && styles["rightCard__acceptButton--selected"]}
                 `}
                 onClick={() => {
-                    if(selectedPerson){
-                        ap(selectedPerson)
+                    if (selectedPerson.personObj) {
+                        ap(selectedPerson.personObj)
                     }
                 }}
             >

@@ -16,7 +16,9 @@ export interface PersonsDto {
     he_can: string[] | null;
     sick_start: string | null;
     sick_end: string | null;
-    brigade_name: string
+    brigade_name: {
+        number_brigade: number;
+    } | null;
     study_start: string | null;
     study_end: string | null;
     
@@ -40,7 +42,9 @@ export interface Persons {
     he_can: string[] | null;
     sick_start: string | null;
     sick_end: string | null;
-    brigade_name: string
+    brigade_name: {
+        number_brigade: number;
+    } | null;
     study_start: string | null;
     study_end: string | null;
 }

@@ -1,4 +1,4 @@
-import { ArrowDownWideNarrow, BadgeCheck, OctagonAlert } from 'lucide-react'
+import { ArrowDownWideNarrow, OctagonAlert } from 'lucide-react'
 import styles from './SceletonAdmin.module.scss'
 
 export function SceletonAdmin () {
@@ -119,7 +119,7 @@ export function SceletonAdmin () {
                                                 aria-hidden="true"
                                             >
 
-                                                <ArrowDownWideNarrow aria-hidden="true"/>
+                                                <ArrowDownWideNarrow/>
 
                                             </div>
 

@@ -6,7 +6,7 @@ type ChangePersonBrigadeProps = {
 };
 
 export function usePersonManagment () {
-    const [deleteBrigadeOnPerson, { isLoading: isCreating }] = useDeletPersonBrigadeMutation();
+    const [deleteBrigadeOnPerson] = useDeletPersonBrigadeMutation();
     const [changePerson] = useChangePersonBrigadeMutation();
 
     async function deletF(data: string) {

@@ -1,7 +1,7 @@
 import { useEffect, type Dispatch, type SetStateAction } from 'react';
 import styles from './Modal.module.scss';
 import type { Brigade } from '../../../entities/brigades/types/brigades.dto';
-import type { filterSelected } from '../../../pages/ReplaceWorker/ui/ReplaceWorker';
+import type { FilterSelected } from '../../../pages/ReplaceWorker/types/typeReplaseWorker';
 
 interface Props {
     modal: boolean;
@@ -10,8 +10,8 @@ interface Props {
     jobTitleArr: string[];
     blockArr: string[];
     dischargeArr: number[];
-    filters: filterSelected;
-    onFilters: Dispatch<SetStateAction<filterSelected>>;
+    filters: FilterSelected;
+    onFilters: Dispatch<SetStateAction<FilterSelected>>;
     filterApply: boolean;
     onFilterApply: (filterApply: boolean) => void;
 }
@@ -25,8 +25,8 @@ export function Modal ({
     dischargeArr,
     filters,
     onFilters,
-    filterApply,
-    onFilterApply
+    onFilterApply,
+    filterApply
 }: Props) {
     
 
@@ -230,7 +230,7 @@ export function Modal ({
                 <button
                     className={styles["modal__apply"]}
                     onClick={() => {
-                        onFilterApply(filterApply = true)
+                        onFilterApply(!filterApply)
                         onModal(modal = false)
                     }}
                 >
