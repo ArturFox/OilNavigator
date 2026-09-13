@@ -19,27 +19,27 @@ import type { SelectedPerson } from './types/typeReplaseWorker';
 import { sortShiftMap, sortWhoDontHaveBrigade } from '../Home/adminPage/model/selectorsAdminPage';
 import { toast } from 'sonner';
 import { getPersonReplacementApi, useGetPersonReplacementQuery } from '../../entities/personReplacement/api/getPersonReplacement';
+import { useGetShiftsQuery } from '../../entities/shifts/api/getShifts';
 
 export function ReplaseWorker () {
 
     const navigate = useNavigate();
     const [searchParams] = useSearchParams();
 
-    const personId = searchParams.get("personId");
-    const personWhoWasReplacedBrigadeId = searchParams.get("brigadeId");
-     const dateStore: string = searchParams.get("date") ?? '';
-    
+    const personId: string | null = searchParams.get("personId");
+    const personWhoWasReplacedBrigadeId: string | null = searchParams.get("brigadeId");
+    const dateStore: string = searchParams.get("date") ?? '';
 
     // вызываем API хуки 
     const personsQuery = useGetPesonsQuery();
     const brigadesQuery = useGetBrigadesQuery();
     const personReplacementQuery = useGetPersonReplacementQuery();
+    const shiftQuery = useGetShiftsQuery();
 
     const brigadesArr = useSelector(brigadesSortArr) as Brigade[];
     const jobTitleArr = useSelector(jobTitlePerson) as string[];
     const blockArr = useSelector(blockPerson) as string[];
     const dischargeArr = useSelector(dischargePerson) as number[];
-
     const shiftSort = useSelector(sortShiftMap) as Map<string, SortShift[]>; 
     
     // чтобы дойти до этого окна
@@ -279,7 +279,12 @@ export function ReplaseWorker () {
 
     }
 
-    if(personsQuery.isLoading || brigadesQuery.isLoading){
+    if(
+        personsQuery.isLoading || 
+        brigadesQuery.isLoading || 
+        personReplacementQuery.isLoading ||
+        shiftQuery.isLoading
+    ){
         return(
             <div>
                 грузится

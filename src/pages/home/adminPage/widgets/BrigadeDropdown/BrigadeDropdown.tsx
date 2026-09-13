@@ -115,7 +115,6 @@ export function BrigadeDropdown(
                         isFutureDate={shift.isFutureDate} 
                         startDate={shift.startDate}
                         personWhoWasReplacedBrigadeId={shift.brigade.id}
-                        shiftsToday={shiftsToday}
                     />
 
                 ))}
@@ -129,7 +128,6 @@ export function BrigadeDropdown(
                             isFutureDate={shift.isFutureDate}
                             startDate={shift.startDate}
                             personWhoWasReplacedBrigadeId={shift.brigade.id}
-                            shiftsToday={shiftsToday}
                         />
                         
                     ))

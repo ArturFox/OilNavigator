@@ -11,7 +11,6 @@ interface Props {
   isFutureDate: boolean;
   startDate: string;
   personWhoWasReplacedBrigadeId: string;
-  shiftsToday: SortShift[]
 }
 
 export function PersonDropdownItem (
@@ -20,7 +19,6 @@ export function PersonDropdownItem (
         isFutureDate,
         startDate,
         personWhoWasReplacedBrigadeId,
-        shiftsToday
     }:Props
 ) {
 
@@ -30,8 +28,6 @@ export function PersonDropdownItem (
     const [modalCenter, onModalCenter] = useState<boolean>(false);
 
     if(!personWhoWasReplacedId){
-
-        const personNull = null;
 
         return (
             
@@ -66,14 +62,7 @@ export function PersonDropdownItem (
                         type="button"
                         aria-label={`Не хватает человека`}
                         onClick={() => {
-                            navigate('/userChange', {
-                                state: {
-                                    personNull,
-                                    startDate,
-                                    personWhoWasReplacedBrigadeId,
-                                    shiftsToday
-                                },
-                            })
+                            navigate(`/userChange?personId=${null}&brigadeId=${personWhoWasReplacedBrigadeId}&date=${startDate}`)
                         }}
                         disabled={isFutureDate === false}
                     >
