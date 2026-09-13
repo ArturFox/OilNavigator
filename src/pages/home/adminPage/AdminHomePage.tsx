@@ -1,4 +1,3 @@
-import { useState } from "react";
 import { useSelector } from "react-redux";
 import styles from './AdminHomePage.module.scss';
 import { useGetPesonsQuery } from "../../../entities/persons/api/getPersons";
@@ -20,9 +19,6 @@ export function AdminHomePage() {
     const shiftsQuery = useGetShiftsQuery();
     const personsReplacementQuery = useGetPersonReplacementQuery();
 
-    // состояние для открытия карточек бригад которые отдыхают
-    const [flagArrslakers, setFlagArrslakers] = useState<boolean>(false);
-
     // получаем дату из стора 
     // эту дату отдаем в widget "CalendarAdmin" и "BrigadeDropDown"
     // управляет датой две стрелки в файле "MainLayout",
@@ -42,9 +38,6 @@ export function AdminHomePage() {
 
     // отсортировали кто работает 
     const shiftsWhoWorkToday: SortShift[] = shiftsToday.filter(s => s.code !== "О");
-
-    // отсортировали кто отдыхает
-    const shiftsWhoRestToday: SortShift[] = shiftsToday.filter(s => s.code === "О");
 
     // узнаем реальную дату и превращаем в string
     const realDateToday: Date = new Date();
@@ -76,27 +69,6 @@ export function AdminHomePage() {
                 stringRealDateToday={stringRealDateToday}
             />
 
-            <section 
-                className={styles["main__changeShift"]}
-            >
-            
-                <button 
-                    onClick={() => setFlagArrslakers(!flagArrslakers)}
-                    className={`
-                        ${styles["main__buttonChangeShift"]}
-                        ${flagArrslakers && styles["main__buttonChangeShift--open"]}
-   
-                    `}
-                    type="button"
-                    aria-expanded={flagArrslakers}
-                    aria-controls="rest-brigades"
-                    aria-label="Показать все бригады"
-                >
-                    Все бригады
-                </button>
-
-            </section>
-
             <section
                 className={styles['main__list']}
             >
@@ -111,25 +83,6 @@ export function AdminHomePage() {
                             shiftsToday={shiftsToday}
                         />
 
-                    ))}
-
-                </ul>
-
-                <ul
-                    className={`
-                        ${styles["main__shadow"]}
-                        ${flagArrslakers && styles['main__shadow--open']}    
-                    `}
-                >
-
-                    {shiftsWhoRestToday.map((s) => (
-
-                        <BrigadeDropdown
-                            key={s.id}
-                            shift={s}
-                            shiftsToday={shiftsToday}
-                        />
-                        
                     ))}
 
                 </ul>

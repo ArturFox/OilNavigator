@@ -17,8 +17,13 @@ export function generateCalendarDays({
 
             const [, , day] = stringDate.split('-').map(Number);
 
-            const checkRealMonth =
-                stringRealDateToday.split('-')[1] === stringDate.split('-')[1];
+            const isFutureDate: boolean = stringDate > stringRealDateToday;
+            const isPastDate: boolean = stringDate < stringRealDateToday;  
+            const isToday = stringDate === stringRealDateToday; 
+
+            const checkRealMonth: boolean =
+                stringRealDateToday.split('-')[1] === stringDate.split('-')[1] &&
+                stringRealDateToday.split('-')[0] === stringDate.split('-')[0];
 
             const whoWorkOnThisDay = shiftsForDay.filter(
                 (s) =>  s.code !== 'О' && s.code !== 'O'
@@ -39,6 +44,9 @@ export function generateCalendarDays({
                 hasRedAlarm,
                 hasYellowAlarm,
                 checkRealMonth,
+                isFutureDate,
+                isPastDate,
+                isToday
             };
         }
     );

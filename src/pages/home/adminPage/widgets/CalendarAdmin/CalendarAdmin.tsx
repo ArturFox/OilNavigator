@@ -74,13 +74,23 @@ export function CalendarAdmin ({ shiftsMap, dateStore, stringRealDateToday}: Pro
                                 ${day.checkRealMonth
                                     
                                     ? userSelect === stringRealDateToday
+
                                         ? stringRealDateToday === day.stringDate
                                             ? styles["calendar__button--todaySelected"]
                                             : ''
+
                                         : userSelect === day.stringDate
-                                            ? styles["calendar__button--todaySelected"]
-                                            : stringRealDateToday === day.stringDate
-                                                ? styles["calendar__button--todayNotSelected"]
+
+                                            ? day.isFutureDate
+
+                                                ? styles["calendar__button--isFutureDate"]
+
+                                                : day.isPastDate
+                                                    ? styles["calendar__button--isPastDate"]
+                                                    : ''
+
+                                            : day.isToday
+                                                ? styles["calendar__button--isToday"]
                                                 : ''
 
                                     : dateStore === day.stringDate

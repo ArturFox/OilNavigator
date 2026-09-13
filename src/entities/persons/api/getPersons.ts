@@ -14,8 +14,6 @@ export const getPesonsApi = createApi({
             
             queryFn: async () => {
 
-                console.log("🔥 GET PERSON REPLACEMENT ЗАПРОС");
-
                 const { data, error } = await supabase
                 .from("persons")
                 .select(`
@@ -24,9 +22,6 @@ export const getPesonsApi = createApi({
                         number_brigade
                     )
                 `);
-
-                console.log("🔥 GET PERSON REPLACEMENT DATA:", data);
-
 
                 if (error) {
                     return { error };

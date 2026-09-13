@@ -1,10 +1,9 @@
 import { useSelector } from 'react-redux';
 import { useEffect, useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { getPesonsApi, useGetPesonsQuery } from '../../entities/persons/api/getPersons';
 import { useGetBrigadesQuery } from '../../entities/brigades/api/getBrigades';
 import { brigadesSortArr } from '../../entities/brigades/model/selectors/brigades';
-import type { RootState } from '../../app/store/store';
 import type { Brigade } from '../../entities/brigades/types/brigades.dto';
 import type { PersonsWithStatus } from '../../entities/persons/types/persons.dto';
 import { Modal } from '../../shared/ui/Modal/Modal';
@@ -17,30 +16,36 @@ import { useFilter } from './model/useFilter';
 import { blockPerson, dischargePerson, jobTitlePerson } from './model/selectorsReplaceWorker';
 import type { SortShift } from '../../entities/shifts/types/shifts.dto';
 import type { SelectedPerson } from './types/typeReplaseWorker';
-import { sortWhoDontHaveBrigade } from '../Home/adminPage/model/selectorsAdminPage';
+import { sortShiftMap, sortWhoDontHaveBrigade } from '../Home/adminPage/model/selectorsAdminPage';
 import { toast } from 'sonner';
 import { getPersonReplacementApi, useGetPersonReplacementQuery } from '../../entities/personReplacement/api/getPersonReplacement';
 
 export function ReplaseWorker () {
 
     const navigate = useNavigate();
+    const [searchParams] = useSearchParams();
+
+    const personId = searchParams.get("personId");
+    const personWhoWasReplacedBrigadeId = searchParams.get("brigadeId");
+     const dateStore: string = searchParams.get("date") ?? '';
+    
+
     // вызываем API хуки 
     const personsQuery = useGetPesonsQuery();
     const brigadesQuery = useGetBrigadesQuery();
     const personReplacementQuery = useGetPersonReplacementQuery();
 
-    console.log("SUBSCRIPTION:", personReplacementQuery);
-
     const brigadesArr = useSelector(brigadesSortArr) as Brigade[];
     const jobTitleArr = useSelector(jobTitlePerson) as string[];
     const blockArr = useSelector(blockPerson) as string[];
     const dischargeArr = useSelector(dischargePerson) as number[];
+
+    const shiftSort = useSelector(sortShiftMap) as Map<string, SortShift[]>; 
     
     // чтобы дойти до этого окна
     // начальник должен был:
     // нажать на день в календаре, где при нажатии сразу в dateStore кладется выбранный день
     // нажал на пользователя которого надо заменить и мы в этом окне с датой в которой надо кого поменять
-    const dateStore: string = useSelector((state: RootState) => state.date.day);
     const russianDate: string = `${dateStore.slice(8, 10)}-${dateStore.slice(5,7)}-${dateStore.slice(0,4)}`
 
     // только для визуального эффекта в widget ReplaceWorkerItem
@@ -71,15 +76,26 @@ export function ReplaseWorker () {
 
     const shiftsWithoutBrigadeToday: SortShift | undefined = shiftsWhoDontHaveBrigade.get(dateStore);
 
-    // при нажатии на item в widget PersonDropdownItem на иконку ArrowRightLeft
-    // положили этого человека в state: {} от navigate
-    // и вытаскиваем эти данные 
-    const location = useLocation();
+    const foundShift: SortShift | undefined = shiftSort.get(dateStore)?.find(
+        
+        (b) => b.brigade.id === personWhoWasReplacedBrigadeId
 
-    const personWhoWasReplacedId: PersonsWithStatus | null = (location.state.personWhoWasReplacedId ?? null);
-    const arrProblemPersonToReplace: string[] = (location.state.arrProblem ?? []);
-    const personWhoWasReplacedBrigadeId: string = location.state.personWhoWasReplacedBrigadeId;
-    const shiftsToday: SortShift[] = location.state.shiftsToday;
+    );
+
+
+    const personWhoWasReplacedId = foundShift?.peopleOnThisDay.find(
+
+        (p) => p.id === personId
+
+    ) ?? null
+
+    const arrProblemPersonToReplace: string[] = [
+
+        ...personWhoWasReplacedId?.redAlarm ?? [],
+        ...personWhoWasReplacedId?.yellowAlarm ?? [],
+    ]
+
+    const shiftsToday: SortShift[] = shiftSort.get(dateStore) ?? [];
 
     const brigadesAndDontBrigade: SortShift[] = [
         ...shiftsToday,
@@ -112,7 +128,7 @@ export function ReplaseWorker () {
             selectedPerson.brigade.id !== 'no-brigade'
         ){
 
-            const { data, error } = await supabase
+            const { error } = await supabase
             .from('person_replacements')
             .insert([
                 {
@@ -150,7 +166,7 @@ export function ReplaseWorker () {
             selectedPerson.brigade.id === 'no-brigade'
         ){
 
-            const { data, error } = await supabase
+            const { error } = await supabase
             .from('person_replacements')
             .insert([
                 {
@@ -188,7 +204,7 @@ export function ReplaseWorker () {
             selectedPerson.brigade?.id !== 'no-brigade'
         ){
 
-            const { data, error } = await supabase
+            const { error } = await supabase
             .from('person_replacements')
             .insert([
                 {
@@ -229,7 +245,7 @@ export function ReplaseWorker () {
             selectedPerson.brigade?.id === 'no-brigade'
         ){
 
-            const { data, error } = await supabase
+            const { error } = await supabase
             .from('person_replacements')
             .insert([
                 {

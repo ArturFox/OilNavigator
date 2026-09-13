@@ -5,4 +5,7 @@ export interface DayItem {
     stringDate: string
     hasYellowAlarm: boolean,
     checkRealMonth: boolean
+    isFutureDate: boolean,
+    isPastDate: boolean,
+    isToday: boolean
 }

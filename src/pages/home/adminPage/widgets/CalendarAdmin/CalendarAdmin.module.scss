@@ -8,6 +8,8 @@
 
     overflow: scroll;
     scrollbar-width: none;
+
+    min-height: rem(100);
 }
 
 .calendar__item {
@@ -15,7 +17,7 @@
     flex-direction: column;
     align-items: center;
     
-    flex: 0 0 rem(40);
+    flex: 0 0 rem(50);
 }
 
 .calendar__dayOfWeek {
@@ -35,8 +37,16 @@
         background-color: var(--blue99);
     }
 
-    &--todayNotSelected {
+    &--isFutureDate {
+        background-color: var(--blue99);
+    }
+
+    &--isPastDate {
         background-color: var(--white99);
+    }
+
+    &--isToday {
+        background-color: black;
     }
 }
 
