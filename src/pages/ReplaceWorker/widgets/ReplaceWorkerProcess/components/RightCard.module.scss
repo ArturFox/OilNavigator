@@ -221,4 +221,8 @@
         opacity: 1;
         pointer-events: all;
     }
+
+    &--isLoading {
+        background-color: gray;
+    }
 }

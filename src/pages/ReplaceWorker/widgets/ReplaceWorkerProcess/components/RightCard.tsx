@@ -16,6 +16,7 @@ export function RightCard (
 ) {
 
     const [currentIndex, onCurrentIndex] = useState<number>(0);
+    const [isLoading, setIsLoading] = useState<boolean>(false);
 
     let arrProblemSelectedPerson: string[] = [];
 
@@ -159,11 +160,21 @@ export function RightCard (
             <button
                 className={`
                     ${styles["rightCard__acceptButton"]}
-                    ${selectedPerson !== null && styles["rightCard__acceptButton--selected"]}
+                    ${(selectedPerson.brigade && selectedPerson.personObj) && styles["rightCard__acceptButton--selected"]}
+                    ${isLoading && styles["rightCard__acceptButton--isLoading"]}
                 `}
-                onClick={() => {
-                    if (selectedPerson.personObj) {
-                        ap(selectedPerson.personObj)
+                onClick={ async () => {
+                    if (
+                        selectedPerson.personObj && 
+                        selectedPerson.brigade &&
+                        !isLoading
+                    ) {
+                        setIsLoading(true);
+                        try {
+                            await ap(selectedPerson.personObj);
+                        } finally {
+                            setIsLoading(false);
+                        }
                     }
                 }}
             >

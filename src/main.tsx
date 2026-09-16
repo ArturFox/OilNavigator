@@ -7,8 +7,7 @@ import { store } from './app/store/store.ts';
 
 createRoot(document.getElementById('root')!).render(
   
-  
-  <BrowserRouter basename="/OilNavigator">
+  <BrowserRouter basename={import.meta.env.BASE_URL}>
     <Provider store={store}>
       <App />
     </Provider>

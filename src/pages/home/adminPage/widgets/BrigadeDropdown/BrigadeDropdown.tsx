@@ -14,7 +14,6 @@ interface Props {
 export function BrigadeDropdown(
     { 
         shift, 
-        shiftsToday,
     }: Props
 ) {
 

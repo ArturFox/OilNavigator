@@ -4,7 +4,6 @@ import { ArrowRightLeft, Plus, Search } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 import type { PersonsWithStatus } from '../../../../../../entities/persons/types/persons.dto';
 import { ModalCenterWindow } from '../../../../../../shared/ui/Modal/ModalCenterWindow/ModalCenterWindow';
-import type { SortShift } from '../../../../../../entities/shifts/types/shifts.dto';
 
 interface Props {
   personWhoWasReplacedId?: PersonsWithStatus;

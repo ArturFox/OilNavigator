@@ -1,7 +1,7 @@
 import { useState } from "react";
-import type { BrigadesDto } from "../../../entities/brigades/types/brigades.dto";
+import type { Brigade } from "../../../entities/brigades/types/brigades.dto";
 
-export function useBrigadeSelector () {
+export function useBrigadeChange () {
 
     const [brigadeClick, setBrigadeClick] = useState<string[]>([]);
     const [addDateBrigade, setAddDateBrigade] = useState<string[]>([]);
@@ -9,7 +9,7 @@ export function useBrigadeSelector () {
     const [dateInput, setDateInput] = useState<Record<string, string>>({});
 
 
-    function fnDiv (brigade: BrigadesDto) {
+    function fnDiv (brigade: Brigade) {
     
         setBrigadeClick((prev) => prev.includes(brigade.id) 
             ? prev.filter((id) => id !== brigade.id) 
@@ -22,7 +22,7 @@ export function useBrigadeSelector () {
         
     }
 
-    function addDate(brigade: BrigadesDto) {
+    function addDate(brigade: Brigade) {
         setAddDateBrigade(
         (prev) => prev.includes(brigade.id)
             ? prev.filter((id) => id !== brigade.id) 
