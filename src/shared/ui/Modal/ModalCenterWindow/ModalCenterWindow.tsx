@@ -1,11 +1,11 @@
 import { useEffect } from 'react';
 import styles from './ModalCenterWindow.module.scss';
-import type { PersonsWithStatus } from '../../../../entities/persons/types/persons.dto';
+import type { Persons, PersonsWithStatus } from '../../../../entities/persons/types/persons.dto';
 
 interface Props {
     modalCenter: boolean;
     onModalCenter: (modalCenter: boolean) => void;
-    person: PersonsWithStatus;
+    person: PersonsWithStatus | Persons;
     arrProblem?: string[];
     personToReplace?: PersonsWithStatus | null;
 }

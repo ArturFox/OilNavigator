@@ -1,0 +1,69 @@
+@use '../../../../../styles/helpers/' as *;
+
+.brigadeList {
+    display: flex;
+    justify-content: center;
+    gap: rem(10);
+    border-radius: rem(10);
+    padding: rem(10);
+    padding-bottom: rem(15);
+    padding-top: rem(15);
+
+    /* 1. БЛАГОРОДНЫЙ ЧЕРНЫЙ ГРАДИЕНТ (Глубокий обсидиан / темное стекло) */
+    background: linear-gradient(
+        135deg, 
+        var(--white99) 0%,    /* Очень глубокий, но не «мертвый» черный цвет */
+        var(--white99) 40%,   /* Чуть более светлый оттенок, имитирующий мягкий объем */
+        var(--white99) 100%   /* Уход в плотную темноту внизу */
+    );
+    
+    /* 2. ПРИЗРАЧНАЯ ГРАНИЦА */
+    /* Тончайшая полупрозрачная линия, которая просто отделяет контейнер от подложки */
+    border: 1px solid rgba(255, 255, 255, 0.08); 
+
+    box-shadow: 
+        /* Светлый микро-блик по самому верхнему краю (придает текстуру стекла) */
+        inset 0 1px 1px rgba(255, 255, 255, 0.15), 
+        
+        /* Внутренняя тень, которая заставляет карточки внутри как бы «сидеть в нише» */
+        inset 0 4px 20px rgba(0, 0, 0, 0.6), 
+        
+        /* Мягкая внешняя тень, чтобы блок слегка отделялся от основного фона */
+        0 10px 40px rgba(0, 0, 0, 0.5);
+}
+
+
+.brigadeList__brigadeItem {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    aspect-ratio: 1;
+    width: rem(50);
+    flex-shrink: 1;
+
+    border-top-right-radius: rem(15);
+    border-bottom-left-radius: rem(15);
+
+    background-color: var(--white);
+
+    &--current {
+        background-color: var(--blue);
+    }
+
+    &--red {
+        background-color: var(--redBlack);
+    }
+
+}
+
+.brigadeList__brigadeItemButton {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: 100%;
+    height: 100%;
+
+    color: var(--black);
+} 

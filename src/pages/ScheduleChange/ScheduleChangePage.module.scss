@@ -3,13 +3,14 @@
 .scheduleChange {
     display: flex;
     flex-direction: column;
+    gap: rem(10);
     padding-bottom: rem(40);
-    gap: rem(30);
     
 }
 
 .scheduleChange__h4 {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     color: var(--white);
+    font-size: rem(20);
 }

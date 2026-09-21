@@ -1,11 +1,13 @@
 import { useSelector } from 'react-redux';
 import { useGetPersonReplacementQuery } from '../../entities/personReplacement/api/getPersonReplacement';
 import { useGetShiftsQuery } from '../../entities/shifts/api/getShifts';
-import { BrigadeChange, useGetBrigadesQuery, useGetPesonsQuery } from './barrel';
 import styles from './ScheduleChangePage.module.scss';
 import { brigadeSortArrScheduleChange, peopleMapScheduleChange } from './model/selectorsScheduleChange';
 import type { Brigade } from '../../entities/brigades/types/brigades.dto';
 import type { Persons } from '../../entities/persons/types/persons.dto';
+import { useGetPesonsQuery } from '../../entities/persons/api/getPersons';
+import { useGetBrigadesQuery } from '../../entities/brigades/api/getBrigades';
+import { BrigadeChange } from './widgets/BrigadeChange/BrigadeChange';
 
 export function ScheduleChangePage() {
 
@@ -78,7 +80,7 @@ export function ScheduleChangePage() {
             <h4
                 className={styles['scheduleChange__h4']}
             >
-                Состав бригад
+                Основной состав бригад
             </h4>
 
             <BrigadeChange

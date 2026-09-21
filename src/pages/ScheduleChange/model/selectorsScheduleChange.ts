@@ -24,7 +24,7 @@ export const brigadeSortArrScheduleChange = createSelector(
             number_brigade: 0,
         }
 
-        return [noBrigadeItem, ...sortBrigades];;
+        return [noBrigadeItem, ...sortBrigades];
 
     }
 
@@ -56,5 +56,7 @@ export const peopleMapScheduleChange = createSelector(
         })
 
         return map;
+
     }
+
 )

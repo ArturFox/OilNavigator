@@ -1,0 +1,13 @@
+@use '../../../../../styles/helpers/' as *;
+
+.peopleListWrapper {
+    width: 100%;
+    overflow: hidden;
+}
+
+.peopleListWrapper__peopleList {
+    display: flex;
+
+    transition: transform 0.45s ease;
+
+}

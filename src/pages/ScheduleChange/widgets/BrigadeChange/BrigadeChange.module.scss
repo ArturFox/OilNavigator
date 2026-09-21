@@ -3,107 +3,17 @@
 .brigadeChange {
     display: flex;
     flex-direction: column;
+ 
+    gap: rem(10);
 
     border-radius: rem(10);
 
-    background-color: var(--blue99);
-
-    height: rem(570);
 }
 
-.brigadeChange__peopleBlock {
-    position: relative;
-
-    flex: 1;
-
-    min-width: 0;
-    padding: rem(10);
-
-}
-
-.brigadeChange__peopleSwiper {
-
-    height: 100%;
-
-    :global(.swiper-slide) {
-        display: flex;
-        flex-direction: column;
-        gap: rem(10);
-
-        padding: rem(10);
-        
-        border-radius: rem(10);
-    }
-}
-
-.brigadeChange__peopleTitle {
+.brigadeChange__title {
     display: flex;
     justify-content: center;
-    
+    align-items: center;
+
     color: var(--white);
 }
-
-.brigadeChange__peopleList {
-    overflow: scroll;
-
-    display: flex;
-    flex-direction: column;
-    gap: rem(10);
-
-    list-style: none;
-
-    
-}
-
-.brigadeChange__peopleItem {
-    display: flex;
-    justify-content: space-between;
-
-    background-color: var(--white99);
-
-    border-radius: rem(10);
-
-    padding: rem(10);
-    
-}
-
-.brigadeChange__peopleItem-name {
-    flex: 1;
-
-    color: var(--black);
-}
-
-.brigadeChange__peopleItem-button {
-    color: var(--black);
-}
-
-.brigadeChange__brigadeList {
-    display: flex;
-    justify-content: center;
-    gap: rem(10);
-
-    white-space: nowrap;
-
-    padding: rem(10);
-
-}
-
-.brigadeChange__brigadeItemButton {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    aspect-ratio: 1;
-    width: rem(30);
-
-    border-radius: 50%;
-
-    background-color: var(--white);
-    color: var(--black);
-
-    &--red {
-        background-color: var(--redBlack);
-    }
-
-}
-

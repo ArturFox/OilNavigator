@@ -1,0 +1,21 @@
+@use '../../../../../styles/helpers/' as *;
+
+.peopleBrigade {
+    display: flex;
+    flex-direction: column;
+
+    flex: 0 0 100%;
+
+    overflow: hidden;
+    
+}
+
+.peopleBrigade__peopleList {
+    display: flex;
+    flex-direction: column;
+    gap: rem(15);
+
+    list-style: none;
+
+    padding-top: rem(10);
+}
