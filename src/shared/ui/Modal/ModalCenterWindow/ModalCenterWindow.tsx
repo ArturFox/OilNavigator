@@ -1,6 +1,7 @@
 import { useEffect } from 'react';
 import styles from './ModalCenterWindow.module.scss';
 import type { Persons, PersonsWithStatus } from '../../../../entities/persons/types/persons.dto';
+import { createPortal } from 'react-dom'; 
 
 interface Props {
     modalCenter: boolean;
@@ -34,7 +35,9 @@ export function ModalCenterWindow (
 
     }, [modalCenter]);
 
-    return(
+    if (!modalCenter) return null;
+
+    return createPortal (
 
         <div
             className={`
@@ -221,7 +224,9 @@ export function ModalCenterWindow (
 
             </div>
 
-        </div>
+        </div>,
 
-    )
+        document.body
+
+    );
 }

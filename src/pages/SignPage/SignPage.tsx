@@ -1,11 +1,12 @@
 //src/components/signIn/signIn.index.tsx
 
 import { Factory } from 'lucide-react'
-import styles from '../signIn/signIn.module.scss'
+import styles from './SignPage.module.scss'
 import { FormProvider, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { signInForm } from '../../features/auth/model/signIn.schema';
 import { supabase } from '../../shared/api/supabase/client';
+import { toast } from 'sonner';
 
 
 export function SignPage() {
@@ -21,23 +22,34 @@ export function SignPage() {
         
     })
 
-    async function onSubmit(data: { email: string; password: string }) {
+    async function onSubmit(signData: { email: string; password: string }) {
 
         try {
 
-            const { error } = await supabase.auth.signInWithPassword({
-                email: data.email,
-                password: data.password,
+            const { data: authData, error: authError } = await supabase
+            .auth
+            .signInWithPassword({
+                email: signData.email,
+                password: signData.password,
             });
 
-            if (error) {
-                throw error;
-            }
+            if (authError) throw authError;
+
+            const { data: profileData, error: profileError } = await supabase
+            .from('profiles')
+            .select('*')
+            .eq('id', authData.user.id)
+            .single();
+
+            if (profileError) throw profileError;
+
+            toast.success(`Добро Пожаловать ${profileData.name}`)
             
         } catch (error: unknown) {
 
             if (error instanceof Error) {
-                console.log(error.message);
+            
+                toast.error(`Ошибка: ${error.message}`); 
             }
         } 
     }
@@ -46,24 +58,34 @@ export function SignPage() {
 
         <main className={styles['mainAuthorization']}>
 
-            <header className={styles['mainAuthorization__title']}>
+            <section className={styles['mainAuthorization__header']}>
 
-                <Factory className={styles['mainAuthorization__titleFactory']}/>
+                <Factory className={styles['mainAuthorization__header-iconeFactory']}/>
 
-                <h2 className={styles['mainAuthorization__titleText']}>
-                    Нефте Навигатор
+                <h2 className={styles['mainAuthorization__header-text']}>
+                    НЕФТЕНАВИГАТОР
                 </h2>
 
-            </header>
+            </section>
 
-            <section className={styles['mainAuthorization__signIn']}>
+            <section 
+                className={styles['mainAuthorization__signIn']}
+            >
 
                 <FormProvider {...form}>
-                    <form className={styles['mainAuthorization__form']} onSubmit={form.handleSubmit(onSubmit)}>
 
-                        <div className={styles['mainAuthorization__id']}>
+                    <form 
+                        className={styles['mainAuthorization__signIn-form']} 
+                        onSubmit={form.handleSubmit(onSubmit)}
+                    >
 
-                            <h4 className={styles['mainAuthorization__idText']}>
+                        <div 
+                            className={styles['mainAuthorization__signIn-block']}
+                        >
+
+                            <h4 
+                                className={styles['mainAuthorization__signIn-block-title']}
+                            >
                                 Ваш Email
                             </h4>
 
@@ -71,10 +93,10 @@ export function SignPage() {
                                 {...form.register('email')}
                                 type="text"
                                 className={`
-                                    ${styles['mainAuthorization__idInput']}
+                                    ${styles['mainAuthorization__signIn-block-input']}
                                     ${form.formState.errors.email
-                                        ? styles['mainAuthorization__idInput_error'] 
-                                        : styles['mainAuthorization__idInput_good']
+                                        ? styles['mainAuthorization__signIn-block-input--error'] 
+                                        : styles['mainAuthorization__signIn-block-input--good']
                                     }
                                 `} 
                             />
@@ -87,24 +109,20 @@ export function SignPage() {
 
                         </div>
 
-                        <div className={styles['mainAuthorization__pasword']}>
+                        <div className={styles['mainAuthorization__signIn-block']}>
 
-                            <div className={styles['mainAuthorization__titlePassword']}>
-
-                                <h4 className={styles['mainAuthorization__titlePasswordH4']}>
-                                    Пароль
-                                </h4>
-
-                            </div>
+                            <h4 className={styles['mainAuthorization__signIn-block-title']}>
+                                Пароль
+                            </h4>
 
                             <input 
                                 {...form.register('password')}
                                 type="password"
                                 className={`
-                                    ${styles['mainAuthorization__titlePasswordInput']}
+                                    ${styles['mainAuthorization__signIn-block-input']}
                                     ${form.formState.errors.password
-                                        ? styles['mainAuthorization__titlePasswordInput_error']
-                                        : styles['mainAuthorization__titlePasswordInput_good']
+                                        ? styles['mainAuthorization__signIn-block-input--error']
+                                        : styles['mainAuthorization__signIn-block-input--good']
                                     }
                                 `} 
                             />
@@ -132,6 +150,7 @@ export function SignPage() {
                         </button>
 
                     </form>
+
                 </FormProvider>
 
             </section>

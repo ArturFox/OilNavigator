@@ -1,14 +1,14 @@
 //src/features/auth/model/useAuth.ts
 
 import { useEffect, useState } from "react";
-import type { AuthState, SessionType, UserRole } from "./auth.types";
+import type { AuthState, AuthStatus, SessionType, UserRole } from "./auth.types";
 import { supabase } from "../../../shared/api/supabase/client";
 
 export function useAuth(): AuthState {
 
   const [session, setSession] = useState<SessionType>(null);
   const [role, setRole] = useState<UserRole>(null);
-  const [status, setStatus] = useState<AuthState["status"]>("loading");
+  const [status, setStatus] = useState<AuthStatus>("loading");
 
   async function loadRole(userId: string): Promise<UserRole> {
 

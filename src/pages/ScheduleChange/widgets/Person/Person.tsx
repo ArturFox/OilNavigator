@@ -1,8 +1,12 @@
 import { ArrowRightLeft, Plus, Search } from 'lucide-react';
-import type { Persons } from '../../../../../entities/persons/types/persons.dto';
 import styles from './Person.module.scss';
-import { ModalCenterWindow } from '../../../../../shared/ui/Modal/ModalCenterWindow/ModalCenterWindow';
 import { useState } from 'react';
+import { useSelector } from 'react-redux';
+import type { Persons } from '../../../../entities/persons/types/persons.dto';
+import { brigadeSortArrScheduleChange } from '../../model/selectorsScheduleChange';
+import type { Brigade } from '../../../../entities/brigades/types/brigades.dto';
+import { ModalCenterWindow } from '../../../../shared/ui/Modal/ModalCenterWindow/ModalCenterWindow';
+import { ModalReplaceToBrigade } from '../../../../shared/ui/Modal/ModalReplaceToBrigade/ModalReplaceToBrigade';
 
 interface Props {
     person: Persons | null
@@ -14,7 +18,10 @@ export function Person (
     }: Props
 ) {
 
+    const brigadeSortArr = useSelector(brigadeSortArrScheduleChange) as Brigade[];
+
     const [modalCenter, onModalCenter] = useState<boolean>(false);
+    const [modalReplace, onModalReplace] = useState<boolean>(false);
 
     return (
         <>
@@ -40,6 +47,7 @@ export function Person (
                         
                     <button
                         className={styles['peopleItem-buttonArrow']}
+                        onClick={() => onModalReplace(!modalReplace)}
                     >
                         <ArrowRightLeft size={18}/>
                     </button>
@@ -86,6 +94,16 @@ export function Person (
                     person={person}
                 />
 
+            }
+
+            {(person && modalReplace) && 
+
+                <ModalReplaceToBrigade
+                    modalReplace={modalReplace}
+                    onModalReplace={onModalReplace}
+                    person={person}
+                    brigadeArr={brigadeSortArr}
+                />
             }
 
         </>

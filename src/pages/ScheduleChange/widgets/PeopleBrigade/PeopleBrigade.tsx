@@ -1,7 +1,7 @@
-import type { Brigade } from '../../../../../entities/brigades/types/brigades.dto';
-import type { Persons } from '../../../../../entities/persons/types/persons.dto';
+import type { Brigade } from '../../../../entities/brigades/types/brigades.dto';
+import type { Persons } from '../../../../entities/persons/types/persons.dto';
+import { Person } from '../Person/Person';
 import styles from './PeopleBrigade.module.scss';
-import { Person } from './Person';
 
 interface Props {
     brigade: Brigade;

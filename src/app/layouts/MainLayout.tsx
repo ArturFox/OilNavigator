@@ -1,5 +1,5 @@
 import { Link, Outlet, useLocation } from "react-router-dom";
-import { ArrowBigLeft, ArrowBigRight, CalendarCheck, Highlighter, UserPen } from "lucide-react";
+import { ArrowBigLeft, ArrowBigRight, CalendarCheck, CalendarClock, Highlighter, UserPen } from "lucide-react";
 import styles from "../layouts/mainLayout.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { changeDay, type RootState } from "../store/store";
@@ -17,8 +17,9 @@ export function MainLayout({role}: Props) {
   const location = useLocation();
   const isCalendar: boolean = location.pathname === "/";
   const isProfile: boolean = location.pathname === "/profile";
-  const isScheduleChange: boolean = location.pathname === '/scheduleChangePage'
-  const userChange: boolean = location.pathname === '/userChange'
+  const isScheduleChange: boolean = location.pathname === '/scheduleChangePage';
+  const isUserChange: boolean = location.pathname === '/userChange';
+  const isCalendarBrigadeChange: boolean = location.pathname === '/calendarBrigadeChange';
 
   // получаем дату из стора 
   // управляет датой две стрелки, которые в этом файле,
@@ -68,7 +69,10 @@ export function MainLayout({role}: Props) {
 
       
 
-      {userChange === true || isScheduleChange
+      {isUserChange === true || 
+       isScheduleChange ||
+       isCalendarBrigadeChange
+       
         ? null
         : <header
             ref={heightHeaderRef} 
@@ -144,6 +148,36 @@ export function MainLayout({role}: Props) {
               </Link>
 
             </li>
+
+            {role === 'admin' && (
+              <li
+                className={`
+                  ${styles["mainLayout__navigateItem"]}
+                  ${isCalendarBrigadeChange && styles["mainLayout__navigateItem--active"]}  
+                `}
+              >
+
+                <Link
+                  to="/calendarBrigadeChange"
+                  className={`
+                    ${styles["mainLayout__link"]}
+                    ${isCalendarBrigadeChange && styles["mainLayout__link--active"]}  
+                  `}
+                  aria-label="Изменить расписание бригад"
+                  aria-current={isCalendarBrigadeChange ? "page" : undefined}
+                >
+                  
+                  <CalendarClock
+                    className={isCalendarBrigadeChange
+                      ? styles["mainLayout__icone"] 
+                      : ""
+                    } 
+                    aria-hidden="true"
+                  />
+                </Link>
+
+              </li>
+            )}
 
             {role === 'admin' && (
               <li

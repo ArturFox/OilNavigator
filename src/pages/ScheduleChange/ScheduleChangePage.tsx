@@ -1,4 +1,4 @@
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { useGetPersonReplacementQuery } from '../../entities/personReplacement/api/getPersonReplacement';
 import { useGetShiftsQuery } from '../../entities/shifts/api/getShifts';
 import styles from './ScheduleChangePage.module.scss';
@@ -7,9 +7,17 @@ import type { Brigade } from '../../entities/brigades/types/brigades.dto';
 import type { Persons } from '../../entities/persons/types/persons.dto';
 import { useGetPesonsQuery } from '../../entities/persons/api/getPersons';
 import { useGetBrigadesQuery } from '../../entities/brigades/api/getBrigades';
-import { BrigadeChange } from './widgets/BrigadeChange/BrigadeChange';
+import { resetBrigadeTransfer, type RootState } from '../../app/store/store';
+import { supabase } from '../../shared/api/supabase/client';
+import { toast } from 'sonner';
+import { useEffect, useState } from 'react';
+import { PeopleList } from './widgets/PeopleList/PeopleList';
+import { BrigadeList } from './widgets/BrigadeList/BrigadeList';
+import { BadgeCheck } from 'lucide-react';
 
 export function ScheduleChangePage() {
+
+    const dispatch = useDispatch();
 
     // вызываем API хуки 
     const personsQuery = useGetPesonsQuery();
@@ -19,6 +27,7 @@ export function ScheduleChangePage() {
 
     const brigadeSortArr = useSelector(brigadeSortArrScheduleChange) as Brigade[];
     const peopleMap = useSelector(peopleMapScheduleChange) as Map<string, Persons[]>;
+    const brigadeTransfer = useSelector((state: RootState) => state.date.brigadeTransfer);
 
     if(
         personsQuery.isLoading ||
@@ -31,51 +40,74 @@ export function ScheduleChangePage() {
         </div>
     }
 
+    useEffect(() => {
+        if (
+            brigadeTransfer.person &&
+            brigadeTransfer.brigade
+        ) {
+            handleApply();
+        }
+    }, [brigadeTransfer]);
+
+    async function handleApply() {
+        
+        if (!brigadeTransfer.person || !brigadeTransfer.brigade) return;
+
+        let brigadeId: string | null;
+
+        if(brigadeTransfer.brigade.id === 'no_brigade'){
+            brigadeId = null
+        }else{
+            brigadeId = brigadeTransfer.brigade.id
+        }
+
+        const { error } = await supabase
+            .from('persons') 
+            .update({ brigade_id: brigadeId })
+            .eq('id', brigadeTransfer.person.id);
+
+        
+
+        if (error) {
+            toast.error("Ошибка при отправке запроса", {
+                description: error.message,
+            });
+            return;
+        }
+        dispatch(resetBrigadeTransfer());
+        personsQuery.refetch();
+        personReplacementQuery.refetch();
+        personReplacementQuery.refetch();
+        shiftQuery.refetch();
+
+
+        toast.success("Успешно", {
+            position: 'top-right',
+            icon: <BadgeCheck />,
+            style: {
+                background: 'var(--greenBlack)',
+                color: 'var(--white)',
+                display: 'grid',
+                gridTemplateColumns: 'auto 1fr auto',
+                alignItems: 'center',
+                gap: '12px',
+                textAlign: 'center',
+                
+                minWidth: '280px',
+            },
+        });
+       
+    };
+
+    const [brigadeClick, onBrigadeClick] = useState<string>('no_brigade');
+    
+    const currentIndex: number = brigadeSortArr.findIndex(
+        (brigade) => brigade.id === brigadeClick
+    );
+
     return (
 
         <main className={styles['scheduleChange']}> 
-
-            {/* <section className={styles['scheduleChange__block']}>
-            
-                <h4 className={styles['scheduleChange__title']}>
-                    {`Составте график для бригад(ы)`}
-                </h4>
-            
-                <button 
-                    className={styles['scheduleChange__button']}
-                    onClick={() => setArrShift((prev) => prev.slice(0, -1))}
-                    type="button"
-                >
-                    Удалить
-                </button>
-
-            </section> */}
-
-            {/* <ShiftConstructor
-                arrButtons={arrButtons}
-                arrShift={arrShift}
-                setArrShift={setArrShift}
-            /> */}
-
-            {/* <h4 
-                className={styles['scheduleChange__titlee']}
-            >
-
-                <span className={styles['scheduleChange__titlee__span']}>
-                    Оставте или Измените
-                </span>
-
-                <span className={styles['scheduleChange__titlee__span']}>
-                    время начала выбранных смен
-                </span>
-
-            </h4>
-
-            <ShiftTimeEditor
-                openWindow={openWindow}
-                arrButtons={arrButtons}
-                setArrButtons={setArrButtons}
-            /> */}
 
             <h4
                 className={styles['scheduleChange__h4']}
@@ -83,62 +115,31 @@ export function ScheduleChangePage() {
                 Основной состав бригад
             </h4>
 
-            <BrigadeChange
-                brigadeSortArr={brigadeSortArr}
-                peopleMap={peopleMap}
-            />
+            <section 
+                className={styles['brigadeChange']}
+            >
 
-            {/* <PersonsEditor 
-                brigades={arrBrigadesProps} 
-                currentButton={currentButton} 
-                selectedCrew={selectedCrew} 
-                onSelectBrigade={click}
-                deletF={deletF}
-                clickChangePerson={clickChangePerson}
-            /> */}
+                <BrigadeList
+                    brigadeSortArr={brigadeSortArr}
+                    brigadeClick={brigadeClick}
+                    onBrigadeClick={onBrigadeClick}
+                    peopleMap={peopleMap}
+                />
 
-            {/* { newUser && (
-                <OverlayParent
-                    onClose={() => setNewUser(false)}
-                    paddingLeft="20px"
-                    paddingRight="20px"
+                <h3
+                    className={styles['brigadeChange__title']}
                 >
-                    <OverlayChildren>
+                    {brigadeSortArr[currentIndex].name}
+                </h3>
 
-                        <CreateBrigadeModal
-                            setNewUser={setNewUser}
-                            brigadeNumber={brigadeNumber}
-                            setBrigadeNumber={setBrigadeNumber}
-                            newUserSend={newUserSend}
-                            createBrigade={createBrigade}
-                        />
+                <PeopleList
+                    brigadeSortArr={brigadeSortArr}
+                    peopleMap={peopleMap}
+                    currentIndex={currentIndex}
+                    onBrigadeClick={onBrigadeClick}
+                />
 
-                    </OverlayChildren>
-
-                </OverlayParent>
-            )
-            } */}
-
-            {/* {flagOpenWindow && (
-                <OverlayParent
-                    onClose={() => setFlagOpenWindow(false)}
-                    alignItems="flex-end"
-                >
-                    <OverlayChildren
-                        display="block"
-                        color="white"
-                        borderTopLeftRadius={20}
-                        borderTopRightRadius={20}
-                    >
-
-                        <ShiftTimeModal
-                            localState={localState}
-                        />
-
-                    </OverlayChildren>
-
-                </OverlayParent>
-            )} */}
+            </section>
 
         </main>
 
