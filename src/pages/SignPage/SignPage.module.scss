@@ -114,14 +114,14 @@
 }
 
 .mainAuthorization__buttonSignIn {
-    border: rem(4) solid var(--white);
+    border: rem(4) solid var(--white99);
     border-radius: rem(10);
     padding: rem(4);
     background: transparent;
-    color: var(--white);
+    color: var(--white99);
 
     &_good {
-        border: rem(4) solid #F2F1E8;
-        color: #F2F1E8;
+        border: rem(4) solid var(--white);
+        color: var(--white);
     }
 }
