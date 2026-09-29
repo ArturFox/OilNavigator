@@ -1,0 +1,11 @@
+@use '../../../../styles/helpers/' as *;
+
+.h4 {
+    color: var(--white);
+
+    font-size: rem(18);
+
+    &--disable {
+        color: var(--white66);
+    }
+}

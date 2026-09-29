@@ -2,11 +2,12 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { ProtectedRoute } from "./ProtectedRoute";
 import { MainLayout } from "../layouts/MainLayout";
 import type { AuthState } from "../../features/auth/model/auth.types";
-import { ProfilePage } from "../../pages/profile/ui/ProfilePage";
 import { SignPage } from "../../pages/SignPage/SignPage";
 import { HomePage } from "../../pages/Home/HomePage";
 import { ScheduleChangePage } from "../../pages/ScheduleChange/ScheduleChangePage";
 import { ReplaseWorker } from "../../pages/ReplaceWorker/ReplaseWorker";
+import { ProfilePage } from "../../pages/ProfilePage/ProfilePage";
+import { AdminScheduleChange } from "../../pages/AdminScheduleChange/AdminScheduleChange";
 
 interface Props {
 
@@ -48,6 +49,8 @@ export function AppRouter({ auth }: Props) {
         <Route path="profile" element={<ProfilePage/>} />
 
         <Route path="userChange" element={<ReplaseWorker/>}/>
+
+        <Route path="calendarBrigadeChange" element={<AdminScheduleChange/>}/>
         
       </Route>
 

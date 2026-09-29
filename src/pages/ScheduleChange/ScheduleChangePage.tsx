@@ -29,17 +29,6 @@ export function ScheduleChangePage() {
     const peopleMap = useSelector(peopleMapScheduleChange) as Map<string, Persons[]>;
     const brigadeTransfer = useSelector((state: RootState) => state.date.brigadeTransfer);
 
-    if(
-        personsQuery.isLoading ||
-        brigadesQuery.isLoading ||
-        personReplacementQuery.isLoading ||
-        shiftQuery.isLoading
-    ) {
-        <div>
-            ...Загурзка
-        </div>
-    }
-
     useEffect(() => {
         if (
             brigadeTransfer.person &&
@@ -105,12 +94,25 @@ export function ScheduleChangePage() {
         (brigade) => brigade.id === brigadeClick
     );
 
+    if(
+        personsQuery.isLoading ||
+        brigadesQuery.isLoading ||
+        personReplacementQuery.isLoading ||
+        shiftQuery.isLoading
+    ) {
+        return (
+            <div>
+                ...Загурзка
+            </div>
+        )
+    }
+
     return (
 
         <main className={styles['scheduleChange']}> 
 
             <h4
-                className={styles['scheduleChange__h4']}
+                className={styles['scheduleChange__title']}
             >
                 Основной состав бригад
             </h4>

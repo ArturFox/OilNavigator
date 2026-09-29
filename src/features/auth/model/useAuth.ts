@@ -25,6 +25,8 @@ export function useAuth(): AuthState {
 
   useEffect(() => {
 
+    let isInitialLoading = true;
+
     async function sync(session: SessionType) {
 
       if (!session) {
@@ -42,12 +44,29 @@ export function useAuth(): AuthState {
     }
 
     (async () => {
+
+      const startTime = Date.now();
+
       const { data } = await supabase.auth.getSession();
-      sync(data.session);
+
+      const elapsed = Date.now() - startTime;
+      const remaining = Math.max(1500 - elapsed, 0);
+
+      await new Promise(resolve => setTimeout(resolve, remaining));
+
+      await sync(data.session);
+
+      isInitialLoading = false;
+
     })();
 
     const { data: listener } = supabase.auth.onAuthStateChange(
       async (_, nextSession) => {
+
+        if(isInitialLoading){
+          return
+        }
+
         sync(nextSession);
       }
     );

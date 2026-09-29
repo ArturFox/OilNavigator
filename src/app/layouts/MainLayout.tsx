@@ -71,7 +71,8 @@ export function MainLayout({role}: Props) {
 
       {isUserChange === true || 
        isScheduleChange ||
-       isCalendarBrigadeChange
+       isCalendarBrigadeChange ||
+       isProfile
        
         ? null
         : <header

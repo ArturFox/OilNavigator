@@ -1,0 +1,48 @@
+@use '../../styles/helpers/' as *;
+
+.adminScheduleChange {
+    display: flex;
+    flex-direction: column;
+    gap: rem(10);
+}
+
+.adminScheduleChange__title {
+    font-size: rem(20);
+
+    color: var(--white);
+}
+
+.adminScheduleChange__actions {
+    display: flex;
+    justify-content: space-between;
+}
+
+.adminScheduleChange__actions-buttonChange {
+    color: var(--yellowBlack);
+}
+
+.adminScheduleChange__actions-buttonDelete {
+    color: var(--yellowBlack);
+}
+
+.adminScheduleChange__buttons {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: rem(10);
+}
+
+.adminScheduleChange__arrowBigDown {
+    display: flex;
+    justify-content: center;
+
+    color: var(--white);
+}
+
+.adminScheduleChange__createShift {
+    display: flex;
+    justify-content: center;
+
+    color: var(--white);
+
+    font-size: rem(18);
+}

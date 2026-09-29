@@ -20,7 +20,7 @@ export const brigadeSortArrScheduleChange = createSelector(
             id: 'no_brigade',
             name: 'Без Бригады',
             cycle_start_date: null,
-            installation_id: sortBrigades[0].installation_id,
+            installation_id: sortBrigades[0]?.installation_id,
             number_brigade: 0,
         }
 
