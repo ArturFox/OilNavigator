@@ -9,8 +9,10 @@
   flex-direction: column;
   gap: rem(20);
 
-  padding: rem(20);
-  padding-bottom: rem(80);
+  padding-top: calc(rem(20) + env(safe-area-inset-top));
+  padding-left: rem(20);
+  padding-right: rem(20);
+  padding-bottom: calc(rem(80) + env(safe-area-inset-bottom));
 
   overflow: hidden;
 
@@ -55,7 +57,7 @@
 .mainLayout__bottomBar {
   position: fixed;
 
-  bottom: 5%;
+  bottom: calc(5% + env(safe-area-inset-bottom));
   left: 15%;
   right: 15%;
 

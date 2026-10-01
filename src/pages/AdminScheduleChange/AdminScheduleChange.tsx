@@ -8,10 +8,18 @@ import styles from './AdminScheduleChange.module.scss';
 import { ButtonBlock } from "./widgets/ButtonBlock/ButtonBlock";
 import { ButtonBlockPlus } from "./widgets/ButtonBlockPlus/ButtonBlockPlus";
 import { TitleH4 } from "../../shared/ui/Title/TitleH4/TitleH4";
+import { Calendar } from "./widgets/Calendar/Calendar";
+import { useGetBrigadesQuery } from "../../entities/brigades/api/getBrigades";
+import { useGetPesonsQuery } from "../../entities/persons/api/getPersons";
+import { useGetPersonReplacementQuery } from "../../entities/personReplacement/api/getPersonReplacement";
 
 export function AdminScheduleChange() {
 
+    // вызываем API хуки 
+    const personsQuery = useGetPesonsQuery();
+    const brigadesQuery = useGetBrigadesQuery();
     const shiftsQuery = useGetShiftsQuery();
+    const personsReplacementQuery = useGetPersonReplacementQuery();
 
     const uniqueObjectArr = useSelector(uniqueObjectArrAdminScheduleChange);
 
@@ -21,7 +29,11 @@ export function AdminScheduleChange() {
 
     const [date, onDate] = useState<string>('');
 
-    if(shiftsQuery.isLoading){
+    if( personsQuery.isLoading ||
+        brigadesQuery.isLoading ||
+        shiftsQuery.isLoading ||
+        personsReplacementQuery.isLoading
+    ){
         return (
             <main>
                 <span>
@@ -41,6 +53,8 @@ export function AdminScheduleChange() {
             >
                 Изменить расписание бригад
             </h4>
+
+            <Calendar/>
 
             <section
                 className={styles['adminScheduleChange__actions']}
@@ -82,13 +96,13 @@ export function AdminScheduleChange() {
 
                     </section>
                 )
-                : <div
+                : <section
                     className={styles['adminScheduleChange__createShift']}
                 >
                     <TitleH4>
                         Составте расписание
                     </TitleH4>
-                </div>
+                </section>
             }
             
             <div

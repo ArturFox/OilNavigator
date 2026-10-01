@@ -1,0 +1,77 @@
+@use '../../../../styles/helpers/' as *;
+
+.calendar {
+    display: flex;
+    flex-direction: column;
+    gap: rem(10);
+}
+
+.calendar__daysOfTheWeek {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+
+.calendar__daysOfTheWeek-dayWeek {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: var(--white);
+
+    &--weekend {
+        color: var(--redBlack);
+    }
+}
+
+.calendar__days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: rem(5);
+
+}
+
+.calendar__days-day {
+    display: flex;
+    flex-direction: column;
+
+    border-radius: rem(10);
+
+    background-color: var(--white99);
+
+    min-height: rem(90);
+
+    padding: rem(2);
+    
+}
+
+.calendar__days-date {
+    display: flex;
+    justify-content: flex-end;
+
+    font-size: rem(14);
+
+    color: var(--black);
+}
+
+.calendar__days-brigades {
+    display: flex;
+    flex-direction: column;
+    gap: rem(2);
+
+    list-style: none;
+
+    width: 100%;
+
+    
+}
+
+.calendar__days-brigades-brigade {
+    display: flex;
+    justify-content: center;
+
+    border-radius: rem(5);
+
+    font-size: rem(12);
+
+    color: var(--black);
+}

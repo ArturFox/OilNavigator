@@ -11,7 +11,7 @@ export function mappperShifts (shift: ShiftDto): Shift {
         end_time: shift.end_time,
         label: shift.label,
         code: shift.code,
-
+        color: shift.color,
     }
 
 };

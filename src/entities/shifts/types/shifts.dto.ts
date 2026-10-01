@@ -10,7 +10,8 @@ export interface ShiftDto {
     start_time: string | null;
     end_time: string | null;
     label: string;
-    code: string
+    code: string;
+    color: string;
 }
 
 export interface Shift {
@@ -20,7 +21,8 @@ export interface Shift {
     start_time: string | null;
     end_time: string | null;
     label: string;
-    code: string
+    code: string;
+    color: string;
 }
 
 export interface AddShiftDto {
@@ -58,4 +60,6 @@ export interface SortShift {
 
     hasRedAlarm: boolean,
     hasYellowAlarm: boolean,
+
+    color: string;
 }

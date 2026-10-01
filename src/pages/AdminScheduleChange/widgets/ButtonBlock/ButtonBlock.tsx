@@ -27,6 +27,7 @@ export function ButtonBlock (
                     }
                     return onUserSelectButtons((prev) => [...prev, shift])
                 }}
+                style={{background: shift.color}}
             >
 
                 {(shift.start_time && shift.end_time) 

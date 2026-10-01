@@ -312,6 +312,7 @@ export const createMonthShift = createSelector(
           weekday: weekday,
           hasRedAlarm: hasRedAlarm,
           hasYellowAlarm: hasYellowAlarm,
+          color: template.color
         });
       }
     })
@@ -486,6 +487,7 @@ export const whoDontHaveBrigade = createSelector(
           weekday,
           hasRedAlarm,
           hasYellowAlarm,
+          color: ''
         });
       }
     });

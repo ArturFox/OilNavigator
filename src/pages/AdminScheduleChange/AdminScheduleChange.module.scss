@@ -4,6 +4,8 @@
     display: flex;
     flex-direction: column;
     gap: rem(10);
+
+    padding-bottom: rem(80);
 }
 
 .adminScheduleChange__title {
@@ -41,8 +43,11 @@
 .adminScheduleChange__createShift {
     display: flex;
     justify-content: center;
+    align-items: center;
 
     color: var(--white);
 
     font-size: rem(18);
+
+    min-height: rem(96);
 }
