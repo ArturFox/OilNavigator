@@ -1,12 +1,12 @@
 import { createSelector } from "@reduxjs/toolkit";
-import { brigadesMapper } from "../../../../entities/brigades/model/selectors/brigades";
+import { brigadesMapper } from "../../../../entities/brigades/model/selectors/mapperBrigades";
 import type { Brigade } from "../../../../entities/brigades/types/brigades.dto";
 import type { RootState } from "../../../../app/store/store";
-import { personsMapper } from "../../../../entities/persons/model/selectors/persons";
+import { personsMapper } from "../../../../entities/persons/model/selector/selectorPersons";
 import type { Persons, PersonsWithStatus } from "../../../../entities/persons/types/persons.dto";
-import { shiftsMapper } from "../../../../entities/shifts/model/selectors/shifts";
+import { shiftsMapper } from "../../../../entities/shifts/model/selector/selectorShifts";
 import type { Shift, SortShift } from "../../../../entities/shifts/types/shifts.dto";
-import { personsReplacementMapper } from "../../../../entities/personReplacement/model/selectors/personReplacement";
+import { personsReplacementMapper } from "../../../../entities/personReplacement/model/selector/selectorPersonReplacement";
 
 export const brigadesArr = createSelector(
   

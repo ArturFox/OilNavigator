@@ -1,0 +1,157 @@
+@use '../../../../styles/helpers/' as *;
+
+.footer {
+  position: fixed;
+
+  left: 15%;
+  right: 15%;
+  bottom: 5%;
+
+  clip-path: inset(-500px 0 0 0 round rem(15));
+
+  z-index: 99;
+}
+
+.mainLayout__bottomBar {
+  position: relative;
+
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  z-index: 99;
+
+  background-color:  var(--blue66);
+
+  border: rem(2) solid var(--blue);
+  border-radius: rem(15);
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+
+  padding-left: rem(10);
+  padding-right: rem(10);
+  padding-bottom: rem(10);
+
+  overflow: hidden;
+
+}
+
+.mainLayout__navigateList {
+  
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+
+}
+
+.mainLayout__navigateItem {
+
+  position: relative;
+
+  width: rem(50);
+
+  padding-top: rem(10);
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+
+    width: rem(30); 
+    
+    height: rem(5); 
+    
+    background-color: var(--white);
+    
+    border-radius: rem(5); 
+
+    opacity: 0;
+
+    transition: opacity 0.3s ease
+  }
+
+  &--active {
+
+    &::after {
+      opacity: 1;
+    }
+
+  }
+   
+}
+
+.mainLayout__link {
+  display: flex;
+  flex-direction: column;
+
+  align-items: center;
+  gap: rem(6);
+  
+  color: var(--white99);
+  text-decoration: none;
+
+  z-index: 1;
+
+  -webkit-tap-highlight-color: transparent;
+
+  transition: color 0.3s ease; 
+
+  &:focus-visible {
+    outline: rem(3) solid var(--textFocusVisible);
+    outline-offset: rem(4);
+  }
+
+  &::before {
+    content: '';
+    position: absolute;
+
+    top: 0;
+    left: 0;
+    right: 0;
+  
+    width: 100%;  
+    height: 32px;     
+    
+    background: conic-gradient(
+      from 135deg at top center, 
+      transparent 0deg,
+      var(--white) 10deg,
+      var(--white) 80deg,
+      transparent 90deg
+    );
+
+    filter: blur(3px);
+
+    z-index: -1;
+
+    opacity: 0;
+    
+    transition: opacity 0.3s ease;
+    
+    transform: translateY(15%);
+  }
+
+  &--active {
+    color: var(--black);
+
+    &::before {
+      opacity: 1; 
+    }
+  }
+
+}
+
+.mainLayout__icone {
+  z-index: 99;
+      
+  transition: transform 0.3s ease;
+
+  &:active {
+    transform: scale(0.90);
+  }
+
+}

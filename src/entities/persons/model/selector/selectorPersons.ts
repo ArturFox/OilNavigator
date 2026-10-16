@@ -3,7 +3,7 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { getPesonsApi } from "../../api/getPersons";
 import type { Persons } from "../../types/persons.dto";
-import { mappperPerson } from "../mapper/mapper";
+import { mappperPerson } from "../mapper/personsMapper";
 
 // получаем данные от апи
 // делаем mapper 

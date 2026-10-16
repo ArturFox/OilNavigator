@@ -6,6 +6,7 @@ import { getWalletsApi } from '../../entities/wallets/api/getWallets';
 import { getPersonReplacementApi } from '../../entities/personReplacement/api/getPersonReplacement';
 import type { Persons } from '../../entities/persons/types/persons.dto';
 import type { Brigade } from '../../entities/brigades/types/brigades.dto';
+import { getDefaultScheduleTemplatesApi } from '../../entities/defaultScheduleTemplates/api/getDefaultScheduleTemplates';
 
 const today = new Date();
 const dateString: string = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,'0')}-${String(today.getDate()).padStart(2,'0')}`;
@@ -20,7 +21,8 @@ const date = createSlice({
     brigadeTransfer: {
       person: null as Persons | null,
       brigade: null as Brigade | null,
-    }
+    },
+    todayDate: dateString
     
   },
 
@@ -69,6 +71,7 @@ export const store = configureStore(
       [getBrigadeApi.reducerPath]: getBrigadeApi.reducer,
       [getWalletsApi.reducerPath]: getWalletsApi.reducer,
       [getPersonReplacementApi.reducerPath]: getPersonReplacementApi.reducer,
+      [getDefaultScheduleTemplatesApi.reducerPath]: getDefaultScheduleTemplatesApi.reducer,
     },
     middleware: (getDefaultMiddleware) =>
       getDefaultMiddleware()
@@ -77,6 +80,7 @@ export const store = configureStore(
         .concat(getBrigadeApi.middleware)
         .concat(getWalletsApi.middleware)
         .concat(getPersonReplacementApi.middleware)
+        .concat(getDefaultScheduleTemplatesApi.middleware)
   }
 )
 

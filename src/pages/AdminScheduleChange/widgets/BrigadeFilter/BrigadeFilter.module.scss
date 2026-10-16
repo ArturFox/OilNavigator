@@ -1,0 +1,35 @@
+@use '../../../../styles/helpers/' as *;
+
+.calendar__selectButtons {
+    display: flex;
+    justify-content: space-around;
+    gap: rem(10);
+}
+
+.calendar__selectButtons-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: var(--white);
+    color: var(--black);
+
+    padding: rem(3);
+
+    width: rem(53);
+    height: rem(35);
+
+    border-radius: rem(10);
+    border-top-left-radius: 0;
+    border-bottom-right-radius: 0;
+
+    transition: transform 0.3s ease, background-color 0.3s ease;
+
+    &--active {
+        background-color: var(--blue99);
+    }
+
+    &:active {
+        transform: scale(0.95);
+    }
+}

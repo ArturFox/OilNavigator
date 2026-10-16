@@ -1,0 +1,15 @@
+@use 'styles/helpers/' as *;
+
+.calendar {
+    display: flex;
+    flex-direction: column;
+
+    border-radius: rem(10);
+}
+
+.calendar__days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: rem(5);
+
+}

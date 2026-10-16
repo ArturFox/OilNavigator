@@ -23,20 +23,17 @@ export function ProfilePage() {
     <main
         className={styles['scheduleChange']}
     >
-      
-        <h4
-            className={styles['scheduleChange__title']}
-        >
-            Профиль
-        </h4>
 
-        <button 
-            className={styles['scheduleChange__logOut']}
-            onClick={handleLogout}
-        >
-            <LogOut/>
-            выйти
-        </button>
+      <button 
+          className={styles['scheduleChange__logOut']}
+          onClick={handleLogout}
+      >
+
+        <LogOut/>
+        Выйти
+
+      </button>
+
     </main>
   );
 }

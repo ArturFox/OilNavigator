@@ -2,7 +2,7 @@
 
 import { createSelector } from "@reduxjs/toolkit";
 import { getShiftsApi } from "../../api/getShifts";
-import { mappperShifts } from "../mapper/mapper";
+import { mappperShifts } from "../mapper/shiftsMapper";
 
 
 export const shiftsMapper = createSelector(

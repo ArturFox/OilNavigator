@@ -1,0 +1,18 @@
+@use 'styles/helpers/' as *;
+
+.calendarBrigadeBadge,
+.calendarBrigadeBadge--empty {
+    display: grid;
+    grid-template-columns: 1fr;
+    place-items: center;
+
+    min-height: rem(18);
+    border-radius: rem(5);
+
+    font-size: rem(12);
+    color: var(--black);
+}
+
+.calendarBrigadeBadge--empty {
+    visibility: hidden;
+}

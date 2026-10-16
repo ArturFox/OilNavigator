@@ -10,6 +10,7 @@ import { SceletonAdmin } from "./sceleton/SceletonAdmin";
 import { CalendarAdmin } from "./widgets/CalendarAdmin/CalendarAdmin";
 import { BrigadeDropdown } from "./widgets/BrigadeDropdown/BrigadeDropdown";
 import { sortShiftMap } from "./model/selectorsAdminPage";
+import { useGetDefaultScheduleTemplatesQuery } from "../../../entities/defaultScheduleTemplates/api/getDefaultScheduleTemplates";
 
 export function AdminHomePage() {
 
@@ -18,6 +19,7 @@ export function AdminHomePage() {
     const brigadesQuery = useGetBrigadesQuery();
     const shiftsQuery = useGetShiftsQuery();
     const personsReplacementQuery = useGetPersonReplacementQuery();
+    const defaultScheduleTemplatesQuery = useGetDefaultScheduleTemplatesQuery();
 
     // получаем дату из стора 
     // эту дату отдаем в widget "CalendarAdmin" и "BrigadeDropDown"

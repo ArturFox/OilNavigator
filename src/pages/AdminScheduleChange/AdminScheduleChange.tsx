@@ -1,17 +1,16 @@
+import type { RootState } from "@/app/store/store";
+import { useGetBrigadesQuery } from "@/entities/brigades/api/getBrigades";
+import type { Brigade } from "@/entities/brigades/types/brigades.dto";
+import { useGetPersonReplacementQuery } from "@/entities/personReplacement/api/getPersonReplacement";
+import { useGetPesonsQuery } from "@/entities/persons/api/getPersons";
+import { useGetShiftsQuery } from "@/entities/shifts/api/getShifts";
+import type { Shift, SortShift } from "@/entities/shifts/types/shifts.dto";
+import { sortShiftMap } from "@/pages/Home/adminPage/model/selectorsAdminPage";
+import { Calendar } from "@/shared/ui/Calendar/Calendar";
 import { useState } from "react";
 import { useSelector } from "react-redux";
-import { uniqueObjectArrAdminScheduleChange } from "./model/selectorsAdminScheduleChange";
-import { useGetShiftsQuery } from "../../entities/shifts/api/getShifts";
-import type { Shift } from "../../entities/shifts/types/shifts.dto";
-import { ArrowBigDown } from "lucide-react";
 import styles from './AdminScheduleChange.module.scss';
-import { ButtonBlock } from "./widgets/ButtonBlock/ButtonBlock";
-import { ButtonBlockPlus } from "./widgets/ButtonBlockPlus/ButtonBlockPlus";
-import { TitleH4 } from "../../shared/ui/Title/TitleH4/TitleH4";
-import { Calendar } from "./widgets/Calendar/Calendar";
-import { useGetBrigadesQuery } from "../../entities/brigades/api/getBrigades";
-import { useGetPesonsQuery } from "../../entities/persons/api/getPersons";
-import { useGetPersonReplacementQuery } from "../../entities/personReplacement/api/getPersonReplacement";
+import { uniqueObjectArrSortAdminScheduleChang } from "@/pages/AdminScheduleChange/model/selectorsAdminScheduleChange";
 
 export function AdminScheduleChange() {
 
@@ -21,13 +20,33 @@ export function AdminScheduleChange() {
     const shiftsQuery = useGetShiftsQuery();
     const personsReplacementQuery = useGetPersonReplacementQuery();
 
-    const uniqueObjectArr = useSelector(uniqueObjectArrAdminScheduleChange);
+    // селекторы
+    const shiftMap: Map<string, SortShift[]> = useSelector(sortShiftMap);
+    
+    // получаем настоящию сегодняшнию дату
+    const todayDate = useSelector((state: RootState) => state.date.todayDate);
 
-    const [arrButtons, _] = useState<Shift[]>(uniqueObjectArr);
+    // получаем дату, когда пользователь нажимает на кнопки перелистывания месяца
+    // приходит дата в формате "2026-10-01"
+    //const stringDateToday = useSelector((state: RootState) => state.date.day);
 
-    const [userSelectButtons, onUserSelectButtons] = useState<Shift[]>([]);
+    // получаем множество дней в расписание то есть уникальные дни
+    const uniqueObjectArr: Shift[] = useSelector(uniqueObjectArrSortAdminScheduleChang);
 
-    const [date, onDate] = useState<string>('');
+    //const brigadesArr: Brigade[] = useSelector(brigadesArrAdminScheduleChange);
+
+    // состояния
+    const [selectBrigade, _] = useState<Brigade[]>([]);
+
+    const entries: [string, SortShift[]][] = [...shiftMap.entries()];
+
+    // const likeButtonRef = useRef<HTMLDivElement>(null);
+
+    // useEffect(() => {
+    //     if (!likeButtonRef.current) return;
+
+    //     new LikeButton(likeButtonRef.current);
+    // }, []);
 
     if( personsQuery.isLoading ||
         brigadesQuery.isLoading ||
@@ -42,118 +61,55 @@ export function AdminScheduleChange() {
             </main>
         )
     }
+
+    const date = new Date(entries[0][0]);
     
     return(
         <main
             className={styles['adminScheduleChange']}
         >
 
-            <h4
-                className={styles['adminScheduleChange__title']}
-            >
-                Изменить расписание бригад
-            </h4>
+            <Calendar
+                selectBrigade={selectBrigade}
+                entries={entries}
+                todayDate={todayDate}
+                uniqueObjectArr={uniqueObjectArr}
+                date={date}
+            />
 
-            <Calendar/>
-
-            <section
-                className={styles['adminScheduleChange__actions']}
-            >
-
-                <button
-                    className={styles['adminScheduleChange__actions-buttonChange']}
-                >
-                    Изменить
-                </button>
-
-                <button
-                    className={styles['adminScheduleChange__actions-buttonDelete']}
-                    onClick={() => {
-                        onUserSelectButtons((prev) => prev.slice(0, -1));
-                    }}
-                >
-                    Удалить
-                </button>
-
-            </section>
-
-            {userSelectButtons.length > 0 
-                
-                ? (
-                    <section
-                        className={styles['adminScheduleChange__buttons']}
-                    >
-
-                        {userSelectButtons.map((shift, index) => (
-
-                            <ButtonBlock
-                                key={`${shift.id}+${index}+userSelect`}
-                                shift={shift}
-                                onUserSelectButtons={null}
-                            />
-
-                        ))}
-
-                    </section>
-                )
-                : <section
-                    className={styles['adminScheduleChange__createShift']}
-                >
-                    <TitleH4>
-                        Составте расписание
-                    </TitleH4>
-                </section>
-            }
-            
-            <div
-                className={styles['adminScheduleChange__arrowBigDown']}
-            >
-                <TitleH4>
-                    <ArrowBigDown/>
-                </TitleH4>
-            </div>
-
-            <section
-                className={styles['adminScheduleChange__buttons']}
-            >
-
-                {arrButtons.map((shift, index) => (
-
-                    <ButtonBlock
-                        key={`${shift.id}+${index}`}
-                        shift={shift}
-                        onUserSelectButtons={onUserSelectButtons}
-                    />
-
-                ))}
-
-                <ButtonBlockPlus/>
-
-            </section>
-
-            <div
-                className={styles['adminScheduleChange__createShift']}
-            >
-                <TitleH4
-                    disable={userSelectButtons.length === 0}
-                >
-                    Укажите дату начала 
-                </TitleH4>
-            </div>
-
-            <div>
-                <input
-                    type="date"
-                    value={date}
-                    onChange={(event) => {
-                        onDate(event.target.value);
-                    }}
-                    disabled={userSelectButtons.length === 0}
-                />
-            </div>
-
-
+            {/* <div ref={likeButtonRef} /> */}
 
         </main>
     )
 }
+// export class LikeButton {
+
+//     container: HTMLElement;
+//     isLiked: boolean;
+
+//     constructor(container: HTMLElement) {
+//         this.container = container;
+//         this.isLiked = false;
+
+//         this.render();
+//     }
+
+//     render(): void {
+//         this.container.innerHTML = `
+//             <button class="like-btn">
+//                 ${this.isLiked ? '❤️ Активно' : '🤍 Неактивно'}
+//             </button>
+//         `;
+
+//         const button = this.container.querySelector(
+//             '.like-btn'
+//         ) as HTMLButtonElement;
+
+//         button.addEventListener('click', () => this.toggleLike());
+//     }
+
+//     toggleLike(): void {
+//         this.isLiked = !this.isLiked;
+//         this.render();
+//     }
+// }

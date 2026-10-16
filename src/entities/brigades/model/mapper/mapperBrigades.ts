@@ -1,4 +1,4 @@
-import type { Brigade, BrigadesDto } from "../types/brigades.dto";
+import type { Brigade, BrigadesDto } from "../../types/brigades.dto";
 
 export function mapperBrigades (brigade: BrigadesDto): Brigade {
 

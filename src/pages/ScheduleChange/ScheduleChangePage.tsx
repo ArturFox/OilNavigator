@@ -111,12 +111,6 @@ export function ScheduleChangePage() {
 
         <main className={styles['scheduleChange']}> 
 
-            <h4
-                className={styles['scheduleChange__title']}
-            >
-                Основной состав бригад
-            </h4>
-
             <section 
                 className={styles['brigadeChange']}
             >

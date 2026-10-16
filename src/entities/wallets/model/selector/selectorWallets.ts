@@ -2,17 +2,30 @@
 
 import { createSelector } from "@reduxjs/toolkit";
 import { getWalletsApi } from "../../api/getWallets";
-import type { CategoriesDto, EarningsDto, ExpensesDto, InComeDto } from "../../types/wallets.dto";
+import type { Categories, EarningsDto, ExpensesDto, InComeDto } from "../../types/wallets.dto";
+import { mapperCategories } from "../mapper/mapperWallets";
 
-export const categoriesMap = createSelector(
+export const categoriesMapper = createSelector(
 
     getWalletsApi.endpoints.getCategories.select(),
 
-    (result) => {
+    (rusult): Categories[] => {
 
-        const map = new Map<string, CategoriesDto[]>()
+        const categories = rusult.data?.map((category) => mapperCategories(category)) ?? [];
 
-        result.data?.forEach((e) => {
+        return categories;
+    }
+)
+
+export const categoriesMap = createSelector(
+
+    categoriesMapper,
+
+    (categories) => {
+
+        const map = new Map<string, Categories[]>()
+
+        categories.forEach((e) => {
 
             if(!map.has(e.id)){
                 map.set(e.id, [])

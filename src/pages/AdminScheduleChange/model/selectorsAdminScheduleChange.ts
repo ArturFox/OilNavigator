@@ -1,34 +1,61 @@
+import { brigadesMapper } from "@/entities/brigades/model/selectors/mapperBrigades";
+import type { Brigade } from "@/entities/brigades/types/brigades.dto";
+import { shiftsMapper } from "@/entities/shifts/model/selector/selectorShifts";
+import type { Shift } from "@/entities/shifts/types/shifts.dto";
 import { createSelector } from "@reduxjs/toolkit";
-import { shiftsMapper } from "../../../entities/shifts/model/selectors/shifts";
-import type { Shift } from "../../../entities/shifts/types/shifts.dto";
+
 
 export const uniqueObjectArrAdminScheduleChange = createSelector(
 
     shiftsMapper,
 
-    (shifts) => {
+    (shifts): Shift[] => {
+
+        const uniqueTimes = new Set<string>();
 
         const uniqueObject: Shift[] = [];
 
         shifts.forEach((shift) => {
 
-            const alreadyExists: boolean = uniqueObject.some(
-                (item) => {
+            const key: string = `${shift.start_time}-${shift.end_time}`;
 
-                    const startTime: boolean = item.start_time === shift.start_time;
-                    const endTime: boolean = item.end_time === shift.end_time;
+            if (!uniqueTimes.has(key)) {
 
-                    return startTime && endTime;
-                }
-            );
+                uniqueTimes.add(key);
 
-            if(!alreadyExists) {
                 uniqueObject.push(shift);
+
             }
 
         });
-        
+
         return uniqueObject;
+    }
+);
+
+export const uniqueObjectArrSortAdminScheduleChang = createSelector(
+
+    uniqueObjectArrAdminScheduleChange,
+
+    (shifts): Shift[] => {
+
+        const sortShifts = [...shifts].sort((a, b) => {
+
+            return (a.start_time ?? '').localeCompare(b.start_time ?? '');
+
+        });
+
+        return sortShifts;
+    } 
+)
+
+export const brigadesArrAdminScheduleChange = createSelector(
+
+    brigadesMapper,
+
+    (brigades): Brigade[] => {
+
+        return [...brigades].sort( (a,b) => a.number_brigade - b.number_brigade );
 
     }
 

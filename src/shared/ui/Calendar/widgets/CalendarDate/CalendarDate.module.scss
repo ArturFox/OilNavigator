@@ -1,0 +1,29 @@
+@use 'styles/helpers/' as *;
+
+.calendarDate {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    font-size: rem(14);
+
+    color: var(--black);
+
+    border-radius: 50%;
+
+    background-color: transparent;
+    color: var(--white);
+
+    width: rem(24);
+    height: rem(24);
+
+    margin-left: auto; 
+
+    &--todayDate {
+        background-color: var(--yellowBlack);
+    }
+
+    &--isPast {
+        color: var(--black);
+    }
+}

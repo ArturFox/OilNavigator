@@ -18,6 +18,8 @@ export function useAuth(): AuthState {
       .eq("id", userId)
       .single();
 
+      console.log(data?.role)
+
     if (error) return null;
 
     return data?.role;

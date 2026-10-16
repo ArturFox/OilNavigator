@@ -1,7 +1,7 @@
 import { createSelector } from "@reduxjs/toolkit";
 import { getBrigadeApi } from "../../api/getBrigades";
 import type { Brigade, BrigadesDto } from "../../types/brigades.dto";
-import { mapperBrigades } from "../mapper";
+import { mapperBrigades } from "../mapper/mapperBrigades";
 
 export const brigadesMapper = createSelector(
 

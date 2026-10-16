@@ -1,7 +1,7 @@
 import { createSelector } from "@reduxjs/toolkit";
-import { brigadesMapper } from "../../../entities/brigades/model/selectors/brigades";
+import { brigadesMapper } from "../../../entities/brigades/model/selectors/mapperBrigades";
 import type { Brigade } from "../../../entities/brigades/types/brigades.dto";
-import { personsMapper } from "../../../entities/persons/model/selectors/persons";
+import { personsMapper } from "../../../entities/persons/model/selector/selectorPersons";
 
 export const brigadesSortArr = createSelector(
 

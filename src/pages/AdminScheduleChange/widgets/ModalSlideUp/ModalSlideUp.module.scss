@@ -1,0 +1,136 @@
+@use '../../../../styles/helpers/' as *;
+
+
+.modalWindowSlidingUpFromTheBottom {
+    display: flex;
+    align-items: flex-end;
+    position: fixed;
+
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    background-color: #23211E99; 
+
+    z-index: 100;
+    
+}
+
+.modalWindowSlidingUpFromTheBottom__modal {
+    display: flex;
+    flex-direction: column;
+    gap: rem(10);
+    
+    position: relative;
+
+    height: rem(500);
+    width: 100%;
+
+    z-index: 100;
+
+    background-color: gray;
+
+    padding: rem(20);
+    padding-top: 0;
+
+    &::before {
+        content: '';
+
+        position: absolute;
+
+        top: 2%;
+        left: 50%;
+
+        height: rem(4);
+        width: rem(50);
+
+        transform: translateX(-50%);
+
+        border-radius: rem(5);
+
+        background-color: var(--white);
+
+    }
+}
+
+.modalWindowSlidingUpFromTheBottom__blockTitle {
+    margin-top: rem(20);
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modalWindowSlidingUpFromTheBottom__blockTitle-title {
+    color: var(--white);
+    
+    font-size: rem(15);
+}
+
+.modalWindowSlidingUpFromTheBottom__blockTitle-buttonSafe {
+    color: var(--yellowBlack);
+    
+    font-size: rem(15);
+}
+
+.modalWindowSlidingUpFromTheBottom__blockAddOrDelete {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modalWindowSlidingUpFromTheBottom__blockAddOrDelete-title {
+    color: var(--white);
+}
+
+.modalWindowSlidingUpFromTheBottom__blockAddOrDelete-blockButtons {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modalWindowSlidingUpFromTheBottom__blockAddOrDelete-blockButtons-button {
+    display: flex;
+    align-items: center;
+    gap: rem(10);
+
+    color: var(--black);
+
+    &--line {
+
+        position: relative;
+
+        padding-right: rem(3);
+
+        &::after {
+            content: '';
+
+            position: absolute;
+
+            right: 0;
+            top: 10%;
+            bottom: 10%;
+
+            width: rem(2);
+            height: 80%;
+
+            background-color: var(--black);
+        }
+    }
+}
+
+.modalWindowSlidingUpFromTheBottom__blockAddOrDelete-blockChangedShifts {
+
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: rem(5);
+}
+
+.modalWindowSlidingUpFromTheBottom__blockAddOrDelete-blockChangedShifts-buttonShift {
+    padding: rem(5);
+
+    background-color: var(--yellowBlack);
+
+    border-radius: rem(10);
+}

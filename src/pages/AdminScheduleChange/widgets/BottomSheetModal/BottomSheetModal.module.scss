@@ -1,0 +1,109 @@
+@use '../../../../styles/helpers/' as *;
+
+.createSchedule {
+    position: absolute;
+
+    left: 0;
+    right: 0;
+    bottom: 100%;
+
+    touch-action: none;
+    overscroll-behavior: none;
+
+    display: flex;
+    flex-direction: column;
+    gap: rem(10);
+
+    background-color: gray;
+
+    padding: rem(10);
+
+    border-radius: rem(15);
+
+    transition: transform 0.3s ease;
+
+    z-index: 98;
+}
+
+.createSchedule--jittering {
+    transition: none;
+}
+
+
+.createSchedule__handle {
+    position: absolute;
+
+    top: rem(8);
+    left: 50%;
+
+    transform: translateX(-50%);
+
+    width: rem(50);
+    height: rem(4);
+
+    border-radius: rem(4);
+
+    background-color: var(--white);
+
+    touch-action: none;
+}
+
+.createSchedule__title {
+    display: flex;
+    justify-content: center;
+    margin-top: rem(10);
+
+    color: var(--black);
+}
+
+.createSchedule__listSchedule {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background-color: var(--white);
+
+    border-radius: rem(10);
+    border-top-left-radius: 0;
+    border-bottom-right-radius: 0;
+
+    min-height: rem(50);
+
+    color: var(--black);
+}
+
+.createSchedule__scheduleOptions {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: rem(10);
+}
+
+.createSchedule__option {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    font-size: rem(14);
+
+    background-color: var(--white);
+
+    padding: rem(5);
+
+    border-radius: rem(10);
+    border-top-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+.createSchedule__option-add {
+    display: flex;
+    flex-direction: column;
+
+    color: var(--black);
+}
+
+.createSchedule__option-delete {
+    display: flex;
+    align-items: center;
+
+    color: var(--black);
+}

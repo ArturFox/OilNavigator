@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { getPesonsApi, useGetPesonsQuery } from '../../entities/persons/api/getPersons';
 import { useGetBrigadesQuery } from '../../entities/brigades/api/getBrigades';
-import { brigadesSortArr } from '../../entities/brigades/model/selectors/brigades';
+import { brigadesSortArr } from '../../entities/brigades/model/selectors/mapperBrigades';
 import type { Brigade } from '../../entities/brigades/types/brigades.dto';
 import type { PersonsWithStatus } from '../../entities/persons/types/persons.dto';
 import { Modal } from '../../shared/ui/Modal/Modal';

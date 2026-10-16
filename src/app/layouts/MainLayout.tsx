@@ -1,10 +1,11 @@
-import { Link, Outlet, useLocation } from "react-router-dom";
-import { ArrowBigLeft, ArrowBigRight, CalendarCheck, CalendarClock, Highlighter, UserPen } from "lucide-react";
+import { Outlet, useLocation } from "react-router-dom";
+import { ArrowBigLeft, ArrowBigRight } from "lucide-react";
 import styles from "../layouts/mainLayout.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { changeDay, type RootState } from "../store/store";
 import type { UserRole } from "../../features/auth/model/auth.types";
 import { useRef } from "react";
+import { Footer } from "./widgets/Footer/Footer";
 
 interface Props {
   role: UserRole;
@@ -71,7 +72,6 @@ export function MainLayout({role}: Props) {
 
       {isUserChange === true || 
        isScheduleChange ||
-       isCalendarBrigadeChange ||
        isProfile
        
         ? null
@@ -111,143 +111,16 @@ export function MainLayout({role}: Props) {
       <Outlet />
       
 
-      <footer className={styles["mainLayout__bottomBar"]}>
-        
-        <nav 
-          aria-label="Нижняя навигация"
-        >
-
-          <ul className={styles["mainLayout__navigateList"]}>
-
-            <li
-              className={`
-                ${styles["mainLayout__navigateItem"]}
-                ${isCalendar && styles["mainLayout__navigateItem--active"]}  
-              `}
-            >
-
-              <Link
-                to="/"
-                className={`
-                  ${styles["mainLayout__link"]}
-                  ${isCalendar && styles["mainLayout__link--active"]}  
-                `}
-                aria-label="Календарь"
-                aria-current={isCalendar ? "page" : undefined}
-                
-              >
-
-                <CalendarCheck
-                  className={isCalendar 
-                    ? styles["mainLayout__icone"] 
-                    : ""
-                  }
-                  aria-hidden="true"
-                  
-                />
-
-              </Link>
-
-            </li>
-
-            {role === 'admin' && (
-              <li
-                className={`
-                  ${styles["mainLayout__navigateItem"]}
-                  ${isCalendarBrigadeChange && styles["mainLayout__navigateItem--active"]}  
-                `}
-              >
-
-                <Link
-                  to="/calendarBrigadeChange"
-                  className={`
-                    ${styles["mainLayout__link"]}
-                    ${isCalendarBrigadeChange && styles["mainLayout__link--active"]}  
-                  `}
-                  aria-label="Изменить расписание бригад"
-                  aria-current={isCalendarBrigadeChange ? "page" : undefined}
-                >
-                  
-                  <CalendarClock
-                    className={isCalendarBrigadeChange
-                      ? styles["mainLayout__icone"] 
-                      : ""
-                    } 
-                    aria-hidden="true"
-                  />
-                </Link>
-
-              </li>
-            )}
-
-            {role === 'admin' && (
-              <li
-                className={`
-                  ${styles["mainLayout__navigateItem"]}
-                  ${isScheduleChange && styles["mainLayout__navigateItem--active"]}  
-                `}
-              >
-
-                <Link 
-                  to="/scheduleChangePage"
-                  className={`
-                    ${styles["mainLayout__link"]}
-                    ${isScheduleChange && styles["mainLayout__link--active"]}  
-                  `}
-                  aria-label="Изменить расписание"
-                  aria-current={isScheduleChange ? "page" : undefined}
-                >
-
-                  <Highlighter
-                    className={isCalendar 
-                      ? styles["mainLayout__icone"] 
-                      : ""
-                    } 
-                    aria-hidden="true"
-                  />
-
-                </Link>
-
-              </li>
-            )}
-
-            
-
-            <li
-              className={`
-                ${styles["mainLayout__navigateItem"]}
-                ${isProfile && styles["mainLayout__navigateItem--active"]}  
-              `}
-            >
-
-              <Link
-                to="/profile"
-                className={`
-                  ${styles["mainLayout__link"]}
-                  ${isProfile && styles["mainLayout__link--active"]}  
-                `}
-                aria-label="Профиль"
-                aria-current={isProfile ? "page" : undefined}
-              >
-
-                <UserPen
-                  className={isCalendar 
-                    ? styles["mainLayout__icone"] 
-                    : ""
-                  }
-                  aria-hidden="true"
-                />
-
-              </Link>
-
-            </li>
-
-          </ul>
-
-        </nav>
-
-      </footer>
+      <Footer
+        isCalendar={isCalendar}
+        isProfile={isProfile}
+        isCalendarBrigadeChange={isCalendarBrigadeChange}
+        isScheduleChange={isScheduleChange}
+        role={role}
+      />
       
     </div>
+
   );
+
 }

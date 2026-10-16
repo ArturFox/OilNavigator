@@ -1,0 +1,44 @@
+@use 'styles/helpers/' as *;
+
+
+.calendarDay {
+    display: flex;
+    flex-direction: column;
+    gap: rem(5);
+
+    border-radius: rem(10);
+
+    background: var(--white99);
+
+    min-height: rem(100);
+
+    padding: rem(2);
+
+    &--isFuture {
+
+        background: linear-gradient(
+            135deg, 
+            var(--blue) 0%,        
+            var(--blue) 25%,  
+            var(--blue99) 65%, 
+            var(--blue99) 100% 
+        );
+    }
+
+    &--empty{
+        background-color: #2E2C29;
+    }
+    
+}
+
+.calendar__days-brigades {
+    display: flex;
+    flex-direction: column;
+    gap: rem(2);
+
+    list-style: none;
+
+    width: 100%;
+
+    
+}
