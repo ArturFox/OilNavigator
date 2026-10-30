@@ -47,11 +47,6 @@ export interface Persons {
     } | null;
     study_start: string | null;
     study_end: string | null;
+    redAlarm: string[];
+    yellowAlarm: string[];
 }
-
-interface PersonsStatus {
-  redAlarm: string[];
-  yellowAlarm: string[];
-}
-
-export type PersonsWithStatus = Persons & PersonsStatus;

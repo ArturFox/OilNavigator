@@ -18,10 +18,12 @@ const date = createSlice({
   initialState: {
 
     day: dateString,
+
     brigadeTransfer: {
       person: null as Persons | null,
       brigade: null as Brigade | null,
     },
+    
     todayDate: dateString
     
   },

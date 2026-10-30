@@ -15,7 +15,7 @@ export interface PersonReplacementMapper {
     date: string;
     created_at: string;
 
-    personWhoWasReplacedId: string | null;
+    personWhoWasReplacedId: string | null; 
     personWhoWasReplacedBrigadeId: string;
 
     personReplacedId: string;

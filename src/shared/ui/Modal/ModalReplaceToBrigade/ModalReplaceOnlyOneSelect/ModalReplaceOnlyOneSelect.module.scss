@@ -1,0 +1,85 @@
+@use 'styles/helpers/' as *;
+
+.overlay__title {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: rem(10);
+
+    margin-bottom: rem(10);
+
+    color: var(--white);
+
+}
+
+.overlay__block {
+    display: flex;
+    justify-content: space-between;
+}
+
+.overlay__block-nameInfo {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    flex: 1;
+
+    color: var(--white);
+}
+
+.overlay__block-iconeRight {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: var(--white);
+}
+
+.overlay__block-selectedBrigade {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+    flex: 1;
+
+    color: var(--white);
+
+    &--active {
+        color: var(--blue);
+    }
+}
+
+.overlay__brigades {
+    display: flex;
+    justify-content: space-between;
+    gap: rem(10);
+}
+
+.overlay__brigades-button {
+    padding: rem(10);
+    padding-left: rem(15);
+    padding-right: rem(15);
+
+    background-color: var(--white);
+    color: var(--black);
+
+    border-radius: rem(10);
+
+    &--active {
+        background-color: var(--blue);
+    }
+}
+
+.overlay__apply {
+    background-color: var(--greenBlack);
+    color: var(--white);
+
+    border-radius: rem(10);
+
+    padding: rem(10);
+
+    margin-top: auto;
+}

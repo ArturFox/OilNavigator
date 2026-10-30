@@ -1,5 +1,5 @@
-import type { PersonsWithStatus } from '../../../../entities/persons/types/persons.dto';
-import { ModalCenterWindow } from '../../../../shared/ui/Modal/ModalCenterWindow/ModalCenterWindow';
+import { ModalFactory } from '@/shared/ui/Modal/ModalFactory';
+import type { Persons } from '../../../../entities/persons/types/persons.dto';
 import type { SelectedPerson } from '../../types/typeReplaseWorker';
 import { LeftCard } from './components/LeftCard';
 import { RightCard } from './components/RightCard';
@@ -8,9 +8,9 @@ import { useState } from 'react';
 
 interface Props {
     selectedPerson: SelectedPerson;
-    personToReplace: PersonsWithStatus | null;
+    personToReplace: Persons | null;
     arrProblemPersonToReplace: string[];
-    ap: (selectedHuman: PersonsWithStatus) => Promise<void>;
+    ap: (selectedHuman: Persons) => Promise<void>;
 }
 
 export function ReplaceWorkerProcess (
@@ -48,10 +48,16 @@ export function ReplaceWorkerProcess (
             />
 
             {personToReplace && (
-                <ModalCenterWindow
+                <ModalFactory.modalCenterBasic
                     modalCenter={modalCenter}
                     onModalCenter={onModalCenter}
-                    person={personToReplace}
+                    name={personToReplace.name}
+                    surname={personToReplace.surname}
+                    otherSurname={personToReplace.other_surname}
+                    job_title={personToReplace.job_title}
+                    block={personToReplace.block}
+                    discharge={personToReplace.discharge}
+                    avalibleBlocks={(personToReplace.he_can ?? [])}
                 />
             )}
 

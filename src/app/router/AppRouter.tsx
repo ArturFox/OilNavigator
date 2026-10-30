@@ -4,7 +4,7 @@ import { MainLayout } from "../layouts/MainLayout";
 import type { AuthState } from "../../features/auth/model/auth.types";
 import { SignPage } from "../../pages/SignPage/SignPage";
 import { HomePage } from "../../pages/Home/HomePage";
-import { ScheduleChangePage } from "../../pages/ScheduleChange/ScheduleChangePage";
+import { CoreStaffReplacementPage } from "../../pages/CoreStaffReplacementPage/CoreStaffReplacementPage";
 import { ReplaseWorker } from "../../pages/ReplaceWorker/ReplaseWorker";
 import { ProfilePage } from "../../pages/ProfilePage/ProfilePage";
 import { AdminScheduleChange } from "../../pages/AdminScheduleChange/AdminScheduleChange";
@@ -42,7 +42,7 @@ export function AppRouter({ auth }: Props) {
         {auth.role === "admin" && (
           <Route
             path="scheduleChangePage"
-            element={<ScheduleChangePage />}
+            element={<CoreStaffReplacementPage />}
           />
         )}
 

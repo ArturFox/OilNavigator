@@ -1,0 +1,23 @@
+@use 'styles/helpers/' as *;
+
+.identity {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+  height: rem(55);
+  width: calc(100% - 23%);
+
+  padding: rem(10);
+
+}
+
+.identity__info {
+  color: var(--white);
+  
+  font-size: rem(18);
+  
+  white-space: nowrap;
+
+  overflow: hidden;
+}

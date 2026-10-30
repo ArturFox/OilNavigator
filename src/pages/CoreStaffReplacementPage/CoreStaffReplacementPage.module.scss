@@ -1,0 +1,88 @@
+@use '../../styles/helpers/' as *;
+
+.coreStaffReplacement {
+    display: flex;
+    flex-direction: column;
+    gap: rem(10);
+
+    padding-bottom: rem(40);
+    
+}
+
+.coreStaffReplacement__brigadelist {
+    display: flex;
+    flex-direction: column;
+ 
+    gap: rem(10);
+
+    border-radius: rem(10);
+
+}
+
+.coreStaffReplacement__header {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    color: var(--white);
+}
+
+.coreStaffReplacement__brigade-name {
+    font-size: rem(18);
+    color: var(--white);
+}
+
+.coreStaffReplacement__actions {
+    display: flex;
+    align-items: center;
+    gap: rem(8);
+}
+
+.coreStaffReplacement__applyButton {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+
+    &--active {
+        opacity: 1;
+        pointer-events: all;
+        color: var(--gray);
+    }
+
+    &--apply {
+        color: var(--white);
+    }
+}
+
+.coreStaffReplacement__selectionToggle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: rem(20);
+    height: rem(20);
+
+    border: rem(1) solid var(--white);
+
+}
+
+.coreStaffReplacement__selectionToggle-check {
+    opacity: 0;
+    transition: opacity 0.3 ease;
+
+    &--active{
+        opacity: 1;
+        color: var(--blue);
+    }
+}
+
+.coreStaffReplacement__brigadePeopleSlider {
+    width: 100%;
+    overflow: hidden;
+}
+
+.coreStaffReplacement__track {
+    display: flex;
+
+    transition: transform 0.45s ease;
+
+}

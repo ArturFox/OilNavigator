@@ -1,9 +1,9 @@
-import type { Persons, PersonsWithStatus } from "../../entities/persons/types/persons.dto";
+import type { Persons } from "../../entities/persons/types/persons.dto";
 
 export function useCheckPersonStatus(
   people: Persons[], 
   stringDate: string,
-): PersonsWithStatus[] {
+): Persons[] {
     
   const today = new Date(stringDate);
 
@@ -16,9 +16,6 @@ export function useCheckPersonStatus(
   const stringSevenDays = `${sevenDays.getFullYear()}-${String(sevenDays.getMonth() + 1).padStart(2, "0")}-${String(sevenDays.getDate()).padStart(2, "0")}`;
 
     return people.map((person) => {
-        
-        const redAlarm: string[] = [];
-        const yellowAlarm: string[] = [];
 
         if (
             person.vacation_start && 
@@ -26,7 +23,7 @@ export function useCheckPersonStatus(
             stringDate >= person.vacation_start && 
             stringDate <= person.vacation_end
         ) {
-            redAlarm.push("Отпуск");
+            person.redAlarm.push("Отпуск");
         }
 
         if (
@@ -35,7 +32,7 @@ export function useCheckPersonStatus(
             stringDate >= person.sick_start && 
             stringDate <= person.sick_end
         ) {
-            redAlarm.push("Больничный");
+            person.redAlarm.push("Больничный");
         }
 
         if(
@@ -44,7 +41,7 @@ export function useCheckPersonStatus(
             stringDate >= person.study_start && 
             stringDate <= person.study_end
         ) {
-            redAlarm.push('Обучение');
+            person.redAlarm.push('Обучение');
         }
 
         if (
@@ -52,7 +49,7 @@ export function useCheckPersonStatus(
             person.vacation_start > stringDate && 
             person.vacation_start <= stringSevenDays
         ) {
-            yellowAlarm.push("Скоро отпуск");
+            person.yellowAlarm.push("Скоро отпуск");
         }
 
         if (
@@ -60,9 +57,9 @@ export function useCheckPersonStatus(
             person.study_start > stringDate && 
             person.study_start <= stringSevenDays 
         ) {
-            yellowAlarm.push("Скоро обучение");
+            person.yellowAlarm.push("Скоро обучение");
         }
 
-        return { ...person, redAlarm, yellowAlarm };
+        return { ...person };
     });
 }

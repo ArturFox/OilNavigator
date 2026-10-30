@@ -1,11 +1,10 @@
 import { X } from 'lucide-react';
 import styles from './BottomSheetModal.module.scss';
 import { useState } from 'react';
-import { TitleH4 } from '../../../../shared/ui/Title/TitleH4/TitleH4';
 
 export function BottomSheetModal () {
 
-    const [createSchedule, onCreateSchedule] = useState<boolean>(false);
+    //const [createSchedule, onCreateSchedule] = useState<boolean>(false);
 
     const [touchStart, setTouchStart] = useState<number>(0);
 
@@ -83,9 +82,9 @@ export function BottomSheetModal () {
             <div
                 className={styles["createSchedule__title"]}
             >
-                <TitleH4>
+                <h4>
                     Составить расписание
-                </TitleH4>
+                </h4>
             </div>
 
             <button

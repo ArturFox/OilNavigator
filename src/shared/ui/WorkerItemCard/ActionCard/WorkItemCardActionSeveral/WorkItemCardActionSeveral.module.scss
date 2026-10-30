@@ -1,0 +1,28 @@
+@use 'styles/helpers/' as *;
+
+.replaceWorkerItem {
+  position: relative;
+
+  min-height: rem(100);
+  width: 100%;
+
+  list-style: none;
+
+  background-color: var(--blue);
+
+  border-radius: rem(10);
+
+  &--redAlarm {
+    background-color: var(--redBlack);
+  }
+}
+
+.replaceWorkerItem__status {
+  display: flex;
+
+  height: 100%;
+  
+  padding-left: 24%;
+  padding-right: rem(10);
+
+}

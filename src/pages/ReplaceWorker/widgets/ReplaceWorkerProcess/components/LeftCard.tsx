@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import styles from './LeftCard.module.scss';
-import type { PersonsWithStatus } from '../../../../../entities/persons/types/persons.dto';
+import type { Persons } from '../../../../../entities/persons/types/persons.dto';
 import type { SelectedPerson } from '../../../types/typeReplaseWorker';
 
 interface Props {
     selectedPerson: SelectedPerson;
-    personToReplace: PersonsWithStatus | null;
+    personToReplace: Persons | null;
     arrProblemPersonToReplace: string[];
     modalCenter: boolean;
     onModalCenter: (modalCenter: boolean) => void;

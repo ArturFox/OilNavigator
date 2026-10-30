@@ -1,16 +1,16 @@
+import { ModalFactory } from '@/shared/ui/Modal/ModalFactory';
 import type { Brigade } from '../../../../entities/brigades/types/brigades.dto';
-import type { PersonsWithStatus } from '../../../../entities/persons/types/persons.dto';
-import { ModalCenterWindow } from '../../../../shared/ui/Modal/ModalCenterWindow/ModalCenterWindow';
+import type { Persons } from '../../../../entities/persons/types/persons.dto';
 import type { SelectedPerson } from '../../types/typeReplaseWorker';
 import styles from './ReplaceWorkerItem.module.scss';
 import { useEffect, useState } from 'react';
 
 interface Props {
-    person: PersonsWithStatus;
+    person: Persons;
     selected: string;
     onSelected: (value: string) => void;
     onSelectedPerson: (value: SelectedPerson) => void;
-    personToReplace: PersonsWithStatus | null;
+    personToReplace: Persons | null;
     b: Brigade;
 }
 
@@ -212,12 +212,16 @@ export function ReplaceWorkerItem (
                 
             </div>
 
-            <ModalCenterWindow
+            <ModalFactory.modalCenterDetailed
                 modalCenter={modalCenter}
                 onModalCenter={onModalCenter}
-                person={person}
-                arrProblem={arrProblem}
-                personToReplace = {personToReplace}
+                name={person.name}
+                surname={person.surname}
+                otherSurname={person.other_surname}
+                job_title={person.job_title}
+                block={person.block}
+                discharge={person.discharge}
+                avalibleBlocks={(person.he_can) ?? []}
             />
 
         </div>

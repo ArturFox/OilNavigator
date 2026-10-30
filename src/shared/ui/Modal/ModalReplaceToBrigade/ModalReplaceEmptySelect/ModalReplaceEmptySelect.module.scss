@@ -1,0 +1,85 @@
+@use 'styles/helpers/' as *;
+
+.title {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: rem(10);
+
+    margin-bottom: rem(10);
+
+    color: var(--white);
+
+}
+
+.block {
+    display: flex;
+    justify-content: space-between;
+}
+
+.block-titleLeft {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+
+    flex: 1;
+
+    color: var(--white);
+}
+
+.block-iconeCenter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    color: var(--white);
+}
+
+.block-titleRight {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    
+    flex: 1;
+
+    color: var(--white);
+
+    &--active {
+        color: var(--blue);
+    }
+}
+
+.listBrigades {
+    display: flex;
+    justify-content: space-between;
+    gap: rem(10);
+}
+
+.listBrigades-button {
+    padding: rem(10);
+    padding-left: rem(15);
+    padding-right: rem(15);
+
+    background-color: var(--white);
+    color: var(--black);
+
+    border-radius: rem(10);
+
+    &--active {
+        background-color: var(--blue);
+    }
+}
+
+.apply {
+    background-color: var(--greenBlack);
+    color: var(--white);
+
+    border-radius: rem(10);
+
+    padding: rem(10);
+
+    margin-top: auto;
+}

@@ -1,0 +1,42 @@
+@use 'styles/helpers/' as *;
+
+.status {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+
+  flex: 1 1 70%;
+  margin-right: rem(10);
+
+
+  &::after {
+    content: '';
+
+    position: absolute;
+
+    top: 0;
+    right: 0;
+
+    height: 100%;
+
+    border-right: rem(3) dotted var(--black);
+  }
+}
+
+.status__jobTitle {
+  font-size: rem(15);
+
+  white-space: nowrap;
+
+  overflow: hidden;
+  
+  color: var(--black);
+}
+
+.status__problem {
+  font-size: rem(15);
+  white-space: nowrap;
+  overflow: hidden;
+  color: var(--black);
+}

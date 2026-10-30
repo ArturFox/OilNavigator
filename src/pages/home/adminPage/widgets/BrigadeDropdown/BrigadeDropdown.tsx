@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import styles from './BrigadeDropdown.module.scss';
 import type { SortShift } from "../../../../../entities/shifts/types/shifts.dto";
-import type { PersonsWithStatus } from "../../../../../entities/persons/types/persons.dto";
+import type { Persons } from "../../../../../entities/persons/types/persons.dto";
 import { ArrowDownWideNarrow } from "lucide-react";
 import { PersonCard } from "./components/PersonCard";
 import { PersonDropdownItem } from "./components/PersonDropdownItem";
@@ -18,7 +18,7 @@ export function BrigadeDropdown(
 ) {
 
     // вытаскиваем массив людей именно кто работает в этот день
-    const people: PersonsWithStatus[] = shift.peopleOnThisDay;
+    const people: Persons[] = shift.peopleOnThisDay;
 
     // Состояние для открытия списка людей
     const [open, onOpen] = useState<boolean>(false);

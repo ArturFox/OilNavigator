@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
 import styles from './RightCard.module.scss';
-import type { PersonsWithStatus } from "../../../../../entities/persons/types/persons.dto";
+import type { Persons } from "../../../../../entities/persons/types/persons.dto";
 import type { SelectedPerson } from "../../../types/typeReplaseWorker";
 
 interface Props {
     selectedPerson: SelectedPerson;
-    ap: (selectedHuman: PersonsWithStatus) => Promise<void>;
+    ap: (selectedHuman: Persons) => Promise<void>;
 }
 
 export function RightCard (

@@ -1,5 +1,5 @@
 import type { Brigade } from "../../../entities/brigades/types/brigades.dto";
-import type { PersonsWithStatus } from "../../../entities/persons/types/persons.dto";
+import type { Persons } from "../../../entities/persons/types/persons.dto";
 
 export interface FilterSelected {
     brigadesId: string[];
@@ -9,6 +9,6 @@ export interface FilterSelected {
 }
 
 export interface SelectedPerson {
-    personObj: PersonsWithStatus | null;
+    personObj: Persons | null;
     brigade: Brigade | null;
 }

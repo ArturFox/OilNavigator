@@ -23,5 +23,7 @@ export function mappperPerson(person: PersonsDto): Persons {
         study_end: person.study_end,
         installation_id: person.installation_id,
         role: person.role,
+        redAlarm: [],
+        yellowAlarm: []
     };
 }

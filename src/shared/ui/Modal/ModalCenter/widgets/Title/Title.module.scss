@@ -1,0 +1,14 @@
+@use 'styles/helpers/' as *;
+
+.modal__title {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: rem(10);
+
+    margin-bottom: rem(10);
+
+    color: var(--white);
+
+}

@@ -2,11 +2,11 @@ import { useEffect, useState } from 'react';
 import styles from './PersonDropdownItem.module.scss';
 import { ArrowRightLeft, Plus, Search } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
-import type { PersonsWithStatus } from '../../../../../../entities/persons/types/persons.dto';
-import { ModalCenterWindow } from '../../../../../../shared/ui/Modal/ModalCenterWindow/ModalCenterWindow';
+import type { Persons } from '../../../../../../entities/persons/types/persons.dto';
+import { ModalFactory } from '@/shared/ui/Modal/ModalFactory';
 
 interface Props {
-  personWhoWasReplacedId?: PersonsWithStatus;
+  personWhoWasReplacedId?: Persons;
   isFutureDate: boolean;
   startDate: string;
   personWhoWasReplacedBrigadeId: string;
@@ -209,8 +209,14 @@ export function PersonDropdownItem (
 
             </div>
 
-            <ModalCenterWindow
-                person={personWhoWasReplacedId}
+            <ModalFactory.modalCenterBasic
+                name={personWhoWasReplacedId.name}
+                surname={personWhoWasReplacedId.surname}
+                otherSurname={personWhoWasReplacedId.other_surname}
+                job_title={personWhoWasReplacedId.job_title}
+                block={personWhoWasReplacedId.block}
+                discharge={personWhoWasReplacedId.discharge}
+                avalibleBlocks={(personWhoWasReplacedId.he_can ?? [])}
                 modalCenter={modalCenter}
                 onModalCenter={onModalCenter}
             />

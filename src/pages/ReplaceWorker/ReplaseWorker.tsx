@@ -1,14 +1,12 @@
 import { useSelector } from 'react-redux';
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { getPesonsApi, useGetPesonsQuery } from '../../entities/persons/api/getPersons';
 import { useGetBrigadesQuery } from '../../entities/brigades/api/getBrigades';
 import { brigadesSortArr } from '../../entities/brigades/model/selectors/mapperBrigades';
 import type { Brigade } from '../../entities/brigades/types/brigades.dto';
-import type { PersonsWithStatus } from '../../entities/persons/types/persons.dto';
-import { Modal } from '../../shared/ui/Modal/Modal';
+import type { Persons } from '../../entities/persons/types/persons.dto';
 import styles from './ReplaseWorker.module.scss';
-import { ReplaceWorkerItem } from './widgets/ReplaceWorkerItem/ReplaceWorkerItem';
 import { ReplaceWorkerProcess } from './widgets/ReplaceWorkerProcess/ReplaceWorkerProcess';
 import { ReplaceWorkerFilters } from './widgets/ReplaceWorkerFilters/ReplaceWorkerFilters';
 import { supabase } from '../../shared/api/supabase/client';
@@ -20,6 +18,8 @@ import { sortShiftMap, sortWhoDontHaveBrigade } from '../Home/adminPage/model/se
 import { toast } from 'sonner';
 import { getPersonReplacementApi, useGetPersonReplacementQuery } from '../../entities/personReplacement/api/getPersonReplacement';
 import { useGetShiftsQuery } from '../../entities/shifts/api/getShifts';
+import { WorkItemCardFactory } from '@/shared/ui/WorkerItemCard/WorkItemCardFactory';
+import { ModalWorkerFilters } from '@/shared/ui/Modal/ModalWorkerFilters/ModalWorkerFilters';
 
 export function ReplaseWorker () {
 
@@ -47,12 +47,6 @@ export function ReplaseWorker () {
     // нажать на день в календаре, где при нажатии сразу в dateStore кладется выбранный день
     // нажал на пользователя которого надо заменить и мы в этом окне с датой в которой надо кого поменять
     const russianDate: string = `${dateStore.slice(8, 10)}-${dateStore.slice(5,7)}-${dateStore.slice(0,4)}`
-
-    // только для визуального эффекта в widget ReplaceWorkerItem
-    // при нажатии на item пользователя
-    // его border становится желтый
-    // сюда записали id какого пользователя выбрали
-    const [selected, onSelected] = useState<string>('');
     
     // при нажатии на item пользователя в widget ReplaceWorkerItem
     // срабатывает onSelectedPerson и добавляет в selectedPerson этого пользователя
@@ -120,7 +114,7 @@ export function ReplaseWorker () {
         shiftsWithoutBrigadeToday
     });
 
-    async function ap(selectedHuman: PersonsWithStatus): Promise<void> {
+    async function ap(selectedHuman: Persons): Promise<void> {
 
         if(
             personWhoWasReplacedId && 
@@ -374,20 +368,25 @@ export function ReplaseWorker () {
                                 <div
                                     className={styles["userChange__peopleBlock"]}
                                 >
-                                    {
-                                        b.peopleOnThisDay.map((p) => (
-
-                                            <ReplaceWorkerItem
-                                                key={p.id}
-                                                person={p}
-                                                personToReplace={personWhoWasReplacedId}
-                                                selected={selected}
-                                                onSelected={onSelected}
-                                                onSelectedPerson={onSelectedPerson}
-                                                b={b.brigade}
-                                            />
-                                        ))
-                                    }
+                                    {b.peopleOnThisDay.map((p) => (
+                                        <React.Fragment key={p.id}>
+                                            {WorkItemCardFactory.workActionDetailCard({
+                                                name: p.name,
+                                                surname: p.surname,
+                                                otherSurname: p.other_surname,
+                                                job_title: p.job_title,
+                                                block: p.block,
+                                                discharge: p.discharge,
+                                                avalibleBlocks: p.he_can ?? [],
+                                                personId: p.id,
+                                                redAlarm: p.redAlarm,
+                                                yellowAlarm: p.yellowAlarm,
+                                                onSelectedPerson: onSelectedPerson,
+                                                personToReplace: personWhoWasReplacedId,
+                                                b: b.brigade,
+                                            })}
+                                        </React.Fragment>
+                                    ))}
                                 </div>
 
                             </li>
@@ -399,7 +398,7 @@ export function ReplaseWorker () {
 
             </section>
 
-            <Modal
+            <ModalWorkerFilters
                 modal={modal}
                 onModal={onModal}
                 brigadesArr={brigadesArr}

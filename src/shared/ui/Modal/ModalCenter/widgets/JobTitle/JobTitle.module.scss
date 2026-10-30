@@ -1,0 +1,13 @@
+@use 'styles/helpers/' as *;
+
+.modal__blockInfo {
+    display: flex;
+    align-items: center;
+    gap: rem(10);
+
+    color: var(--white);
+}
+
+.modal__nameCategory {
+    color: var(--white99);
+}

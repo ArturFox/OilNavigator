@@ -1,10 +1,10 @@
 import { useMemo, useState } from "react";
-import type { PersonsWithStatus } from "../../../entities/persons/types/persons.dto";
+import type { Persons } from "../../../entities/persons/types/persons.dto";
 import type { FilterSelected } from "../types/typeReplaseWorker";
 import type { SortShift } from "../../../entities/shifts/types/shifts.dto";
 
 interface Props {
-    personWhoWasReplacedId: PersonsWithStatus | null;
+    personWhoWasReplacedId: Persons | null;
     brigadesAndDontBrigade: SortShift[];
     shiftsWithoutBrigadeToday: SortShift | undefined;
 }
