@@ -5,7 +5,9 @@ import type { AddButtonBaseProps } from '@/shared/ui/Button/AddButton/AddButtonB
 export function AddButtonBase(
     {
         isOpenModal,
-        onIsOpenModal
+        onIsOpenModal,
+        setTargetBrigadeId,
+        brigadeId
     }: AddButtonBaseProps
 ){
 
@@ -19,7 +21,10 @@ export function AddButtonBase(
                     ${styles['selectionButton__button']}
                     
                 `}
-                onClick={() => onIsOpenModal(!isOpenModal)}
+                onClick={() => {
+                    onIsOpenModal(!isOpenModal)
+                    setTargetBrigadeId(brigadeId)
+                }}
             >
 
                 <Plus/>

@@ -9,15 +9,14 @@ export function ModalReplaceOnlyOne (
         name,
         surname,
 
-        brigadesId,
-        brigadesNumber,
-
+        brigadesIdAndNumbers,
+        
         onApply
 
     }: ModalReplaceOnlyOneProps
 ) {
 
-    const [brigadeSelected, onBrigadeSelected] = useState<number | null>(null);
+    const [brigadeSelected, onBrigadeSelected] = useState<string | null>(null);
 
     return (
 
@@ -52,24 +51,18 @@ export function ModalReplaceOnlyOne (
                         ${brigadeSelected && styles['overlay__block-selectedBrigade--active']}
                     `}
                 >
-                    {brigadeSelected 
+                    {brigadeSelected
 
                         ? <span>
-                            {brigadeSelected}
+                            {brigadesIdAndNumbers.find(
+                                (brigade) => brigade.brigadeId === brigadeSelected
+                            )?.brigadeNumber}
                         </span>
 
                         : <>
-
-                            <span>
-                                Выберите
-                            </span> 
-
-                            <span>
-                                бригаду
-                            </span>
-
+                            <span>Выберите</span>
+                            <span>бригаду</span>
                         </>
-
                     }
 
                 </div>
@@ -80,24 +73,25 @@ export function ModalReplaceOnlyOne (
                 className={styles['overlay__brigades']}
             >
 
-                {brigadesNumber.map((brigade) => (
+                {brigadesIdAndNumbers.map((brigade) => (
 
                     <button
+                        key={brigade.brigadeId}
                         className={`
                             ${styles['overlay__brigades-button']}
-                            ${brigadeSelected === brigade
+                            ${brigadeSelected === brigade.brigadeId
                                 ? styles['overlay__brigades-button--active']
                                 : ''}
                         `}
                         onClick={() => {
                             onBrigadeSelected((prev) =>
-                                prev === brigade ? null : brigade
+                                prev === brigade.brigadeId 
+                                ? null 
+                                : brigade.brigadeId
                             );
                         }}
                     >
-
-                        {brigade}
-
+                        {brigade.brigadeNumber}
                     </button>
 
                 ))}
@@ -110,12 +104,9 @@ export function ModalReplaceOnlyOne (
                 onClick={() => {
                     if (brigadeSelected === null) return;
 
-                    const brigadeIndex: number = brigadesNumber.indexOf(brigadeSelected);
-                    if (brigadeIndex === -1) return;
-
                     onApply({
                         personId: id,
-                        brigadeId: brigadesId[brigadeIndex],
+                        brigadeId: brigadeSelected,
                     });
                 }}
             >

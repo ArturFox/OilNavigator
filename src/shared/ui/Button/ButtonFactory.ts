@@ -1,21 +1,23 @@
 import { createElement } from 'react';
-import { SelectionButtonDetail } from '@/shared/ui/Button/SelectionButton/SelectionButtonDetail/SelectionButtonDetail';
 import { DetailButtonBase } from '@/shared/ui/Button/DetailButton/DetailButtonBase/DetailButtonBase';
 import { AddButtonBase } from '@/shared/ui/Button/AddButton/AddButtonBase/AddButtonBase';
-import type { SelectionButtonDetailProps } from '@/shared/ui/Button/SelectionButton/SelectionButtonDetail/types/typesSelectionButtonDetail';
 import type { DetailButtonBaseProps } from '@/shared/ui/Button/DetailButton/DetailButtonBase/types/typesDetailButtonBase';
 import { SelectButtonBase } from '@/shared/ui/Button/SelectionButton/SelectButtonBase/SelectButtonBase';
 import type { SelectButtonBaseProps } from '@/shared/ui/Button/SelectionButton/SelectButtonBase/types/typesSelectButtonBase';
 import type { AddButtonBaseProps } from '@/shared/ui/Button/AddButton/AddButtonBase/types/typesAddButtonBase';
+import { SelectButtonPerson } from '@/shared/ui/Button/SelectionButton/SelectButtonPerson/SelectButtonPerson';
+import type { SelectButtonPersonProps } from '@/shared/ui/Button/SelectionButton/SelectButtonPerson/types/typesSelectButtonPerson';
+import type { SelectButtonPersonObjectProps } from '@/shared/ui/Button/SelectionButton/SelectButtonPersonObject/types/typesSelectButtonPersonObject';
+import { SelectButtonPersonObject } from '@/shared/ui/Button/SelectionButton/SelectButtonPersonObject/SelectButtonPersonObject';
 
 export class ButtonFactory {
 
-    static selectionButtonDetail(props: SelectionButtonDetailProps){
-        return createElement(SelectionButtonDetail, props);
-    }
-
     static selectButtonBase(props: SelectButtonBaseProps){
         return createElement(SelectButtonBase, props);
+    }
+
+    static selectButtonPerson(props: SelectButtonPersonProps){
+        return createElement(SelectButtonPerson, props);
     }
 
     static detailButtonBase(props: DetailButtonBaseProps){
@@ -24,6 +26,10 @@ export class ButtonFactory {
 
     static addButtonBase(props: AddButtonBaseProps){
         return createElement(AddButtonBase, props);
+    }
+
+    static selectButtonPersonObject(props: SelectButtonPersonObjectProps){
+        return createElement(SelectButtonPersonObject, props);
     }
 
 }

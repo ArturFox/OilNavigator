@@ -1,25 +1,15 @@
 import { ButtonFactory } from '@/shared/ui/Button/ButtonFactory';
 import styles from './WorkItemCardActionEmpty.module.scss';
-import { useState } from 'react';
-import { LayoutFactory } from '@/shared/ui/Layout/LayoutFactory';
-import { ModalFactory } from '@/shared/ui/Modal/ModalFactory';
 import type { WorkItemCardActionEmptyProps } from '@/shared/ui/WorkerItemCard/ActionCard/WorkItemCardActionEmpty/types/typesWorkItemCardActionEmpty';
 
-export function WorkItemCardActionEmpty<T, P> (
+export function WorkItemCardActionEmpty (
     {
-        items,                                    
-        brigadeIdWhereEmptyCard,   
-        getItemId,
-        getItemLabel,
-
-        people,
-        getPersonBrigadeId,
-        getPersonName,
-        getPersonSurname
-    }: WorkItemCardActionEmptyProps<T, P>
+        shouldRedirect,
+        setShouldRedirect,
+        brigadeId,
+        setTargetBrigadeId
+    }: WorkItemCardActionEmptyProps
 ){
-
-    const [isOpenModal, onIsOPenModal] = useState<boolean>(false);
 
     return (
 
@@ -33,33 +23,13 @@ export function WorkItemCardActionEmpty<T, P> (
             >
                 Нету Человека
             </span>
-
             
             <ButtonFactory.addButtonBase
-                isOpenModal={isOpenModal}
-                onIsOpenModal={onIsOPenModal}
+                isOpenModal={shouldRedirect}
+                onIsOpenModal={setShouldRedirect} 
+                brigadeId={brigadeId}
+                setTargetBrigadeId={setTargetBrigadeId}
             />
-
-            {isOpenModal && 
-                LayoutFactory.layoutCenterBase({
-                    openModalSeveral: isOpenModal,
-                    onOpenModalSeveral: onIsOPenModal,
-                    children: (
-                        <ModalFactory.modalReplaceEmptySelect
-                            items={items}                     
-                            brigadeIdWhereEmptyCard={brigadeIdWhereEmptyCard} 
-                            getItemId={getItemId}
-                            getItemLabel={getItemLabel}
-
-                            people={people}
-                            getPersonBrigadeId={getPersonBrigadeId}
-                            getPersonName={getPersonName}
-                            getPersonSurname={getPersonSurname}
-                        />
-                    )
-                })
-            }
-
 
         </li>
         

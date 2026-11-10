@@ -1,11 +1,5 @@
 import type { Dispatch, SetStateAction } from "react";
 
-type PersonObj = {
-    id: string;
-    name: string;
-    surname: string;   
-}
-
 export interface WorkItemCardActionSeveralProps {
     id: string;
     name: string;
@@ -18,11 +12,13 @@ export interface WorkItemCardActionSeveralProps {
 
     buttonSelectCheck: boolean;
 
-    brigadesId: string[];
-    brigadesNumber: number[];
+    brigadesIdAndNumbers: {
+        brigadeId: string;
+        brigadeNumber: number;
+    }[];
 
-    listSelectedUsers: PersonObj[];
-    onListSelectedUsers: Dispatch<SetStateAction<PersonObj[]>>;
+    listSelectedUsers: string[];
+    onListSelectedUsers: Dispatch<SetStateAction<string[]>>;
 
     onApply: React.Dispatch<React.SetStateAction<{
         personId: string;

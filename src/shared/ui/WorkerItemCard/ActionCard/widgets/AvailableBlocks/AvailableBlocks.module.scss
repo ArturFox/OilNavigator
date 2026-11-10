@@ -1,0 +1,35 @@
+@use 'styles/helpers/' as *;
+
+.availableBlocks {
+  display: flex;
+  flex-direction: column;
+
+  gap: rem(5);
+}
+
+.availableBlocks__heCanTitle {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+}
+
+.availableBlocks__heCanBlock {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  width: 100%;
+
+}
+
+.availableBlocks__heCan {
+  
+  color: var(--black);
+
+  margin-right: rem(3);
+
+  &--good {
+    color: var(--white);
+  }
+  
+}

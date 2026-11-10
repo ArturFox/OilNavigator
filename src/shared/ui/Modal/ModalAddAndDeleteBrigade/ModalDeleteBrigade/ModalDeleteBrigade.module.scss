@@ -1,0 +1,40 @@
+@use 'styles/helpers/' as *;
+
+.modalDeleteBrigade {
+    display: flex;
+    flex-direction: column;
+    gap: rem(10);
+}
+
+.modalDeleteBrigade__title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modalDeleteBrigade__bridadesList {
+    display: flex;
+    justify-content: space-between;
+    gap: rem(10);
+}
+
+.modalDeleteBrigade__bridadesList__button {
+    padding: rem(10);
+    padding-left: rem(15);
+    padding-right: rem(15);
+
+    background-color: var(--white);
+    color: var(--black);
+
+    border-radius: rem(10);
+
+
+    &--selected {
+        background-color: var(--blue);
+    }
+}
+
+.modalDeleteBrigade__bridadesList {
+    width: 100%;
+
+}

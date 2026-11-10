@@ -2,6 +2,28 @@ import { createSelector } from "@reduxjs/toolkit";
 import { brigadesMapper } from "../../../entities/brigades/model/selectors/mapperBrigades";
 import type { Brigade } from "../../../entities/brigades/types/brigades.dto";
 import { personsMapper } from "../../../entities/persons/model/selector/selectorPersons";
+import type { Persons } from "@/entities/persons/types/persons.dto";
+
+export const peopleMapWhereKeyItsPersonIdReplaceWorker = createSelector(
+
+    personsMapper,
+
+    (persons): Map<string, Persons> => {
+
+        const map = new Map<string, Persons>();
+
+        persons.forEach((person) => {
+
+            const key: string = person.id;
+
+            if(!map.has(key)){
+                map.set(key, person)
+            }
+        })
+
+        return map;
+    }
+)
 
 export const brigadesSortArr = createSelector(
 

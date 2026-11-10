@@ -1,0 +1,52 @@
+@use 'styles/helpers/' as *;
+
+.modal__title {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: rem(10);
+
+    margin-bottom: rem(10);
+
+    color: var(--white);
+
+}
+
+.modal__blockInfo {
+    display: flex;
+    align-items: center;
+    gap: rem(10);
+
+    color: var(--white);
+}
+
+.modal__nameCategory {
+    color: var(--white99);
+}
+
+.modal__blockProblem {
+    display: flex;
+    gap: rem(10);
+}
+
+.modal__problem {
+    color: var(--redAlarm);
+}
+
+.modal__good {
+    color: var(--greenAlarm);
+}
+
+.modal__nameHeCan {
+    display: flex;
+    gap: rem(10);
+}
+
+.modal__heCanName {
+    color: var(--white);
+
+    &--same {
+        color: var(--greenAlarm);
+    }
+}

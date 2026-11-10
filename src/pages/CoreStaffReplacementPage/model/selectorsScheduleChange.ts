@@ -34,7 +34,7 @@ export const peopleMapCoreStaffReplacement = createSelector(
 
     personsMapper,
 
-    (people) => {
+    (people): Map<string, Persons[]> => {
 
         const arrSort = [...people].sort((a, b) => (
             b.discharge - a.discharge
@@ -59,4 +59,26 @@ export const peopleMapCoreStaffReplacement = createSelector(
 
     }
 
+)
+
+export const peopleMapIdKeyCoreStaffReplacement = createSelector(
+
+    personsMapper,
+
+    (people): Map<string, Persons> => {
+
+        const map = new Map<string, Persons>();
+
+        people.forEach((person) => {
+
+            const key: string = person.id;
+
+            if(!map.has(key)){
+                map.set(key, person);
+            }
+
+        });
+
+        return map;
+    }
 )

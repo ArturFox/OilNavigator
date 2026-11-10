@@ -3,8 +3,11 @@
 .replaceWorkerItem {
   position: relative;
 
-  min-height: rem(100);
-  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  min-height: rem(95);
 
   list-style: none;
 
@@ -15,12 +18,11 @@
   &--redAlarm {
     background-color: var(--redBlack);
   }
+
 }
 
 .replaceWorkerItem__status {
   display: flex;
-
-  height: 100%;
   
   padding-left: 24%;
   padding-right: rem(10);

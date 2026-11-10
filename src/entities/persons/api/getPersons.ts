@@ -55,22 +55,28 @@ export const getPesonsApi = createApi({
 
         changePersonBrigade: builder.mutation<void, {idPerson: string, idClickNewBrigade: string}>({
 
-            queryFn: async (obj) => {
+    queryFn: async (obj) => {
 
-                const {error} = await supabase
-                    .from('persons')
-                    .update({brigade_id: obj.idClickNewBrigade})
-                    .eq('id', obj.idPerson);
+        console.log('idPerson:', obj.idPerson);
+        console.log('idClickNewBrigade:', obj.idClickNewBrigade);
 
-                if(error){
-                    return {error}
-                }
+        console.log('typeof idPerson:', typeof obj.idPerson);
+        console.log('typeof idClickNewBrigade:', typeof obj.idClickNewBrigade);
 
-                return {data: undefined}
-            },
+        const {error} = await supabase
+            .from('persons')
+            .update({brigade_id: obj.idClickNewBrigade})
+            .eq('id', obj.idPerson);
 
-            invalidatesTags: ['Persons'],
-        })
+        if(error){
+            return {error}
+        }
+
+        return {data: undefined}
+    },
+
+    invalidatesTags: ['Persons'],
+})
     })
 })
 

@@ -86,3 +86,12 @@
     transition: transform 0.45s ease;
 
 }
+
+.coreStaffReplacement__slide {
+    display: flex;
+    flex-direction: column;
+
+    flex: 0 0 100%;
+
+    overflow: hidden;
+}

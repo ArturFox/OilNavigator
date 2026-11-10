@@ -1,17 +1,17 @@
-import { LayoutCenterBase } from '@/shared/ui/Layout/LayoutCenter/LayoutCenterBase/LayoutCenterBase';
-import type { LayoutCenterBaseProps } from '@/shared/ui/Layout/LayoutCenter/LayoutCenterBase/types/typesLayoutCenterBase';
-import { LayoutCenterOnePerson } from '@/shared/ui/Layout/LayoutCenter/LayoutCenterOnePerson/LayoutCenterOnePerson';
-import type { LayoutCenterOnePersonProps } from '@/shared/ui/Layout/LayoutCenter/LayoutCenterOnePerson/types/typesLayoutCenterOnePerson';
+import { LayoutCenterColumn } from '@/shared/ui/Layout/LayoutCenter/LayoutCenterColumn/LayoutCenterColumn';
+import type { LayoutCenterOnePersonProps } from '@/shared/ui/Layout/LayoutCenter/LayoutCenterColumn/types/typesLayoutCenterColumn';
+import { LayoutSimpleBlackBackground } from '@/shared/ui/Layout/LayoutSimpleBlackBackground/LayoutSimpleBlackBackground';
+import type { LayoutSimpleBlackBackgroundProps } from '@/shared/ui/Layout/LayoutSimpleBlackBackground/types/typesLayoutSimpleBlackBackground';
 import { createElement } from 'react';
 
 export class LayoutFactory {
 
-    static layoutCenterOnePerson(props: LayoutCenterOnePersonProps){
-        return createElement(LayoutCenterOnePerson, props)
+    static layoutCenterColumn(props: LayoutCenterOnePersonProps){
+        return createElement(LayoutCenterColumn, props)
     }
 
-    static layoutCenterBase(props: LayoutCenterBaseProps){
-        return createElement(LayoutCenterBase, props)
+    static layoutSimpleBlackBackground(props: LayoutSimpleBlackBackgroundProps){
+        return createElement(LayoutSimpleBlackBackground, props)
     }
 
 }

@@ -1,12 +1,12 @@
 import styles from './WorkItemCardActionSeveral.module.scss';
-import { AvalibleBlocksFactory } from "@/shared/ui/AvalibleBlocks/AvalibleBlocksFactory/AvalibleBlocksFactory";
-import { PersonStatusFactory } from "@/shared/ui/PersonStatus/PersonStatusFactory/PersonStatusFactory";
 import { ButtonFactory } from "@/shared/ui/Button/ButtonFactory";
 import { useState } from 'react';
 import { ModalFactory } from '@/shared/ui/Modal/ModalFactory';
 import { LayoutFactory } from '@/shared/ui/Layout/LayoutFactory';
 import type { WorkItemCardActionSeveralProps } from '@/shared/ui/WorkerItemCard/ActionCard/WorkItemCardActionSeveral/types/typesWorkItemCardActionSeveral';
 import { Identity } from '@/shared/ui/WorkerItemCard/ActionCard/widgets/Identity/Identity';
+import { AvailableBlocks } from '@/shared/ui/WorkerItemCard/ActionCard/widgets/AvailableBlocks/AvailableBlocks';
+import { WorkInfo } from '@/shared/ui/WorkerItemCard/ActionCard/widgets/WorkInfo/WorkInfo';
 
 export function WorkItemCardActionSeveral (
     {
@@ -21,8 +21,7 @@ export function WorkItemCardActionSeveral (
 
         buttonSelectCheck,
 
-        brigadesId,
-        brigadesNumber, 
+        brigadesIdAndNumbers,
 
         listSelectedUsers,
         onListSelectedUsers,
@@ -32,9 +31,7 @@ export function WorkItemCardActionSeveral (
     }: WorkItemCardActionSeveralProps
 ){
     
-    const isOpenModal: boolean = listSelectedUsers.some(
-        (person) => person.id === id
-    );
+    const [isOpenModal, onIsOpenModal] = useState<boolean>(false);
 
     const [isOpenModalDetail, onIsOpenModalDetail] = useState<boolean>(false);
 
@@ -50,44 +47,62 @@ export function WorkItemCardActionSeveral (
                 surname={surname}
                 name={name}
                 otherSurname={otherSurname}
+                fontSizeNamePx={18}
+                paddingLeftPx={10}
+                paddingTopPx={5}
+                heightPx={40}
+                widthPercent={77}
             />
             
             <div
                 className={styles["replaceWorkerItem__status"]}
             >
 
-                {PersonStatusFactory.workInfoBase({
-                    job_title: job_title,
-                    block: block,
-                    discharge: discharge,
-                })}
+                <WorkInfo
+                    fontSizeJobAndBlockPx={15}
+                    fontSizeDischargePx={15}
+                    job_title={job_title}
+                    block = {block}
+                    discharge = {discharge}
+                    marginRightPx = {5}
+                    gapPx={5}
+                    widthPercent={65}
+                />
 
-                {AvalibleBlocksFactory.avalibleBlocksBase({
-                    he_can: avalibleBlocks
-                })}
+                <AvailableBlocks
+                    fontSizeTitle={15}
+                    fontSizeBlocks={15}
+                    he_can={avalibleBlocks}
+                    widthPercent={35}
+                />
 
             </div>
 
-            <ButtonFactory.selectButtonBase
-                id = {id}
-                name = {name}
-                surname = {surname}
-                isOpenModal = {isOpenModal}
-                onListSelectedUsers = {onListSelectedUsers}
-            />
-            
             {!buttonSelectCheck && 
-                LayoutFactory.layoutCenterOnePerson({
-                    id: id,
+                <ButtonFactory.selectButtonBase
+                    isOpenModal = {isOpenModal}
+                    onIsOpenModal = {onIsOpenModal}
+                />
+            }
+
+            {buttonSelectCheck && 
+                <ButtonFactory.selectButtonPerson
+                    id={id}
+                    listSelectedUsers={listSelectedUsers}
+                    onListSelectedUsers={onListSelectedUsers}
+                />
+            }
+            
+            {(!buttonSelectCheck && isOpenModal) &&
+                LayoutFactory.layoutCenterColumn({
                     isOpenModal: isOpenModal,
-                    onListSelectedUsers: onListSelectedUsers,
+                    onIsOpenModal: onIsOpenModal,
                     children: (
                         <ModalFactory.modalReplaceOnlyOne
                             id={id}
                             name={name}
                             surname={surname}
-                            brigadesId={brigadesId}
-                            brigadesNumber={brigadesNumber}
+                            brigadesIdAndNumbers={brigadesIdAndNumbers}
                             onApply = {onApply}
                         />
                     ),
@@ -100,9 +115,9 @@ export function WorkItemCardActionSeveral (
             />
 
             {isOpenModalDetail && 
-                LayoutFactory.layoutCenterBase({
-                    openModalSeveral: isOpenModalDetail,
-                    onOpenModalSeveral: onIsOpenModalDetail,
+                LayoutFactory.layoutCenterColumn({
+                    isOpenModal: isOpenModalDetail,
+                    onIsOpenModal: onIsOpenModalDetail,
                     children: (
                         ModalFactory.modalCenterDetailed({
                             name: name,

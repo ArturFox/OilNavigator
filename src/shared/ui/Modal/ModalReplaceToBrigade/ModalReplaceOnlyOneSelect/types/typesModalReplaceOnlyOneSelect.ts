@@ -3,8 +3,10 @@ export interface ModalReplaceOnlyOneProps {
     name: string;
     surname: string;
 
-    brigadesId: string[];
-    brigadesNumber: number[];
+    brigadesIdAndNumbers: {
+        brigadeId: string;
+        brigadeNumber: number;
+    }[];
 
     onApply: React.Dispatch<React.SetStateAction<{
         personId: string;

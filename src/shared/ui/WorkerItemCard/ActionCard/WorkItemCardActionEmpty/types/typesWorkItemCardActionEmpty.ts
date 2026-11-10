@@ -1,11 +1,8 @@
-export interface WorkItemCardActionEmptyProps<T, P> {
-    items: T[];                                    
-    brigadeIdWhereEmptyCard: string;     
-    getItemId: (item: T) => string | number;
-    getItemLabel: (item: T) => string | number;    
+import type { Dispatch, SetStateAction } from "react";
 
-    people: Map<string, P[]>  
-    getPersonBrigadeId: (person: P) => string | number | null;
-    getPersonName: (person: P) => string;
-    getPersonSurname: (person: P) => string;
+export interface WorkItemCardActionEmptyProps {
+    shouldRedirect: boolean; 
+    setShouldRedirect: (shouldRedirect: boolean) => void;
+    brigadeId: string;
+    setTargetBrigadeId: Dispatch<SetStateAction<string | null>>
 }

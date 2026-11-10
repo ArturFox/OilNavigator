@@ -124,7 +124,7 @@ export const createMonthShift = createSelector(
     const result: SortShift[] = [];
 
     // берем дату из стора 
-    // и вытаскивает год и меся
+    // и вытаскивает год и месяц
     // ВАЖНО: месяц приходит с числом как в нашем календаре 
     //        то есть Октябрь в календаре = 10 и приходит из стора 10
     const [year, month] = monthSelected.split("-").map(Number);

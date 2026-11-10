@@ -1,0 +1,30 @@
+@use 'styles/helpers/' as *;
+
+.modal {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+
+    background-color: #23211E99; 
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+      
+
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+
+    &--open {
+        opacity: 1;
+        visibility: visible;
+        pointer-events: all;
+        z-index: 100;
+    }
+}

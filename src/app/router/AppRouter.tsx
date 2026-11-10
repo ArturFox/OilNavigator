@@ -5,9 +5,9 @@ import type { AuthState } from "../../features/auth/model/auth.types";
 import { SignPage } from "../../pages/SignPage/SignPage";
 import { HomePage } from "../../pages/Home/HomePage";
 import { CoreStaffReplacementPage } from "../../pages/CoreStaffReplacementPage/CoreStaffReplacementPage";
-import { ReplaseWorker } from "../../pages/ReplaceWorker/ReplaseWorker";
 import { ProfilePage } from "../../pages/ProfilePage/ProfilePage";
 import { AdminScheduleChange } from "../../pages/AdminScheduleChange/AdminScheduleChange";
+import { ReplaseWorkerCoreAdd } from "@/pages/ReplaceWorker/ReplaseWorkerCoreAdd/ReplaseWorkerCoreAdd";
 
 interface Props {
 
@@ -48,7 +48,7 @@ export function AppRouter({ auth }: Props) {
 
         <Route path="profile" element={<ProfilePage/>} />
 
-        <Route path="userChange" element={<ReplaseWorker/>}/>
+        <Route path="userChange" element={<ReplaseWorkerCoreAdd/>}/>
 
         <Route path="calendarBrigadeChange" element={<AdminScheduleChange/>}/>
         

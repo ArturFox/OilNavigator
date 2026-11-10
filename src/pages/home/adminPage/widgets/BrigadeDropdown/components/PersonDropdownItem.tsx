@@ -3,7 +3,6 @@ import styles from './PersonDropdownItem.module.scss';
 import { ArrowRightLeft, Plus, Search } from "lucide-react";
 import { useNavigate } from 'react-router-dom';
 import type { Persons } from '../../../../../../entities/persons/types/persons.dto';
-import { ModalFactory } from '@/shared/ui/Modal/ModalFactory';
 
 interface Props {
   personWhoWasReplacedId?: Persons;
@@ -208,18 +207,6 @@ export function PersonDropdownItem (
                 </button>
 
             </div>
-
-            <ModalFactory.modalCenterBasic
-                name={personWhoWasReplacedId.name}
-                surname={personWhoWasReplacedId.surname}
-                otherSurname={personWhoWasReplacedId.other_surname}
-                job_title={personWhoWasReplacedId.job_title}
-                block={personWhoWasReplacedId.block}
-                discharge={personWhoWasReplacedId.discharge}
-                avalibleBlocks={(personWhoWasReplacedId.he_can ?? [])}
-                modalCenter={modalCenter}
-                onModalCenter={onModalCenter}
-            />
 
         </li>
         

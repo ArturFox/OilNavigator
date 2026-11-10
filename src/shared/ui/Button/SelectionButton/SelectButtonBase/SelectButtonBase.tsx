@@ -1,20 +1,10 @@
 import type { SelectButtonBaseProps } from '@/shared/ui/Button/SelectionButton/SelectButtonBase/types/typesSelectButtonBase';
 import styles from './SelectButtonBase.module.scss'
 
-type PersonObj = {
-    id: string;
-    name: string;
-    surname: string;   
-}
-
 export function SelectButtonBase(
     {
-        id,
-        name,
-        surname,
         isOpenModal,
-        onListSelectedUsers
-
+        onIsOpenModal
     }: SelectButtonBaseProps
 ) {
  
@@ -28,20 +18,7 @@ export function SelectButtonBase(
                     ${styles['selectionButton__button']}
                     ${isOpenModal && styles["selectionButton__button--selected"]}
                 `}
-                onClick={() => onListSelectedUsers((prev) => {
-
-                    if(isOpenModal){
-                        return prev.filter((person) => person.id !== id);
-                    }
-
-                    const newPerson: PersonObj = {
-                        id: id,
-                        name: name,
-                        surname: surname,
-                    };
-
-                    return [...prev, newPerson]
-                })}
+                onClick={() => onIsOpenModal(!isOpenModal)}
             >
                 {isOpenModal
                     ? 'Выбран'
