@@ -1,54 +1,59 @@
 @use 'styles/helpers/' as *;
 
-.overlay__title {
+.title {
     display: flex;
-    flex-direction: column;
     justify-content: center;
     align-items: center;
-    gap: rem(10);
 
     margin-bottom: rem(10);
 
     color: var(--white);
 
+    font-size: rem(20);
+
 }
 
-.overlay__blocks {
+.replaceMainBlock {
     display: flex;
     flex-direction: column;
     gap: rem(20);
-
-    max-height: 60vh;
-    overflow-y: auto;
 }
 
-.overlay__block {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    justify-content: space-between;
-    gap: rem(10);
+.replaceMainBlock-replaceBlock {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+
+    margin-top: auto;
 }
 
-.overlay__brigades {
-    display: flex;
-    flex-wrap: wrap;
-    gap: rem(10);
-    width: 100%;
-}
+.replaceMainBlock-replaceBlock-info {
+    max-width: 100%;
+    overflow: hidden;
 
-.overlay__block-nameInfo {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-start;
     justify-content: center;
 
-    flex: 1;
-
     color: var(--white);
+
+    font-size: rem(18);
+
+    span {
+        max-width: 100%;
+        overflow: hidden;
+
+        padding-left: rem(10);
+        padding-right: rem(10);
+
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
 }
 
-.overlay__block-iconeRight {
+.replaceMainBlock-replaceBlock-icone {
+    max-width: 100%;
+
     display: flex;
     justify-content: center;
     align-items: center;
@@ -56,28 +61,58 @@
     color: var(--white);
 }
 
-.overlay__block-selectedBrigade {
+.replaceMainBlock-replaceBlock-selectedBrigade {
+    max-width: 100%;
+    overflow: hidden;
+
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-end;
     justify-content: center;
-    
-    flex: 1;
 
     color: var(--white);
+
+    span {
+        max-width: 100%;
+        overflow: hidden;
+        
+        padding-left: rem(10);
+        padding-right: rem(10);
+
+        white-space: nowrap;
+        text-overflow: ellipsis;
+    }
 
     &--active {
+        align-items: center;
+
         color: var(--blue);
     }
 }
 
-.overlay__brigades {
-    display: flex;
-    justify-content: space-between;
-    gap: rem(10);
+.listBrigades {
+    max-width: 100%;
+    overflow: hidden;
+    
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    justify-items: center;
+    align-items: center;
+    
+    margin-top: auto;
+
+    column-gap: rem(10);
+    row-gap: rem(10);
 }
 
-.overlay__brigades-button {
+.listBrigades-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: rem(45);
+    height: rem(45);
+    
     padding: rem(10);
     padding-left: rem(15);
     padding-right: rem(15);
@@ -87,18 +122,28 @@
 
     border-radius: rem(10);
 
+    font-size: rem(18);
+
     &--active {
         background-color: var(--blue);
     }
 }
 
-.overlay__apply {
-    background-color: var(--greenBlack);
+.apply {
+    max-width: 100%;
+    
+    background-color: var(--gray);
     color: var(--white);
 
     border-radius: rem(10);
 
     padding: rem(10);
 
+    font-size: rem(18);
+
     margin-top: auto;
+
+    &--active{
+        background-color: var(--greenBlack);
+    }
 }

@@ -1,76 +1,51 @@
 import { useState } from 'react';
 import styles from './ModalReplaceSeveralSelect.module.scss';
 import { ArrowRight } from 'lucide-react';
-import { toast } from 'sonner';
-import { supabase } from '@/shared/api/supabase/client';
 import type { ModalReplaceSeveralSelectProps } from '@/shared/ui/Modal/ModalReplaceToBrigade/ModalReplaceSeveralSelect/type/typesModalReplaceSeveralSelect';
 
 export function ModalReplaceSeveralSelect (
     {
         brigadesIdAndNumbers,
         arrSelectButton,
+        setIsApllyModalSeveral
     }: ModalReplaceSeveralSelectProps
 ) {
     const [brigadeSelected, onBrigadeSelected] = useState<string | null>(null);
     const [isLoading, onIsLoading] = useState<boolean>(false);
 
-    async function handleApply() {
-        
-        if (brigadeSelected === null) {
-            toast.error('Выберите бригаду');
-            return;
-        }
-
-        if (arrSelectButton.length === 0) {
-            toast.error('Не выбраны сотрудники');
-            return;
-        }
-
-        onIsLoading(true);
-
-        const { error } = await supabase
-            .from('persons')
-            .update({ brigade_id: brigadeSelected })
-            .in('id', arrSelectButton.map((person) => person.id));
-
-        onIsLoading(false);
-
-        if (error) {
-            toast.error('Ошибка при изменении бригад', {
-                description: error.message,
-            });
-            return;
-        }
-
-        toast.success('Бригады сотрудников успешно изменены');
-    }
-
     return (
         <>
-            <h4 className={styles['overlay__title']}>
-                Выберите бригаду
+            <h4 
+                className={styles['title']}
+            >
+                Замена бригады
             </h4>
 
-            <div className={styles['overlay__blocks']}>
+            <div 
+                className={styles['replaceMainBlock']}
+            >
+
                 {arrSelectButton.map((person) => (
+
                     <div
-                        className={styles['overlay__block']}
                         key={person.id}
+                        className={styles['replaceMainBlock-replaceBlock']}
                     >
-                        <div className={styles['overlay__block-nameInfo']}>
+
+                        <div className={styles['replaceMainBlock-replaceBlock-info']}>
                             <span>{person.surname}</span>
                             <span>{person.name}</span>
                         </div>
 
-                        <div className={styles['overlay__block-iconeRight']}>
+                        <div className={styles['replaceMainBlock-replaceBlock-icone']}>
                             <ArrowRight />
                         </div>
 
                         <div
                             className={`
-                                ${styles['overlay__block-selectedBrigade']}
+                                ${styles['replaceMainBlock-replaceBlock-selectedBrigade']}
                                 ${brigadeSelected !== null
-                                    ? styles['overlay__block-selectedBrigade--active']
+                                    ? styles['replaceMainBlock-replaceBlock-selectedBrigade--active']
                                     : ''}
                             `}
                         >
@@ -86,18 +61,23 @@ export function ModalReplaceSeveralSelect (
                                 </>
                             }
                         </div>
+
                     </div>
+
                 ))}
+
             </div>
 
-            <div className={styles['overlay__brigades']}>
+            <div className={styles['listBrigades']}>
+
                 {brigadesIdAndNumbers.map((brigade) => (
+
                     <button
                         key={brigade.brigadeId}
                         className={`
-                            ${styles['overlay__brigades-button']}
+                            ${styles['listBrigades-button']}
                             ${brigadeSelected === brigade.brigadeId
-                                ? styles['overlay__brigades-button--active']
+                                ? styles['listBrigades-button--active']
                                 : ''}
                         `}
                         onClick={() => {
@@ -108,15 +88,32 @@ export function ModalReplaceSeveralSelect (
                     >
                         {brigade.brigadeNumber}
                     </button>
+
                 ))}
+
             </div>
 
             <button
-                className={styles['overlay__apply']}
-                onClick={handleApply}
-                disabled={isLoading}
+                className={`
+                    ${styles['apply']}
+                    ${brigadeSelected && styles['apply--active']}
+                `}
+                onClick={() => {
+                    if(!brigadeSelected){
+                        return
+                    }
+                    setIsApllyModalSeveral({
+                        idBrigadeSelected: brigadeSelected,
+                    })
+                }}
+                disabled={isLoading || !brigadeSelected}
             >
-                {isLoading ? 'Применение...' : 'Применить'}
+                {!brigadeSelected 
+                    ? 'Выберите бригаду'
+                    : !isLoading 
+                        ? 'Применить' 
+                        : 'Применение...'
+                }
             </button>
         </>
     );

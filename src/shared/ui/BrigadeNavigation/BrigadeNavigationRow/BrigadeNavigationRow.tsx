@@ -19,50 +19,56 @@ export function BrigadeNavigationRow (
 ) {
 
     return (
+        
+        <section>
 
-        <ul
-            className={styles['brigadeNavigationRow']}
-        >
+            <ul
+                className={styles['brigadeNavigationRow']}
+            >
 
-            {brigadeList.map((brigade) => {
+                {brigadeList.map((brigade) => {
 
-                const currentBrigade: boolean = isbrigadeSelectId === brigade.id
+                    const currentBrigade: boolean = isbrigadeSelectId === brigade.id
 
-                if (brigade.id === 'no_brigade') {
+                    if (brigade.id === 'no_brigade') {
 
+                        return (
+
+                            <ButtonItemNoBrigade
+                                currentBrigade={currentBrigade}
+                                setIsBrigadeSelectId={setIsBrigadeSelectId}
+                            />
+
+                        );
+
+                    }
+                    
                     return (
 
-                        <ButtonItemNoBrigade
+                        <ButtonItemExistBrigade
+                            isFull={brigade.isFull}
+                            id={brigade.id}
                             currentBrigade={currentBrigade}
+                            numberBrigade={brigade.numberBrigade}
                             setIsBrigadeSelectId={setIsBrigadeSelectId}
                         />
 
-                    );
+                    )
 
-                }
-                
-                return (
+                })}
 
-                    <ButtonItemExistBrigade
-                        isFull={brigade.isFull}
-                        id={brigade.id}
-                        currentBrigade={currentBrigade}
-                        numberBrigade={brigade.numberBrigade}
-                        setIsBrigadeSelectId={setIsBrigadeSelectId}
-                    />
+                <ButtonItemCreateBrigade
+                    setIsCreate={setIsCreate}
+                />
 
-                )
+                <ButtonItemDeleteBrigade
+                    setIsDelete={setIsDelete}
+                />
+                    
+            </ul>
+            
+        </section>
 
-            })}
-
-            <ButtonItemCreateBrigade
-                setIsCreate={setIsCreate}
-            />
-
-            <ButtonItemDeleteBrigade
-                setIsDelete={setIsDelete}
-            />
-                
-        </ul>
     )
+    
 } 

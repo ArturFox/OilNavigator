@@ -4,7 +4,7 @@ export interface ModalDeleteBrigadeProps {
         brigadeNumber: number;
     }[];
 
-    onApply: React.Dispatch<React.SetStateAction<{
+    onApply: (value: {
         brigadeId: string;
-    } | null>>;
+    }) => void;
 }

@@ -1,0 +1,56 @@
+@use 'styles/helpers/' as *;
+
+.brigadeToolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.brigadeToolbar__title {
+    font-size: rem(18);
+    color: var(--white);
+}
+
+.brigadeToolbar__actions {
+    display: flex;
+    align-items: center;
+    gap: rem(8);
+}
+
+.brigadeToolbar__actions-applyButton {
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+
+    &--active {
+        opacity: 1;
+        pointer-events: all;
+        color: var(--gray);
+    }
+
+    &--apply {
+        color: var(--white);
+    }
+}
+
+.brigadeToolbar__actions-selectionToggle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    width: rem(20);
+    height: rem(20);
+
+    border: rem(1) solid var(--white);
+
+}
+
+.brigadeToolbar__actions-selectionToggle-check {
+    opacity: 0;
+    transition: opacity 0.3 ease;
+
+    &--active{
+        opacity: 1;
+        color: var(--blue);
+    }
+}

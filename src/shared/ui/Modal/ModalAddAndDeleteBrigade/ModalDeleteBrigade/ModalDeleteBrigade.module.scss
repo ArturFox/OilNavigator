@@ -1,24 +1,40 @@
 @use 'styles/helpers/' as *;
 
-.modalDeleteBrigade {
-    display: flex;
-    flex-direction: column;
-    gap: rem(10);
-}
-
-.modalDeleteBrigade__title {
+.title {
     display: flex;
     justify-content: center;
     align-items: center;
+
+    margin-bottom: rem(10);
+
+    color: var(--white);
+
+    font-size: rem(20);
 }
 
-.modalDeleteBrigade__bridadesList {
+.listBrigades {
+    max-width: 100%;
+    overflow: hidden;
+    
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    justify-items: center;
+    align-items: center;
+    
+    margin-top: auto;
+
+    column-gap: rem(10);
+    row-gap: rem(10);
+}
+
+.listBrigades-button {
     display: flex;
-    justify-content: space-between;
-    gap: rem(10);
-}
+    justify-content: center;
+    align-items: center;
 
-.modalDeleteBrigade__bridadesList__button {
+    width: rem(45);
+    height: rem(45);
+    
     padding: rem(10);
     padding-left: rem(15);
     padding-right: rem(15);
@@ -28,13 +44,25 @@
 
     border-radius: rem(10);
 
+    font-size: rem(18);
 
-    &--selected {
+    &--active {
         background-color: var(--blue);
     }
 }
 
-.modalDeleteBrigade__bridadesList {
-    width: 100%;
+.apply {
+    max-width: 100%;
+    
+    background-color: var(--greenBlack);
+    color: var(--white);
+
+    border-radius: rem(10);
+
+    padding: rem(10);
+
+    font-size: rem(18);
+
+    margin-top: auto;
 
 }

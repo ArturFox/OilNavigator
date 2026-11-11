@@ -10,14 +10,13 @@ import { useGetBrigadesQuery } from '../../entities/brigades/api/getBrigades';
 import { supabase } from '../../shared/api/supabase/client';
 import { toast } from 'sonner';
 import { useEffect, useState } from 'react';
-import { PeopleList } from './widgets/PeopleList/PeopleList';
-import { Check } from 'lucide-react';
 import { LayoutFactory } from '@/shared/ui/Layout/LayoutFactory';
 import { ModalFactory } from '@/shared/ui/Modal/ModalFactory';
 import { useSwipe } from '@/hooks/useSwipe';
-import { DontHavePerson } from '@/pages/CoreStaffReplacementPage/widgets/DontHavePerson/DontHavePerson';
 import { useNavigate } from 'react-router-dom';
 import { BrigadeNavigationRow } from '@/shared/ui/BrigadeNavigation/BrigadeNavigationRow/BrigadeNavigationRow';
+import { BrigadeToolbar } from '@/pages/CoreStaffReplacementPage/widgets/BrigadeToolbar/BrigadeToolbar';
+import { BrigadeWorkersSlider } from '@/pages/CoreStaffReplacementPage/widgets/BrigadeWorkersSlider/BrigadeWorkersSlider';
 
 export function CoreStaffReplacementPage() {
 
@@ -52,6 +51,10 @@ export function CoreStaffReplacementPage() {
     }| null>(
         null
     )
+    const [isLoading, onIsLoading] = useState<boolean>(false);
+    const [isApllyModalSeveral, setIsApllyModalSeveral] = useState<{
+        idBrigadeSelected: string,
+    } | null>(null);
 
     // состояния для перехода на др страницу
     // первое состояние чтобы при нажатии на кнопку поменять флааг и запустить useEffect
@@ -63,6 +66,8 @@ export function CoreStaffReplacementPage() {
     const currentIndex: number = brigadeSortArr.findIndex(
         (brigade) => brigade.id === isbrigadeSelectId
     );
+
+    const currentNameBrigade: string = brigadeSortArr[currentIndex].name; 
 
     const brigadesIdAndNumbers = brigadeSortArr.map((brigade) => ({
         brigadeId: brigade.id,
@@ -205,6 +210,115 @@ export function CoreStaffReplacementPage() {
 
     }, [isAddNewBrigade]);
 
+    useEffect(() => {
+
+        if(
+            listSelectedUsers.length === 0 ||
+            !isApllyModalSeveral?.idBrigadeSelected
+        ){
+            return
+        }
+
+        async function handleApply() {
+        
+            if (!isApllyModalSeveral?.idBrigadeSelected) {
+                toast.error('Выберите бригаду');
+                return;
+            }
+
+            if (listSelectedUsers.length === 0) {
+                toast.error('Не предвиденная ошибка');
+                return;
+            }
+
+            onIsLoading(true);
+
+            const { error } = await supabase
+                .from('persons')
+                .update({ brigade_id: isApllyModalSeveral.idBrigadeSelected === 'no_brigade'? null : isApllyModalSeveral.idBrigadeSelected })
+                .in('id', listSelectedUsers);
+
+            onIsLoading(false);
+
+            if (error) {
+                toast.error('Ошибка при изменении бригад', {
+                    description: error.message,
+                });
+                return;
+            }
+
+            toast.success('Бригады сотрудников успешно изменены');
+
+            personsQuery.refetch();
+            brigadesQuery.refetch();
+            personReplacementQuery.refetch();
+            shiftQuery.refetch();
+
+            onOpenModalSeveral(false);
+            onListSelectedUsers([]);
+            setIsApllyModalSeveral(null);
+            onButtonSelectCheck(false);
+        }
+
+        handleApply();
+
+    }, [isApllyModalSeveral, setIsApllyModalSeveral])
+
+    const [isModalDeleteBrigadeId, setIsModalDeleteBrigadeId] = useState<{idBrigade: string} | null>(null);
+    useEffect(() => {
+
+        if (!isModalDeleteBrigadeId?.idBrigade) {
+            return;
+        }
+
+        const idBrigade: string = isModalDeleteBrigadeId.idBrigade;
+
+        async function deleteBrigade() {
+
+            const persons: Persons[] = peopleMap.get(idBrigade) ?? [];
+
+            if (persons.length > 0) {
+
+                const { error } = await supabase
+                    .from('persons')
+                    .update({ brigade_id: null })
+                    .in('id', persons.map((person) => person.id));
+
+                if (error) {
+                    toast.error('Ошибка при переводе сотрудников', {
+                        description: error.message,
+                    });
+                    return;
+                }
+            }
+
+            const { error } = await supabase
+                .from('brigades')
+                .delete()
+                .eq('id', idBrigade);
+
+            if (error) {
+                toast.error('Ошибка при удалении бригады', {
+                    description: error.message,
+                });
+                return;
+            }
+
+            toast.success('Бригада успешно удалена');
+
+            personsQuery.refetch();
+            brigadesQuery.refetch();
+            personReplacementQuery.refetch();
+            shiftQuery.refetch();
+
+            setIsModalDeleteBrigadeId(null);
+            setIsDelete(false);
+        }
+
+        deleteBrigade();
+
+    }, [isModalDeleteBrigadeId]);
+
     if(
         personsQuery.isLoading ||
         brigadesQuery.isLoading ||
@@ -221,156 +335,43 @@ export function CoreStaffReplacementPage() {
     return (
 
         <main className={styles['coreStaffReplacement']}> 
-
-            <section 
-                className={styles['coreStaffReplacement__brigadelist']}
-            >
-                
-                <BrigadeNavigationRow
-                    brigadeList={brigadeList}
-                    isbrigadeSelectId={isbrigadeSelectId}
-                    setIsBrigadeSelectId={setIsbrigadeSelectId}
-                    setIsDelete={setIsDelete}
-                    setIsCreate={setIsCreate}
-                />
             
-            </section>
+            <BrigadeNavigationRow
+                brigadeList={brigadeList}
+                isbrigadeSelectId={isbrigadeSelectId}
+                setIsBrigadeSelectId={setIsbrigadeSelectId}
+                setIsDelete={setIsDelete}
+                setIsCreate={setIsCreate}
+            />
+            
+            <BrigadeToolbar
+                currentNameBrigade={currentNameBrigade}
+                buttonSelectCheck={buttonSelectCheck}
+                listSelectedUsers={listSelectedUsers}
+                onListSelectedUsers={onListSelectedUsers}
+                openModalSeveral={openModalSeveral}
+                onOpenModalSeveral={onOpenModalSeveral}
+                onButtonSelectCheck={onButtonSelectCheck}
+            />
 
-
-            <section
-                className={styles['coreStaffReplacement__header']}
-            > 
-
-                <h3
-                    className={styles['coreStaffReplacement__heading']}
-                >
-                    <span
-                        className={styles['coreStaffReplacement__brigade-name']}
-                    >
-                        {brigadeSortArr[currentIndex].name} 
-                    </span>
-
-                </h3>
-
-                <article
-                    className={styles['coreStaffReplacement__actions']}
-                >
-
-                    <button 
-                        className={`
-                            ${styles['coreStaffReplacement__applyButton']}
-                            ${buttonSelectCheck && styles['coreStaffReplacement__applyButton--active']}
-                            ${listSelectedUsers.length > 1 && styles['coreStaffReplacement__applyButton--apply']}
-                        `}
-                        onClick={() => {
-
-                            if (listSelectedUsers.length === 0) {
-                                
-                                toast.error('Необходимо выбрать сотрудников');
-                                return;
-                            }
-
-                            if (listSelectedUsers.length === 1) {
-                                
-                                toast.error('Необходимо выбрать минимум двоих');
-                                return;
-                            }
-
-                            onOpenModalSeveral(!openModalSeveral);
-                        }}
-                    >
-                        Применить
-                    </button>
-                    
-
-                    <button
-                        className={`
-                            ${styles['coreStaffReplacement__selectionToggle']}
-                        `}
-                        onClick={() => {
-                            const nextSelectSeveral = !buttonSelectCheck;
-
-                            onButtonSelectCheck(nextSelectSeveral);
-
-                            if (!nextSelectSeveral) {
-                                onListSelectedUsers([]);
-                                onOpenModalSeveral(false);
-                            }
-                        }}
-                    >
-    
-                        <Check
-                            className={` 
-                                ${styles['coreStaffReplacement__selectionToggle-check']}
-                                ${buttonSelectCheck && styles['coreStaffReplacement__selectionToggle-check--active']} 
-                            `}
-                        /> 
-
-                    </button>
-
-                </article>  
-
-            </section>
-
-            <section
-                className={styles['coreStaffReplacement__brigadePeopleSlider']}
-                onTouchStart={handleTouchStart}
-                onTouchMove={handleTouchMove}
-                onTouchEnd={handleTouchEnd}
-            >
-
-                <ul
-                    className={styles['coreStaffReplacement__track']}
-                    style={{
-                        
-                        transform: `translateX(calc(-${currentIndex * 100}% + ${dragOffset}px))`,
-                        
-                        transition: isDragging ? 'none' : 'transform 0.3s ease'
-                    }}
-                >
-
-                    {brigadeSortArr.map((brigade) => {
-
-                        const brigadePeople = peopleMap.get(brigade.id) ?? [];
-                        const doYouHaveAllPeople: boolean = brigadePeople.length >= 7;
-                        const howMatch: number = doYouHaveAllPeople ? 0 : 7 - brigadePeople.length;
-
-                        return (
-
-                            <li
-                                key={brigade.id}
-                                className={styles['coreStaffReplacement__slide']}
-                            >
-
-                                {(!doYouHaveAllPeople && brigade.id !== 'no_brigade') &&
-                                    <DontHavePerson
-                                        howMatch={howMatch}
-                                        shouldRedirect={shouldRedirect}
-                                        setShouldRedirect={setShouldRedirect}
-                                        brigadeId={brigade.id}
-                                        setTargetBrigadeId={setTargetBrigadeId}
-                                    />
-                                }
-
-                                <PeopleList
-                                    brigadeId={brigade.id}
-                                    brigadePeople={brigadePeople}
-                                    listSelectedUsers={listSelectedUsers}
-                                    onListSelectedUsers={onListSelectedUsers}
-                                    buttonSelectCheck={buttonSelectCheck}
-                                    brigadesIdAndNumbers={brigadesIdAndNumbers}
-                                    onApply={onApply}
-                                />
-
-                            </li>
-
-                        );
-
-                    })}
-
-                </ul>
-
-            </section>
+            <BrigadeWorkersSlider
+                currentIndex={currentIndex}
+                dragOffset={dragOffset}
+                isDragging={isDragging}
+                handleTouchStart={handleTouchStart}
+                handleTouchMove={handleTouchMove}
+                handleTouchEnd={handleTouchEnd}
+                brigadeSortArr={brigadeSortArr}
+                peopleMap={peopleMap}
+                shouldRedirect={shouldRedirect}
+                setShouldRedirect={setShouldRedirect}
+                setTargetBrigadeId={setTargetBrigadeId}
+                listSelectedUsers={listSelectedUsers}
+                onListSelectedUsers={onListSelectedUsers}
+                buttonSelectCheck={buttonSelectCheck}
+                brigadesIdAndNumbers={brigadesIdAndNumbers}
+                onApply={onApply}
+            />
 
             {buttonSelectCheck && openModalSeveral &&
                 LayoutFactory.layoutCenterColumn({
@@ -380,6 +381,7 @@ export function CoreStaffReplacementPage() {
                         <ModalFactory.modalReplaceSeveralSelect
                             brigadesIdAndNumbers={brigadesIdAndNumbers}
                             arrSelectButton={selectedPeople}
+                            setIsApllyModalSeveral={setIsApllyModalSeveral}
                         />
                     )
                 })
@@ -392,7 +394,11 @@ export function CoreStaffReplacementPage() {
                     children:  (
                         <ModalFactory.modalDeleteBrigade
                             brigadesIdAndNumbers={brigadesIdAndNumbers}
-                            onApply={() => {}}
+                            onApply={(value) => {
+                                setIsModalDeleteBrigadeId({
+                                    idBrigade: value.brigadeId,
+                                });
+                            }}
                         />
                     )
                 })

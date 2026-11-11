@@ -23,32 +23,32 @@ export function ModalReplaceOnlyOne (
         <>
 
             <h4
-                className={styles['overlay__title']}
+                className={styles['title']}
             >
                 Выберите бригаду 
             </h4>
 
             <div
-                className={styles['overlay__block']}
+                className={styles['replaceBlock']}
             >
 
                 <div
-                    className={styles['overlay__block-nameInfo']}
+                    className={styles['replaceBlock-info']}
                 >
                     <span>{surname}</span>
                     <span>{name}</span>
                 </div>
 
                 <div
-                    className={styles['overlay__block-iconeRight']}
+                    className={styles['replaceBlock-icone']}
                 >
                     <ArrowRight/>
                 </div>
 
                 <div
                     className={`
-                        ${styles['overlay__block-selectedBrigade']}
-                        ${brigadeSelected && styles['overlay__block-selectedBrigade--active']}
+                        ${styles['replaceBlock-selectedBrigade']}
+                        ${brigadeSelected && styles['replaceBlock-selectedBrigade--active']}
                     `}
                 >
                     {brigadeSelected
@@ -70,7 +70,7 @@ export function ModalReplaceOnlyOne (
             </div>
 
             <div
-                className={styles['overlay__brigades']}
+                className={styles['listBrigades']}
             >
 
                 {brigadesIdAndNumbers.map((brigade) => (
@@ -78,9 +78,9 @@ export function ModalReplaceOnlyOne (
                     <button
                         key={brigade.brigadeId}
                         className={`
-                            ${styles['overlay__brigades-button']}
+                            ${styles['listBrigades-button']}
                             ${brigadeSelected === brigade.brigadeId
-                                ? styles['overlay__brigades-button--active']
+                                ? styles['listBrigades-button--active']
                                 : ''}
                         `}
                         onClick={() => {
@@ -99,7 +99,7 @@ export function ModalReplaceOnlyOne (
             </div>
 
             <button
-                className={styles['overlay__apply']}
+                className={styles['apply']}
                 disabled={brigadeSelected === null}
                 onClick={() => {
                     if (brigadeSelected === null) return;

@@ -1,3 +1,5 @@
+import type { Dispatch, SetStateAction } from "react";
+
 type ModalReplaceSeveralSelectPersonObj = {
     id: string;
     name: string;
@@ -10,4 +12,5 @@ export interface ModalReplaceSeveralSelectProps {
         brigadeNumber: number;
     }[];
     arrSelectButton: ModalReplaceSeveralSelectPersonObj[];
+    setIsApllyModalSeveral: Dispatch<SetStateAction<{idBrigadeSelected: string;} | null>>
 }

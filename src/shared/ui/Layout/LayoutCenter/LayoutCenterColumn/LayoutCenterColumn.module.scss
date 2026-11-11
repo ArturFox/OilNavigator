@@ -8,7 +8,7 @@
     right: 0;
     bottom: 0;
 
-    background-color: #23211E99; 
+    background-color: var(--black99); 
 
     display: flex;
     justify-content: center;
@@ -33,19 +33,18 @@
     width: 100%;
     min-height: rem(300);
 
+    display: flex;
+    flex-direction: column;
+    gap: rem(10);
+
     margin-left: rem(40);
     margin-right: rem(40);
 
     padding: rem(20);
 
-    background-color: #23211E;
+    background-color: var(--black);
 
-    border: rem(1) solid #D6D5D0;
+    border: rem(1) solid var(--white);
     border-radius: rem(20);
-
-    display: flex;
-    flex-direction: column;
-    gap: rem(10);
-
 
 }

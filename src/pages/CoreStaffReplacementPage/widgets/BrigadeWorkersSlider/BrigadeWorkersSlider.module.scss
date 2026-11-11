@@ -1,0 +1,36 @@
+@use 'styles/helpers/' as *;
+
+.brigadeWorkersSlider {
+    width: 100%;
+    overflow: hidden;
+    transition: height 0.3s ease;
+}
+
+.brigadeWorkersSlider__track {
+    display: flex;
+    align-items: flex-start;
+    transition: transform 0.45s ease;
+
+}
+
+.brigadeWorkersSlider__track-slide {
+    display: flex;
+    flex-direction: column;
+
+    flex: 0 0 100%;
+
+    overflow: hidden;
+
+    &-dontHavePeople {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+
+        margin-top: rem(100);
+        
+        height: 100%;
+
+        color: var(--white);
+
+    }
+}

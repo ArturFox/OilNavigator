@@ -5,7 +5,6 @@ import { useState } from 'react';
 export function ModalDeleteBrigade (
     {
         brigadesIdAndNumbers,
-
         onApply
     }: ModalDeleteBrigadeProps
 ) {
@@ -14,18 +13,15 @@ export function ModalDeleteBrigade (
 
     return (
 
-        <section
-            className={styles["modalDeleteBrigade"]}
-        >
-
+        <>
             <h4
-                className={styles["modalDeleteBrigade__title"]}
+                className={styles["title"]}
             >
                 Удаление бригады
             </h4>
 
             <div
-                className={styles["modalDeleteBrigade__bridadesList"]}
+                className={styles['listBrigades']}
             >
 
                 {brigadesIdAndNumbers.map((brigade) => (
@@ -33,9 +29,9 @@ export function ModalDeleteBrigade (
                     <button
                         key={brigade.brigadeId}
                         className={`
-                            ${styles["modalDeleteBrigade__bridadesList__button"]}
+                            ${styles['listBrigades-button']}
                             ${brigadeSelected === brigade.brigadeId
-                                ? styles["modalDeleteBrigade__bridadesList__button--selected"]
+                                ? styles['listBrigades-button--active']
                                 : ''}
                         `}
                         onClick={() => {
@@ -54,7 +50,7 @@ export function ModalDeleteBrigade (
             </div>
 
             <button
-                className={styles["modalDeleteBrigade__bridadesList"]}
+                className={styles['apply']}
                 disabled={brigadeSelected === null}
                 onClick={() => {
                     if (brigadeSelected === null) return;
@@ -67,6 +63,6 @@ export function ModalDeleteBrigade (
                 Применить
             </button>
 
-        </section>
+        </>
     )
 }
