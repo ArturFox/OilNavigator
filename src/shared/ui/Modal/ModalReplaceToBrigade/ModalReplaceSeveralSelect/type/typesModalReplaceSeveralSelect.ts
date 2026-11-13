@@ -12,5 +12,5 @@ export interface ModalReplaceSeveralSelectProps {
         brigadeNumber: number;
     }[];
     arrSelectButton: ModalReplaceSeveralSelectPersonObj[];
-    setIsApllyModalSeveral: Dispatch<SetStateAction<{idBrigadeSelected: string;} | null>>
+    setIsApllyModalSeveral: Dispatch<SetStateAction<string | null>>
 }

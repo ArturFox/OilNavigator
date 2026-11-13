@@ -5,7 +5,6 @@ import { useState } from 'react';
 export function ModalAddBrigade(
     {
         onApply,
-        installation_id
     }: ModalAddBrigadeProps
 ) {
     const [cycle_start_date, onCycleStartDate] = useState<string>('');
@@ -43,9 +42,8 @@ export function ModalAddBrigade(
                 }
                 onClick={() => {
                     onApply({
-                        cycle_start_date,
-                        installation_id,
-                        number_brigade: Number(number_brigade),
+                        cycleStartDate: cycle_start_date,
+                        numberBrigade: Number(number_brigade),
                     });
                 }}
             >

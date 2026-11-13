@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './ModalReplaceSeveralSelect.module.scss';
 import { ArrowRight } from 'lucide-react';
 import type { ModalReplaceSeveralSelectProps } from '@/shared/ui/Modal/ModalReplaceToBrigade/ModalReplaceSeveralSelect/type/typesModalReplaceSeveralSelect';
+import { toast } from 'sonner';
 
 export function ModalReplaceSeveralSelect (
     {
@@ -11,7 +12,21 @@ export function ModalReplaceSeveralSelect (
     }: ModalReplaceSeveralSelectProps
 ) {
     const [brigadeSelected, onBrigadeSelected] = useState<string | null>(null);
-    const [isLoading, onIsLoading] = useState<boolean>(false);
+    const [showToast, setShowToast] = useState(false);
+
+    useEffect(() => {
+
+        if(!showToast){
+            return
+        }
+
+        if(showToast){
+            toast.error('Необходимо выбрать бригаду');
+
+            setShowToast(false);
+        }
+
+    }, [showToast])
 
     return (
         <>
@@ -100,20 +115,15 @@ export function ModalReplaceSeveralSelect (
                 `}
                 onClick={() => {
                     if(!brigadeSelected){
+                        setShowToast(true)
                         return
                     }
-                    setIsApllyModalSeveral({
-                        idBrigadeSelected: brigadeSelected,
-                    })
+                    setIsApllyModalSeveral(
+                        brigadeSelected,
+                    )
                 }}
-                disabled={isLoading || !brigadeSelected}
             >
-                {!brigadeSelected 
-                    ? 'Выберите бригаду'
-                    : !isLoading 
-                        ? 'Применить' 
-                        : 'Применение...'
-                }
+                Применить
             </button>
         </>
     );

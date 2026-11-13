@@ -56,18 +56,12 @@ export function BrigadeWorkersSlider({
     onApply,
 }: BrigadeWorkersSliderProps) {
 
-    console.log(currentIndex)
-
     const [sliderHeight, setSliderHeight] = useState<number>(1000);
     const slideRefs = useRef<(HTMLLIElement | null)[]>([]);
 
     useLayoutEffect(() => {
 
         const currentSlide = slideRefs.current[currentIndex];
-
-    console.log('Текущий элемент:', currentSlide);
-    console.log('Высота:', currentSlide?.offsetHeight);
-    console.log('Размеры:', currentSlide?.getBoundingClientRect());
 
         if (currentSlide) {
             setSliderHeight(currentSlide.offsetHeight);
@@ -87,7 +81,7 @@ export function BrigadeWorkersSlider({
                 className={styles['brigadeWorkersSlider__track']}
                 style={{
 
-                    height: `${sliderHeight}px`,
+                    height: `${Math.max(sliderHeight, 1000)}px`,
                     
                     transform: `translateX(calc(-${currentIndex * 100}% + ${dragOffset}px))`,
                     
@@ -103,7 +97,6 @@ export function BrigadeWorkersSlider({
                     
                     if(brigadePeople.length === 0 && brigade.id === 'no_brigade'){
 
-                        console.log('zzz')
                         return (
 
                             <li

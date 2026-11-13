@@ -1,15 +1,32 @@
 import type { ModalDeleteBrigadeProps } from '@/shared/ui/Modal/ModalAddAndDeleteBrigade/ModalDeleteBrigade/types/typesModalDeleteBrigade';
 import styles from './ModalDeleteBrigade.module.scss';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 export function ModalDeleteBrigade (
     {
         brigadesIdAndNumbers,
-        onApply
+        onApply,
+        isLoadingDelete
     }: ModalDeleteBrigadeProps
 ) {
 
     const [brigadeSelected, onBrigadeSelected] = useState<string | null>(null);
+    const [showToast, setShowToast] = useState(false);
+
+    useEffect(() => {
+
+        if(!showToast){
+            return
+        }
+
+        if(showToast){
+            toast.error('Необходимо выбрать бригаду');
+
+            setShowToast(false);
+        }
+
+    }, [showToast])
 
     return (
 
@@ -50,17 +67,26 @@ export function ModalDeleteBrigade (
             </div>
 
             <button
-                className={styles['apply']}
-                disabled={brigadeSelected === null}
+                className={`
+                    ${styles['apply']}
+                    ${brigadeSelected && styles['apply--active']}
+                `}
+                disabled={isLoadingDelete}
                 onClick={() => {
-                    if (brigadeSelected === null) return;
 
-                    onApply({
-                        brigadeId: brigadeSelected,
-                    });
+                    if (isLoadingDelete) return;
+
+                    if (!brigadeSelected) {
+                        setShowToast(true);
+                        return;
+                    }
+
+                    onApply(
+                        brigadeSelected,
+                    );
                 }}
             >
-                Применить
+                {isLoadingDelete ? 'Удаление...' : 'Применить'}
             </button>
 
         </>

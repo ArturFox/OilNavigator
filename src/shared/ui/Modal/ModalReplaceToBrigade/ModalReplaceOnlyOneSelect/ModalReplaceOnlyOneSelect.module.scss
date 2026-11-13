@@ -118,6 +118,13 @@
 
     font-size: rem(18);
 
+    transition: transform 0.3s ease, opacity 0.3s ease;
+
+    &:active {
+        transform: scale(0.95);
+        opacity: 0.8;
+    }
+
     &--active {
         background-color: var(--blue);
     }
@@ -126,7 +133,7 @@
 .apply {
     max-width: 100%;
     
-    background-color: var(--greenBlack);
+    background-color: var(--gray);
     color: var(--white);
 
     border-radius: rem(10);
@@ -136,4 +143,15 @@
     font-size: rem(18);
 
     margin-top: auto;
+
+    transition: transform 0.3s ease, opacity 0.3s ease;
+
+    &:active {
+        transform: scale(0.95);
+        opacity: 0.8;
+    }
+
+    &--active {
+        background-color: var(--greenBlack);
+    }
 }

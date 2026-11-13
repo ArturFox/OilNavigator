@@ -35,10 +35,11 @@
   border-top-left-radius: 0;
   border-bottom-right-radius: 0;
 
-  transition: transform 0.3s ease;
+  transition: transform 0.3s ease, opacity 0.3s ease;
 
   &:active {
-    transform: scale(0.90);
+      transform: scale(0.95);
+      opacity: 0.8;
   }
 
   &--selected {

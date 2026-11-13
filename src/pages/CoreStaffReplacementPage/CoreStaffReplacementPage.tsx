@@ -7,8 +7,6 @@ import type { Brigade } from '../../entities/brigades/types/brigades.dto';
 import type { Persons } from '../../entities/persons/types/persons.dto';
 import { useGetPesonsQuery } from '../../entities/persons/api/getPersons';
 import { useGetBrigadesQuery } from '../../entities/brigades/api/getBrigades';
-import { supabase } from '../../shared/api/supabase/client';
-import { toast } from 'sonner';
 import { useEffect, useState } from 'react';
 import { LayoutFactory } from '@/shared/ui/Layout/LayoutFactory';
 import { ModalFactory } from '@/shared/ui/Modal/ModalFactory';
@@ -17,6 +15,10 @@ import { useNavigate } from 'react-router-dom';
 import { BrigadeNavigationRow } from '@/shared/ui/BrigadeNavigation/BrigadeNavigationRow/BrigadeNavigationRow';
 import { BrigadeToolbar } from '@/pages/CoreStaffReplacementPage/widgets/BrigadeToolbar/BrigadeToolbar';
 import { BrigadeWorkersSlider } from '@/pages/CoreStaffReplacementPage/widgets/BrigadeWorkersSlider/BrigadeWorkersSlider';
+import { useBrigadeDelete } from '@/pages/CoreStaffReplacementPage/hooks/useBrigadeDelete';
+import { useSeveralPeopleReplacement } from '@/pages/CoreStaffReplacementPage/hooks/useSeveralPeopleReplacement';
+import { useBrigadeCreate } from '@/pages/CoreStaffReplacementPage/hooks/useBrigadeCreate';
+import { useBrigadeReplacement } from '@/pages/CoreStaffReplacementPage/hooks/useBrigadeReplacement';
 
 export function CoreStaffReplacementPage() {
 
@@ -33,34 +35,17 @@ export function CoreStaffReplacementPage() {
     const peopleMap = useSelector(peopleMapCoreStaffReplacement) as Map<string, Persons[]>;
     const peopleMapIdKey = useSelector(peopleMapIdKeyCoreStaffReplacement) as Map<string, Persons>;
 
+    // метод для хуков
+    const refetchData = () => {
+        personsQuery.refetch();
+        brigadesQuery.refetch();
+        personReplacementQuery.refetch();
+        shiftQuery.refetch();
+    };
+
     // состояния
     const [listSelectedUsers, onListSelectedUsers] = useState<string[]>([]);
-    const [buttonSelectCheck, onButtonSelectCheck] = useState<boolean>(false);
-    const [openModalSeveral, onOpenModalSeveral] = useState<boolean>(false);
     const [isbrigadeSelectId, setIsbrigadeSelectId] = useState<string>('no_brigade');
-    const [apply, onApply] = useState<{
-        personId: string;
-        brigadeId: string;
-    } | null>(null);
-    const [isDelete, setIsDelete] = useState<boolean>(false);
-    const [isCreate, setIsCreate] = useState<boolean>(false);
-    const [isAddNewBrigade, setIsaddNewBrigade] = useState<{
-        cycle_start_date: string,
-        installation_id: string,
-        number_brigade: number,
-    }| null>(
-        null
-    )
-    const [isLoading, onIsLoading] = useState<boolean>(false);
-    const [isApllyModalSeveral, setIsApllyModalSeveral] = useState<{
-        idBrigadeSelected: string,
-    } | null>(null);
-
-    // состояния для перехода на др страницу
-    // первое состояние чтобы при нажатии на кнопку поменять флааг и запустить useEffect
-    // второе состоняие чтобы передать id бригады, в какой бригаде будет замена 
-    const [shouldRedirect, setShouldRedirect] = useState<boolean>(false);
-    const [targetBrigadeId, setTargetBrigadeId] = useState<string | null>(null);
 
     // обработчик свайпа
     const currentIndex: number = brigadeSortArr.findIndex(
@@ -103,53 +88,48 @@ export function CoreStaffReplacementPage() {
         onBrigadeClick: setIsbrigadeSelectId,
     });
 
-    useEffect(() => {
+    const {
+        setIsBrigadeReplacement
+    } = useBrigadeReplacement({
+        refetchData
+    })
 
-        if (!apply) return;
+    const {
+        isButtonSelectCheck,
+        setIsButtonSelectCheck,
+        isOpenModalSeveral,
+        setIsOpenModalSeveral,
+        setIsBrigadeId: setIsBrigadeIdSeveral
+    } = useSeveralPeopleReplacement({
+        listSelectedUsers,
+        onListSelectedUsers,
+        refetchData
+    })
 
-        const { personId, brigadeId } = apply;
+    const {
+        isCreateModal,
+        setIsCreateModal,
+        setIsCreateNewBrigade
+    } = useBrigadeCreate({
+        installationId: brigadeSortArr[0].installation_id,
+        refetchData
+    })
 
-        if (!brigadeId) {
-            toast.error('Добавте бригаду');
-            return;
-        }
+    const {
+        isDeleteModal,
+        setIsDeleteModal,
+        isLoading: isLoadingDelete,
+        setIsBrigadeId: setIsBrigadeIdDelete
+    } = useBrigadeDelete({
+        peopleMap,
+        refetchData,
+    });
 
-        if (!personId) {
-            toast.error('Добавте человека');
-            return;
-        }
-
-        async function updateBrigade() {
-
-            const { error } = await supabase
-                .from('persons')
-                .update({
-                    brigade_id: brigadeId === 'no_brigade' ? null : brigadeId,
-                })
-                .eq('id', personId)
-            ;
-
-            if (error) {
-                toast.error('Ошибка при изменении бригады', {
-                    description: error.message,
-                });
-                return;
-            }
-
-            toast.success('Бригада успешно изменена');
-
-            personsQuery.refetch();
-            brigadesQuery.refetch();
-            personReplacementQuery.refetch();
-            shiftQuery.refetch();
-
-            onApply(null);
-        }
-
-        updateBrigade();
-
-    }, [apply]);
-
+    // состояния для перехода на др страницу
+    // первое состояние чтобы при нажатии на кнопку поменять флааг и запустить useEffect
+    // второе состоняие чтобы передать id бригады, в какой бригаде будет замена 
+    const [shouldRedirect, setShouldRedirect] = useState<boolean>(false);
+    const [targetBrigadeId, setTargetBrigadeId] = useState<string | null>(null);
     useEffect(() => {
 
         if(!shouldRedirect && targetBrigadeId === null){
@@ -159,166 +139,7 @@ export function CoreStaffReplacementPage() {
         navigate(`/userChange?personId=${null}&brigadeId=${targetBrigadeId}&date=${null}&isCorePage=${String(true)}`);
         
     }, [shouldRedirect, setShouldRedirect, targetBrigadeId, setTargetBrigadeId])
-
-    useEffect(() => {
-
-        if (
-            !isAddNewBrigade ||
-            !isAddNewBrigade.cycle_start_date ||
-            !isAddNewBrigade.installation_id ||
-            !isAddNewBrigade.number_brigade
-        ) {
-            return;
-        }
-
-        const brigade = isAddNewBrigade;
-
-        async function addBrigade() {
-
-            const { error } = await supabase
-                .from('brigades')
-                .insert({
-                    name: `Бригада ${brigade.number_brigade}`,
-                    cycle_start_date: brigade.cycle_start_date,
-                    installation_id: brigade.installation_id,
-                    number_brigade: brigade.number_brigade,
-                })
-            ;
-
-            if (error) {
-                console.error('Ошибка создания бригады:', error);
-
-                toast.error('Ошибка при создании бригады', {
-                    description: error.message,
-                });
-
-                return;
-            }
-
-            toast.success('Бригада успешно создана');
-
-            brigadesQuery.refetch();
-            personsQuery.refetch();
-            personReplacementQuery.refetch();
-            shiftQuery.refetch();
-
-            setIsaddNewBrigade(null);
-            setIsCreate(false);
-        }
-
-        addBrigade();
-
-    }, [isAddNewBrigade]);
-
-    useEffect(() => {
-
-        if(
-            listSelectedUsers.length === 0 ||
-            !isApllyModalSeveral?.idBrigadeSelected
-        ){
-            return
-        }
-
-        async function handleApply() {
-        
-            if (!isApllyModalSeveral?.idBrigadeSelected) {
-                toast.error('Выберите бригаду');
-                return;
-            }
-
-            if (listSelectedUsers.length === 0) {
-                toast.error('Не предвиденная ошибка');
-                return;
-            }
-
-            onIsLoading(true);
-
-            const { error } = await supabase
-                .from('persons')
-                .update({ brigade_id: isApllyModalSeveral.idBrigadeSelected === 'no_brigade'? null : isApllyModalSeveral.idBrigadeSelected })
-                .in('id', listSelectedUsers);
-
-            onIsLoading(false);
-
-            if (error) {
-                toast.error('Ошибка при изменении бригад', {
-                    description: error.message,
-                });
-                return;
-            }
-
-            toast.success('Бригады сотрудников успешно изменены');
-
-            personsQuery.refetch();
-            brigadesQuery.refetch();
-            personReplacementQuery.refetch();
-            shiftQuery.refetch();
-
-            onOpenModalSeveral(false);
-            onListSelectedUsers([]);
-            setIsApllyModalSeveral(null);
-            onButtonSelectCheck(false);
-        }
-
-        handleApply();
-
-    }, [isApllyModalSeveral, setIsApllyModalSeveral])
-
-    const [isModalDeleteBrigadeId, setIsModalDeleteBrigadeId] = useState<{idBrigade: string} | null>(null);
-    useEffect(() => {
-
-        if (!isModalDeleteBrigadeId?.idBrigade) {
-            return;
-        }
-
-        const idBrigade: string = isModalDeleteBrigadeId.idBrigade;
-
-        async function deleteBrigade() {
-
-            const persons: Persons[] = peopleMap.get(idBrigade) ?? [];
-
-            if (persons.length > 0) {
-
-                const { error } = await supabase
-                    .from('persons')
-                    .update({ brigade_id: null })
-                    .in('id', persons.map((person) => person.id));
-
-                if (error) {
-                    toast.error('Ошибка при переводе сотрудников', {
-                        description: error.message,
-                    });
-                    return;
-                }
-            }
-
-            const { error } = await supabase
-                .from('brigades')
-                .delete()
-                .eq('id', idBrigade);
-
-            if (error) {
-                toast.error('Ошибка при удалении бригады', {
-                    description: error.message,
-                });
-                return;
-            }
-
-            toast.success('Бригада успешно удалена');
-
-            personsQuery.refetch();
-            brigadesQuery.refetch();
-            personReplacementQuery.refetch();
-            shiftQuery.refetch();
-
-            setIsModalDeleteBrigadeId(null);
-            setIsDelete(false);
-        }
-
-        deleteBrigade();
-
-    }, [isModalDeleteBrigadeId]);
-
+    
     if(
         personsQuery.isLoading ||
         brigadesQuery.isLoading ||
@@ -340,18 +161,18 @@ export function CoreStaffReplacementPage() {
                 brigadeList={brigadeList}
                 isbrigadeSelectId={isbrigadeSelectId}
                 setIsBrigadeSelectId={setIsbrigadeSelectId}
-                setIsDelete={setIsDelete}
-                setIsCreate={setIsCreate}
+                setIsDelete={setIsDeleteModal}
+                setIsCreate={setIsCreateModal}
             />
             
             <BrigadeToolbar
                 currentNameBrigade={currentNameBrigade}
-                buttonSelectCheck={buttonSelectCheck}
+                buttonSelectCheck={isButtonSelectCheck}
                 listSelectedUsers={listSelectedUsers}
                 onListSelectedUsers={onListSelectedUsers}
-                openModalSeveral={openModalSeveral}
-                onOpenModalSeveral={onOpenModalSeveral}
-                onButtonSelectCheck={onButtonSelectCheck}
+                openModalSeveral={isOpenModalSeveral}
+                onOpenModalSeveral={setIsOpenModalSeveral}
+                onButtonSelectCheck={setIsButtonSelectCheck}
             />
 
             <BrigadeWorkersSlider
@@ -368,50 +189,46 @@ export function CoreStaffReplacementPage() {
                 setTargetBrigadeId={setTargetBrigadeId}
                 listSelectedUsers={listSelectedUsers}
                 onListSelectedUsers={onListSelectedUsers}
-                buttonSelectCheck={buttonSelectCheck}
+                buttonSelectCheck={isButtonSelectCheck}
                 brigadesIdAndNumbers={brigadesIdAndNumbers}
-                onApply={onApply}
+                onApply={setIsBrigadeReplacement}
             />
 
-            {buttonSelectCheck && openModalSeveral &&
+            {isButtonSelectCheck && isOpenModalSeveral &&
                 LayoutFactory.layoutCenterColumn({
-                    isOpenModal: openModalSeveral,
-                    onIsOpenModal: onOpenModalSeveral,
+                    isOpenModal: isOpenModalSeveral,
+                    onIsOpenModal: setIsOpenModalSeveral,
                     children: (
                         <ModalFactory.modalReplaceSeveralSelect
                             brigadesIdAndNumbers={brigadesIdAndNumbers}
                             arrSelectButton={selectedPeople}
-                            setIsApllyModalSeveral={setIsApllyModalSeveral}
+                            setIsApllyModalSeveral={setIsBrigadeIdSeveral}
                         />
                     )
                 })
             }
 
-            {isDelete && 
+            {isCreateModal &&
                 LayoutFactory.layoutCenterColumn({
-                    isOpenModal: isDelete,
-                    onIsOpenModal: setIsDelete,
+                    isOpenModal: isCreateModal,
+                    onIsOpenModal: setIsCreateModal,
+                    children: (
+                        <ModalFactory.modalAddBrigade
+                            onApply={setIsCreateNewBrigade}
+                        />
+                    )
+                })
+            }
+
+            {isDeleteModal && 
+                LayoutFactory.layoutCenterColumn({
+                    isOpenModal: isDeleteModal,
+                    onIsOpenModal: setIsDeleteModal,
                     children:  (
                         <ModalFactory.modalDeleteBrigade
                             brigadesIdAndNumbers={brigadesIdAndNumbers}
-                            onApply={(value) => {
-                                setIsModalDeleteBrigadeId({
-                                    idBrigade: value.brigadeId,
-                                });
-                            }}
-                        />
-                    )
-                })
-            }
-
-            {isCreate &&
-                LayoutFactory.layoutCenterColumn({
-                    isOpenModal: isCreate,
-                    onIsOpenModal: setIsCreate,
-                    children: (
-                        <ModalFactory.modalAddBrigade
-                            installation_id={brigadeSortArr[0].installation_id}
-                            onApply={setIsaddNewBrigade}
+                            isLoadingDelete={isLoadingDelete}
+                            onApply={setIsBrigadeIdDelete}
                         />
                     )
                 })

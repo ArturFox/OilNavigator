@@ -1,7 +1,8 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import styles from './ModalReplaceOnlyOneSelect.module.scss';
 import { ArrowRight } from 'lucide-react';
 import type { ModalReplaceOnlyOneProps } from '@/shared/ui/Modal/ModalReplaceToBrigade/ModalReplaceOnlyOneSelect/types/typesModalReplaceOnlyOneSelect';
+import { toast } from 'sonner';
 
 export function ModalReplaceOnlyOne (
     {
@@ -17,6 +18,21 @@ export function ModalReplaceOnlyOne (
 ) {
 
     const [brigadeSelected, onBrigadeSelected] = useState<string | null>(null);
+    const [showToast, setShowToast] = useState(false);
+
+    useEffect(() => {
+
+        if(!showToast){
+            return
+        }
+
+        if(showToast){
+            toast.error('Необходимо выбрать бригаду');
+
+            setShowToast(false);
+        }
+
+    }, [showToast])
 
     return (
 
@@ -99,15 +115,22 @@ export function ModalReplaceOnlyOne (
             </div>
 
             <button
-                className={styles['apply']}
-                disabled={brigadeSelected === null}
+                className={`
+                    ${styles['apply']}
+                    ${brigadeSelected && styles['apply--active']}    
+                `}
                 onClick={() => {
-                    if (brigadeSelected === null) return;
+
+                    if (brigadeSelected === null) {
+                        setShowToast(true);
+                        return;
+                    }
 
                     onApply({
                         personId: id,
                         brigadeId: brigadeSelected,
                     });
+
                 }}
             >
                 Применить
