@@ -1,6 +1,6 @@
-import { ButtonFactory } from '@/shared/ui/Button/ButtonFactory';
 import styles from './WorkItemCardActionEmpty.module.scss';
 import type { WorkItemCardActionEmptyProps } from '@/shared/ui/WorkerItemCard/ActionCard/WorkItemCardActionEmpty/types/typesWorkItemCardActionEmpty';
+import { Plus } from 'lucide-react';
 
 export function WorkItemCardActionEmpty (
     {
@@ -14,22 +14,35 @@ export function WorkItemCardActionEmpty (
     return (
 
         <li
-            className={styles['peopleItem-notPerson']}
+            className={styles['workItemCardActionEmpty']}
             
         >
 
             <span
-                className={styles['peopleItem-notPerson-text']}
+                className={styles['workItemCardActionEmpty__text']}
             >
                 Нету Человека
             </span>
             
-            <ButtonFactory.addButtonBase
-                isOpenModal={shouldRedirect}
-                onIsOpenModal={setShouldRedirect} 
-                brigadeId={brigadeId}
-                setTargetBrigadeId={setTargetBrigadeId}
-            />
+            <div
+                className={styles["workItemCardActionEmpty__selectionButton"]}
+            >
+                <button
+                    className={`
+                        ${styles['workItemCardActionEmpty__selectionButton-button']}
+                        
+                    `}
+                    onClick={() => {
+                        setShouldRedirect(!shouldRedirect)
+                        setTargetBrigadeId(brigadeId)
+                    }}
+                >
+
+                    <Plus/>
+
+                </button>
+                
+            </div>
 
         </li>
         

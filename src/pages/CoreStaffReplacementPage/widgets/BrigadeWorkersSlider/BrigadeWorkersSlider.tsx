@@ -1,62 +1,56 @@
-import { DontHavePerson } from "@/pages/CoreStaffReplacementPage/widgets/DontHavePerson/DontHavePerson";
-import { PeopleList } from "@/pages/CoreStaffReplacementPage/widgets/PeopleList/PeopleList";
+import { DontHavePerson } from "@/pages/CoreStaffReplacementPage/widgets/BrigadeWorkersSlider/widgets/DontHavePerson/DontHavePerson";
+import { PeopleList } from "@/pages/CoreStaffReplacementPage/widgets/BrigadeWorkersSlider/widgets/PeopleList/PeopleList";
 import styles from './BrigadeWorkersSlider.module.scss';
-import type { Brigade } from "@/entities/brigades/types/brigades.dto";
 import type { Persons } from "@/entities/persons/types/persons.dto";
-import type { Dispatch, SetStateAction } from 'react';
 import { useLayoutEffect, useRef, useState } from 'react';
+import type { BrigadeWorkersSliderProps } from "@/pages/CoreStaffReplacementPage/widgets/BrigadeWorkersSlider/types/typesBrigadeWorkersSlider";
 
-interface BrigadeWorkersSliderProps {
-    currentIndex: number;
-    dragOffset: number;
-    isDragging: boolean;
+export function BrigadeWorkersSlider(
+    {
 
-    handleTouchStart: (event: React.TouchEvent<HTMLElement>) => void;
-    handleTouchMove: (event: React.TouchEvent<HTMLElement>) => void;
-    handleTouchEnd: () => void;
+        // хук useSwipe
+        currentIndex,
+        dragOffset,
+        isDragging,
+        handleTouchStart,
+        handleTouchMove,
+        handleTouchEnd,
 
-    brigadeSortArr: Brigade[];
-    peopleMap: Map<string, Persons[]>;
+        // хук useManageSeveralWorkItemCards
+        isButtonSelectCheck,
 
-    shouldRedirect: boolean;
-    setShouldRedirect: Dispatch<SetStateAction<boolean>>;
-    setTargetBrigadeId: Dispatch<SetStateAction<string | null>>;
+        listSelectedUsers,
+        setListSelectedUsers,
 
-    listSelectedUsers: string[];
-    onListSelectedUsers: Dispatch<SetStateAction<string[]>>;
-    buttonSelectCheck: boolean;
+        isOpenModalSeveral,
+        setIsOpenModalSeveral,
 
-    brigadesIdAndNumbers: {
-        brigadeId: string;
-        brigadeNumber: number;
-    }[];
+        setIsApplymodalReplaceSeveral,
 
-    onApply: Dispatch<SetStateAction<{
-        personId: string;
-        brigadeId: string;
-    } | null>>;
-}
+        // хук useManageOnlyOneWorkItemCards
+        setIsApplymodalReplaceOnlyOne,
 
-export function BrigadeWorkersSlider({
-    currentIndex,
-    dragOffset,
-    isDragging,
-    handleTouchStart,
-    handleTouchMove,
-    handleTouchEnd,
-    brigadeSortArr,
-    peopleMap,
-    shouldRedirect,
-    setShouldRedirect,
-    setTargetBrigadeId,
-    listSelectedUsers,
-    onListSelectedUsers,
-    buttonSelectCheck,
-    brigadesIdAndNumbers,
-    onApply,
-}: BrigadeWorkersSliderProps) {
+        // хук useRedirectEmptyCard
+        isShouldRedirect,
+        setIsShouldRedirect,
+        setTargetBrigadeId,
 
-    const [sliderHeight, setSliderHeight] = useState<number>(1000);
+        // Передаем массив бригад, по которому формируются слайды 
+        // и распределяются сотрудники в соответствии с их brigade_id
+        brigadeSortArr,
+
+        // Передаём сотрудников, распределённых по своим бригадам (ключ — ID бригады)
+        peopleMap,
+
+        // Нужен чтобы отображать в модалках список бригад
+        brigadesIdAndNumbers,
+
+        // Для отображания в ModalReplaceSeveralSelect списка выбранных людей
+        arrSelectButton,
+    }: BrigadeWorkersSliderProps
+) {
+
+    const [sliderHeight, setSliderHeight] = useState<number>(0);
     const slideRefs = useRef<(HTMLLIElement | null)[]>([]);
 
     useLayoutEffect(() => {
@@ -70,6 +64,7 @@ export function BrigadeWorkersSlider({
     }, [currentIndex, brigadeSortArr, peopleMap]);
 
     return (
+
         <section
             className={styles['brigadeWorkersSlider']}
             onTouchStart={handleTouchStart}
@@ -81,7 +76,7 @@ export function BrigadeWorkersSlider({
                 className={styles['brigadeWorkersSlider__track']}
                 style={{
 
-                    height: `${Math.max(sliderHeight, 1000)}px`,
+                    height: `${Math.max(sliderHeight, 700)}px`,
                     
                     transform: `translateX(calc(-${currentIndex * 100}% + ${dragOffset}px))`,
                     
@@ -122,26 +117,46 @@ export function BrigadeWorkersSlider({
                             key={brigade.id}
                             className={styles['brigadeWorkersSlider__track-slide']}
                         >
-                            
 
                             {(!doYouHaveAllPeople && brigade.id !== 'no_brigade') &&
                                 <DontHavePerson
+
                                     howMatch={howMatch}
-                                    shouldRedirect={shouldRedirect}
-                                    setShouldRedirect={setShouldRedirect}
                                     brigadeId={brigade.id}
+
+                                    // хук useRedirectEmptyCard
+                                    shouldRedirect={isShouldRedirect}
+                                    setShouldRedirect={setIsShouldRedirect}
                                     setTargetBrigadeId={setTargetBrigadeId}
+                                    
                                 />
                             }
 
                             <PeopleList
+
+                                // хук useManageSeveralWorkItemCards
+                                isButtonSelectCheck={isButtonSelectCheck}
+
+                                isOpenModalSeveral={isOpenModalSeveral}
+                                setIsOpenModalSeveral={setIsOpenModalSeveral}
+
+                                listSelectedUsers={listSelectedUsers}
+                                setListSelectedUsers={setListSelectedUsers}
+
+                                setIsApplymodalReplaceSeveral={setIsApplymodalReplaceSeveral}
+
+                                // хук useManageOnlyOneWorkItemCards
+                                setIsApplymodalReplaceOnlyOne={setIsApplymodalReplaceOnlyOne}
+
+                                // Нужен чтобы отображать в модалках список бригад
+                                brigadesIdAndNumbers={brigadesIdAndNumbers}
+
+                                // Для отображания в ModalReplaceSeveralSelect списка выбранных людей
+                                arrSelectButton={arrSelectButton}
+
                                 brigadeId={brigade.id}
                                 brigadePeople={brigadePeople}
-                                listSelectedUsers={listSelectedUsers}
-                                onListSelectedUsers={onListSelectedUsers}
-                                buttonSelectCheck={buttonSelectCheck}
-                                brigadesIdAndNumbers={brigadesIdAndNumbers}
-                                onApply={onApply}
+                                isActiveSlide={index === currentIndex}
                             />
 
                         </li>

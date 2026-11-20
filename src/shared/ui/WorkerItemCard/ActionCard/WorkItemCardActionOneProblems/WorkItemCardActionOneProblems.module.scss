@@ -1,0 +1,157 @@
+@use 'styles/helpers/' as *;
+
+.replaceWorkerItem {
+  position: relative;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  min-height: rem(95);
+
+  list-style: none;
+
+  background-color: var(--blue);
+
+  border-radius: rem(10);
+
+  &--redAlarm {
+    background-color: var(--redBlack);
+  }
+
+  &--yellowAlarm {
+      background-color: #d6a500;
+  }
+
+  &--bothAlarm {
+      animation: alarmBlink 1.5s infinite;
+  }
+
+  &--success {
+      background-color: var(--greenBlack);
+  }
+
+}
+
+@keyframes alarmBlink {
+    0%, 49% {
+        background-color: var(--redBlack);
+    }
+
+    50%, 100% {
+        background-color: #d6a500;
+    }
+}
+
+.replaceWorkerItem__status {
+  display: flex;
+  
+  padding-left: 24%;
+  padding-right: rem(10);
+
+}
+
+.replaceWorkerItem__selectionButton {
+  position: absolute;
+  top: 0;
+  right: 0;
+
+  background-color: var(--black);
+
+  width: 20%;
+  height: rem(30);
+
+  border-radius: rem(10);
+  border-top-left-radius: 0;
+  border-bottom-right-radius: 0;
+
+  box-shadow: 0 0 0 rem(10) var(--black);
+
+  z-index: 99;
+
+}
+
+.replaceWorkerItem__selectionButton-button {
+  width: 100%;
+  height: rem(30);
+  
+  overflow: hidden;
+
+  font-size: rem(14);
+
+  color: var(--black);
+  background-color: var(--white);
+
+  border-radius: rem(10);
+  border-top-left-radius: 0;
+  border-bottom-right-radius: 0;
+
+  transition: transform 0.3s ease, opacity 0.3s ease;
+
+  &:active {
+      transform: scale(0.95);
+      opacity: 0.8;
+  }
+
+  &--selected {
+    animation: pressed 2s infinite ease;
+
+    @keyframes pressed {
+      0% {
+        background-color: var(--blue);
+      }
+
+      50% {
+        background-color: var(--blue99);
+      }
+
+      100% {
+        background-color: var(--blue);
+      }
+    }
+    
+  }
+
+}
+
+.replaceWorkerItem__detailsButton {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+
+  background-color: var(--black);
+
+  width: 20%;
+  height: rem(30);
+
+  border-radius: rem(10);
+  border-bottom-right-radius: 0;
+  border-top-left-radius: 0;
+
+  box-shadow: 0 0 0 rem(10) var(--black);
+
+  z-index: 99;
+}
+
+.replaceWorkerItem__detailsButton-button {
+  width: 100%;
+  height: rem(30);
+
+  overflow: hidden;
+
+  font-size: rem(12);
+
+  color: var(--black);
+  background-color: var(--white);
+
+  border-radius: rem(10);
+  border-top-left-radius: 0;
+  border-bottom-right-radius: 0;
+
+  transition: transform 0.3s ease;
+
+  &:active {
+    transform: scale(0.90);
+  }
+
+}

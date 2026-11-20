@@ -4,7 +4,6 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import styles from './ReplaseWorkerCoreAdd.module.scss';
 import { WorkerReplaceFactory } from '@/shared/ui/WorkerReplace/WorkerReplaceFactory';
 import type { Persons } from '@/entities/persons/types/persons.dto';
-import { WorkItemCardFactory } from '@/shared/ui/WorkerItemCard/WorkItemCardFactory';
 import { useGetPesonsQuery } from '@/entities/persons/api/getPersons';
 import { useGetBrigadesQuery } from '@/entities/brigades/api/getBrigades';
 import { useGetPersonReplacementQuery } from '@/entities/personReplacement/api/getPersonReplacement';
@@ -14,6 +13,7 @@ import { peopelSortForHisBrigades, peopleMapWhereKeyItsPersonIdReplaseWorkerCore
 import { brigadesMapper } from '@/entities/brigades/model/selectors/mapperBrigades';
 import { useChangePersonBrigadeMutation } from '@/entities/persons/api/getPersons';
 import { LayoutFactory } from '@/shared/ui/Layout/LayoutFactory';
+import { BrigadePeopleSectionCoreAdd } from '@/pages/ReplaceWorker/ReplaseWorkerCoreAdd/widgets/BrigadePeopleSectionCoreAdd/BrigadePeopleSectionCoreAdd';
 
 export function ReplaseWorkerCoreAdd () {
 
@@ -41,6 +41,7 @@ export function ReplaseWorkerCoreAdd () {
     const brigadesArr = useSelector(brigadesMapper);
     
     const [isLoading, setIsLoading] = useState<boolean>(false);
+
     // состояние где хранится id человека 
     // на которого кликнул пользователь
     const [selectNewWorker, setSelectNewWorker] = useState<ObjectSelectUserReplaseWorkerCoreAdd | null>(null);
@@ -66,8 +67,6 @@ export function ReplaseWorkerCoreAdd () {
             setApply: setApply
         }
     : null;
-
-    const currentWorkerObj = null;
  
     useEffect(() => {
 
@@ -81,22 +80,18 @@ export function ReplaseWorkerCoreAdd () {
 
                 setIsLoading(true);
 
-                // 1. Обновляем сотрудника в Supabase
                 await changePersonBrigade({
                     idPerson: newWorker.id,
                     idClickNewBrigade: brigadeIdParam
                 }).unwrap();
 
-                // 2. Принудительно получаем свежий список сотрудников
                 await personsQuery.refetch();
 
                 setIsLoading(false);
 
-                // 3. Сбрасываем состояние
                 setApply(false);
 
-                // 4. Возвращаемся на предыдущую страницу
-                navigate(-1);
+                navigate('/scheduleChangePage');
 
             } catch (error) {
                 console.error(
@@ -152,66 +147,35 @@ export function ReplaseWorkerCoreAdd () {
         >
 
             <h4
-                className={styles["userChange__dateStore"]}
+                className={styles["userChange__title"]}
             >
-                <span
-                    className={styles["userChange__dateStore--text"]}
-                >
-                    
+                <span>
                     Замена постоянного сотрудника
-                    
-                </span>
-
-                <span
-                    className={styles["userChange__dateStore--date"]}
-                >
-                    
-                </span>
-
+                </span>       
             </h4>
             
-            {WorkerReplaceFactory.workerReplaceBlockWithProblemAndHavePerson({
-                currentWorker: currentWorkerObj,
+            {WorkerReplaceFactory.workerReplaceBlockWithOutProblems({
+                currentWorker: null,
                 newWorker: newWorkerObj
             })}
 
             {peopelSort.map((brigade) => {
 
-                const b = brigadesArr.find((b) => b.id === brigade.brigadeId);
+                const b = brigadesArr.find(
+                    (b) => b.id === brigade.brigadeId
+                );
 
                 return (
-                    <section 
+                    <BrigadePeopleSectionCoreAdd
                         key={brigade.brigadeId}
-                        style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}
-                    >
-
-                        <h3>
-                            {brigade.brigadeId === 'no_brigade'
-                                ? 'Без бригады'
-                                : b?.name ?? 'Бригада не найдена'
-                            }
-                        </h3>
-
-                        {brigade.people.map((person) => (
-                            WorkItemCardFactory.workItemCardActionOne({
-                                id: person.id,
-                                name: person.name,
-                                surname: person.surname,
-                                otherSurname: person.other_surname,
-                                job_title: person.job_title,
-                                block: person.block,
-                                discharge: person.discharge,
-                                avalibleBlocks: person.he_can ?? [],
-
-                                objectSelectUser: selectNewWorker,
-                                onObjectSelectUser: setSelectNewWorker
-                            })
-                        ))}
-
-                    </section>
+                        brigade={brigade}
+                        brigadeName={b?.name ?? null}
+                        selectNewWorker={selectNewWorker}
+                        setSelectNewWorker={setSelectNewWorker}
+                    />
                 );
-            })}
 
+            })}
 
             {isLoading && 
                 LayoutFactory.layoutSimpleBlackBackground({

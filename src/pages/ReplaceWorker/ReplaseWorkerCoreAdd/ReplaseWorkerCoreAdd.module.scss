@@ -7,24 +7,19 @@
     padding-bottom: rem(40);
 }
 
-.userChange__dateStore {
+.userChange__title {
     display: flex;
+    justify-content: flex-start;
     align-items: center;
-    gap: rem(5);
-    
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
 
-    &--text {
+    span{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
 
         color: var(--white99);
-
-    }
-
-    &--date {
-
-        color: var(--blue);
-
-        white-space: nowrap;
     }
 }
 

@@ -180,9 +180,11 @@ export function PersonDropdownItem (
                     className={styles["personDropdownItem__button"]}
                     type="button"
                     aria-label={`Заменить ${personWhoWasReplacedId.name}`}
-                    onClick={() => navigate(
-                        `/userChange?personId=${personWhoWasReplacedId.id}&brigadeId=${personWhoWasReplacedBrigadeId}&date=${startDate}`
-                    )}
+                    onClick={() => {
+                        navigate(
+                            `/replaseWorker?personId=${personWhoWasReplacedId.id}&brigadeId=${personWhoWasReplacedBrigadeId}&date=${startDate}&isSimpleReplaceWorker=${String(true)}`
+                        )
+                    }}
                     disabled={isFutureDate === false}
                 >
                     

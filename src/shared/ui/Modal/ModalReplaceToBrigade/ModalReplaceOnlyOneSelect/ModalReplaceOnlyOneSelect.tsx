@@ -12,7 +12,7 @@ export function ModalReplaceOnlyOne (
 
         brigadesIdAndNumbers,
         
-        onApply
+        setApply
 
     }: ModalReplaceOnlyOneProps
 ) {
@@ -126,7 +126,7 @@ export function ModalReplaceOnlyOne (
                         return;
                     }
 
-                    onApply({
+                    setApply({
                         personId: id,
                         brigadeId: brigadeSelected,
                     });

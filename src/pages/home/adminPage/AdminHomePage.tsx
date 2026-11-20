@@ -30,7 +30,7 @@ export function AdminHomePage() {
 
     // расписание в нем алгоритм записывает по дням какая бригада
     // работает утром, вечером, ночью, отдыхает всё в одном дне 
-    const shiftsMap = useSelector(sortShiftMap);
+    const shiftsMap: Map<string, SortShift[]> = useSelector(sortShiftMap);
 
     // вытащили расписание бригад в конкретный день
     // если пользователь нажал на две стрелки в файле "MainLayout" покажется на первое число
@@ -81,7 +81,6 @@ export function AdminHomePage() {
                         <BrigadeDropdown
                             key={s.id} 
                             shift={s}  
-                            shiftsToday={shiftsToday}
                         />
 
                     ))}

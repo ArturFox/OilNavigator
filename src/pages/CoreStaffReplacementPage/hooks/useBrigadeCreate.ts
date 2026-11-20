@@ -14,6 +14,11 @@ export function useBrigadeCreate (
     }: Props
 ) {
 
+    // Состояние для открытия модалки 
+    const [isModalWhereCreateNewBrigade, setIsModalWhereCreateNewBrigade] = useState<boolean>(false);
+
+    // Состояние куда пользователь передаст данные при нажатии 
+    // на кнопку в модалке для создания новой бригады
     const [isCreateNewBrigade, setIsCreateNewBrigade] = useState<{
         cycleStartDate: string,
         numberBrigade: number,
@@ -21,7 +26,9 @@ export function useBrigadeCreate (
         null
     );
 
-    const [isCreateModal, setIsCreateModal] = useState<boolean>(false);
+    // состояние чтобы пользователь во время выполнения запроса
+    // не вызвал еще один запрос
+    const [isLoadingCreateNewBrigade, setIsLoadingCreateNewBrigade] = useState<boolean>(false);
 
      useEffect(() => {
 
@@ -29,51 +36,69 @@ export function useBrigadeCreate (
             !isCreateNewBrigade ||
             !installationId ||
             !isCreateNewBrigade.cycleStartDate ||
-            !isCreateNewBrigade.numberBrigade
+            !isCreateNewBrigade.numberBrigade ||
+            !isModalWhereCreateNewBrigade
         ) {
             return;
         }
 
         const brigade = isCreateNewBrigade;
 
-        async function addBrigade() {
+        async function apply() {
 
-            const { error } = await supabase
-                .from('brigades')
-                .insert({
-                    name: `Бригада ${brigade.numberBrigade}`,
-                    cycle_start_date: brigade.cycleStartDate,
-                    installation_id: installationId,
-                    number_brigade: brigade.numberBrigade,
-                })
-            ;
+            setIsLoadingCreateNewBrigade(true);
 
-            if (error) {
-                console.error('Ошибка создания бригады:', error);
+            try {
 
-                toast.error('Ошибка при создании бригады', {
-                    description: error.message,
-                });
+                const { error } = await supabase
+                    .from('brigades')
+                    .insert({
+                        name: `Бригада ${brigade.numberBrigade}`,
+                        cycle_start_date: brigade.cycleStartDate,
+                        installation_id: installationId,
+                        number_brigade: brigade.numberBrigade,
+                    })
+                ;
 
-                return;
+                if (error) {
+                    throw error;
+                }
+
+                toast.success('Бригада успешно создана');
+
+                refetchData();
+
+            } catch(error){
+
+                if (error instanceof Error) {
+                    toast.error('Ошибка при создании бригады', {
+                        description: error.message,
+                    });
+                } else {
+                    toast.error('Ошибка при создании бригады', {
+                        description: 'Неизвестная ошибка',
+                    });
+                }
+
+            } finally{
+
+                setIsCreateNewBrigade(null);
+                setIsModalWhereCreateNewBrigade(false);
+                setIsLoadingCreateNewBrigade(false);
+
             }
 
-            toast.success('Бригада успешно создана');
-
-            refetchData();
-
-            setIsCreateNewBrigade(null);
-            setIsCreateModal(false);
         }
 
-        addBrigade();
+        apply();
 
-    }, [isCreateNewBrigade]);
+    }, [isCreateNewBrigade, isModalWhereCreateNewBrigade]);
 
     return {
-        isCreateModal,
-        setIsCreateModal,
-        setIsCreateNewBrigade
+        setIsCreateNewBrigade,
+        isModalWhereCreateNewBrigade,
+        setIsModalWhereCreateNewBrigade,
+        isLoadingCreateNewBrigade
     }
 
 }

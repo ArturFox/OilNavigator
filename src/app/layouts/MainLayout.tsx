@@ -19,7 +19,7 @@ export function MainLayout({role}: Props) {
   const isCalendar: boolean = location.pathname === "/";
   const isProfile: boolean = location.pathname === "/profile";
   const isScheduleChange: boolean = location.pathname === '/scheduleChangePage';
-  const isUserChange: boolean = location.pathname === '/userChange';
+  const isUserChange: boolean = location.pathname === '/replaseWorkerCoreAdd';
   const isCalendarBrigadeChange: boolean = location.pathname === '/calendarBrigadeChange';
 
   // получаем дату из стора 

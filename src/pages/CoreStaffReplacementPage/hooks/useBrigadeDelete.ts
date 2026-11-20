@@ -15,29 +15,33 @@ export function useBrigadeDelete(
     }: Props
 ){
 
+    // Состояние для открытия модалки
+    const [isModalWhereDeleteBrigade, setIsModalWhereDeleteBrigade] = useState<boolean>(false);
+
     // состояние где хранится id выбранной бригады
-    const [isBrigadeId, setIsBrigadeId] = useState<string | null>(null);
+    const [isBrigadeIdDeleteBrigade, setIsBrigadeIdDeleteBrigade] = useState<string | null>(null);
 
     // состояние чтобы пользователь во время выполнения запроса
     // не вызвал еще один запрос
-    const [isLoading, setIsLoading] = useState<boolean>(false);
-
-    // состояние для открытия модалки
-    const [isDeleteModal, setIsDeleteModal] = useState<boolean>(false);
+    const [isLoadingDeleteBrigade, setIsLoadingDeleteBrigade] = useState<boolean>(false);
 
     useEffect(() => {
 
-        if (!isBrigadeId) {
+        if (
+            !isBrigadeIdDeleteBrigade ||
+            !isModalWhereDeleteBrigade
+        ) {
             return;
         }
 
-        const idBrigade: string = isBrigadeId;
+        const idBrigade: string = isBrigadeIdDeleteBrigade;
 
-        async function deleteBrigade() {
+        async function apply() {
 
-            setIsLoading(true);
+            setIsLoadingDeleteBrigade(true);
 
             try {
+
                 const persons: Persons[] = peopleMap.get(idBrigade) ?? [];
 
                 if (persons.length > 0) {
@@ -48,11 +52,9 @@ export function useBrigadeDelete(
                         .in('id', persons.map((person) => person.id));
 
                     if (error) {
-                        toast.error('Ошибка при переводе сотрудников', {
-                            description: error.message,
-                        });
-                        return;
+                        throw new Error(`Ошибка при переводе сотрудников: ${error.message}`);
                     }
+
                 }
 
                 const { error } = await supabase
@@ -61,33 +63,41 @@ export function useBrigadeDelete(
                     .eq('id', idBrigade);
 
                 if (error) {
-                    toast.error('Ошибка при удалении бригады', {
-                        description: error.message,
-                    });
-                    return;
+                    throw new Error(`Ошибка при удалении бригады: ${error.message}`);
                 }
 
                 toast.success('Бригада успешно удалена');
 
                 refetchData();
 
-                setIsBrigadeId(null);
-                setIsDeleteModal(false);
+            } catch(error){
+
+               if (error instanceof Error) {
+                    toast.error('Ошибка при выполнении операции', {
+                        description: error.message,
+                    });
+                } else {
+                    toast.error('Ошибка при выполнении операции', {
+                        description: 'Неизвестная ошибка',
+                    });
+                }
 
             } finally {
-                setIsLoading(false);
+                setIsModalWhereDeleteBrigade(false);
+                setIsLoadingDeleteBrigade(false);
+                setIsBrigadeIdDeleteBrigade(null);
             }
         }
 
-        deleteBrigade();
+        apply();
 
-    }, [isBrigadeId]);
+    }, [isBrigadeIdDeleteBrigade, isModalWhereDeleteBrigade, peopleMap, refetchData]);
 
     return {
-        isDeleteModal,
-        setIsDeleteModal,
-        isLoading,
-        setIsBrigadeId
+        isModalWhereDeleteBrigade,
+        setIsModalWhereDeleteBrigade,
+        isLoadingDeleteBrigade,
+        setIsBrigadeIdDeleteBrigade
     };
 
 }

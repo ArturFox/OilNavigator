@@ -1,0 +1,144 @@
+import styles from './WorkItemCardActionOneProblems.module.scss';
+import { useState } from 'react';
+import { ModalFactory } from '@/shared/ui/Modal/ModalFactory';
+import { LayoutFactory } from '@/shared/ui/Layout/LayoutFactory';
+import { Identity } from '@/shared/ui/WorkerItemCard/ActionCard/widgets/Identity/Identity';
+import { AvailableBlocks } from '@/shared/ui/WorkerItemCard/ActionCard/widgets/AvailableBlocks/AvailableBlocks';
+import { WorkInfo } from '@/shared/ui/WorkerItemCard/ActionCard/widgets/WorkInfo/WorkInfo';
+import type { WorkItemCardActionOneProblemsProps } from '@/shared/ui/WorkerItemCard/ActionCard/WorkItemCardActionOneProblems/types/typesWorkItemCardActionOneProblems';
+
+export function WorkItemCardActionOneProblems (
+    {
+        id,
+        name,
+        surname,
+        otherSurname,
+        job_title,
+        block,
+        discharge,
+        avalibleBlocks,
+
+        objectSelectUser,
+        onObjectSelectUser,
+
+        redAlarm,
+        yellowAlarm
+
+    }: WorkItemCardActionOneProblemsProps
+){
+
+    const [isOpenModalDetail, onIsOpenModalDetail] = useState<boolean>(false);
+
+    const isSelected: boolean = objectSelectUser !== null && objectSelectUser.id !== null
+    ? objectSelectUser.id === id
+    : false;
+
+    return (
+
+        <li
+            className={`
+                ${styles["replaceWorkerItem"]}
+                ${redAlarm.length > 0 && yellowAlarm.length === 0 && styles["replaceWorkerItem--redAlarm"]}
+                ${yellowAlarm.length > 0 && redAlarm.length === 0 && styles["replaceWorkerItem--yellowAlarm"]}
+                ${redAlarm.length > 0 && yellowAlarm.length > 0 && styles["replaceWorkerItem--bothAlarm"]}
+                ${redAlarm.length === 0 && yellowAlarm.length === 0 && styles["replaceWorkerItem--success"]}
+            `}
+        >
+
+            <Identity
+                surname={surname}
+                name={name}
+                otherSurname={otherSurname}
+                fontSizeNamePx={18}
+                paddingLeftPx={10}
+                paddingTopPx={5}
+                heightPx={40}
+                widthPercent={77}
+            />
+            
+            <div
+                className={styles["replaceWorkerItem__status"]}
+            >
+
+                <WorkInfo
+                    fontSizeJobAndBlockPx={15}
+                    fontSizeDischargePx={15}
+                    job_title={job_title}
+                    block = {block}
+                    discharge = {discharge}
+                    marginRightPx = {5}
+                    gapPx={5}
+                    widthPercent={65}
+                />
+
+                <AvailableBlocks
+                    fontSizeTitle={15}
+                    fontSizeBlocks={15}
+                    he_can={avalibleBlocks}
+                    widthPercent={35}
+                />
+
+            </div>
+
+            <div
+                className={styles["replaceWorkerItem__selectionButton"]}
+            >
+                <button
+                    className={`
+                        ${styles['replaceWorkerItem__selectionButton-button']}
+                        ${isSelected && styles["replaceWorkerItem__selectionButton-button--selected"]}
+                    `}
+                    onClick={() => {
+
+                        if(isSelected){
+                            onObjectSelectUser(null)
+                        }else{
+                            onObjectSelectUser({id: id})
+                        }
+                    }}
+                >
+                    {isSelected
+                        ? 'Выбран'
+                        : 'Выбрать'
+                    }
+                </button>
+                
+            </div>
+
+            
+
+            <div
+                className={styles["replaceWorkerItem__detailsButton"]}
+            >
+                <button
+                    className={styles["replaceWorkerItem__detailsButton-button"]}
+                    onClick={() => onIsOpenModalDetail(!isOpenModalDetail)}
+                >
+                    Подробнее
+                </button>
+                
+            </div>
+
+            {isOpenModalDetail && 
+                LayoutFactory.layoutCenterColumn({
+                    isOpenModal: isOpenModalDetail,
+                    onIsOpenModal: onIsOpenModalDetail,
+                    children: (
+                        ModalFactory.modalCenterDetailed({
+                            name: name,
+                            surname: surname,
+                            otherSurname: otherSurname,
+                            job_title: job_title,
+                            block: block,
+                            discharge: discharge,
+                            avalibleBlocks: avalibleBlocks
+                        })
+                    )
+                })
+            }
+
+        </li>
+
+    )
+
+}

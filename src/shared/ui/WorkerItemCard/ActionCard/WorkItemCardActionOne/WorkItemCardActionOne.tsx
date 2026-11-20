@@ -1,5 +1,4 @@
 import styles from './WorkItemCardActionOne.module.scss';
-import { ButtonFactory } from "@/shared/ui/Button/ButtonFactory";
 import { useState } from 'react';
 import { ModalFactory } from '@/shared/ui/Modal/ModalFactory';
 import { LayoutFactory } from '@/shared/ui/Layout/LayoutFactory';
@@ -26,6 +25,10 @@ export function WorkItemCardActionOne (
 ){
 
     const [isOpenModalDetail, onIsOpenModalDetail] = useState<boolean>(false);
+
+    const isSelected: boolean = objectSelectUser !== null && objectSelectUser.id !== null
+    ? objectSelectUser.id === id
+    : false;
 
     return (
 
@@ -70,16 +73,44 @@ export function WorkItemCardActionOne (
 
             </div>
 
-            <ButtonFactory.selectButtonPersonObject
-                id={id}
-                objectSelectUser={objectSelectUser}
-                onObjectSelectUser={onObjectSelectUser}
-            />
+            <div
+                className={styles["replaceWorkerItem__selectionButton"]}
+            >
+                <button
+                    className={`
+                        ${styles['replaceWorkerItem__selectionButton-button']}
+                        ${isSelected && styles["replaceWorkerItem__selectionButton-button--selected"]}
+                    `}
+                    onClick={() => {
+
+                        if(isSelected){
+                            onObjectSelectUser(null)
+                        }else{
+                            onObjectSelectUser({id: id})
+                        }
+                    }}
+                >
+                    {isSelected
+                        ? 'Выбран'
+                        : 'Выбрать'
+                    }
+                </button>
+                
+            </div>
+
             
-            <ButtonFactory.detailButtonBase
-                onModalCenter={onIsOpenModalDetail}
-                modalCenter={isOpenModalDetail}
-            />
+
+            <div
+                className={styles["replaceWorkerItem__detailsButton"]}
+            >
+                <button
+                    className={styles["replaceWorkerItem__detailsButton-button"]}
+                    onClick={() => onIsOpenModalDetail(!isOpenModalDetail)}
+                >
+                    Подробнее
+                </button>
+                
+            </div>
 
             {isOpenModalDetail && 
                 LayoutFactory.layoutCenterColumn({

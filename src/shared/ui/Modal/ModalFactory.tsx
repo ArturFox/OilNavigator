@@ -1,7 +1,7 @@
-import { ModalAddBrigade } from '@/shared/ui/Modal/ModalAddAndDeleteBrigade/ModalAddBrigade/ModalAddBrigade';
-import type { ModalAddBrigadeProps } from '@/shared/ui/Modal/ModalAddAndDeleteBrigade/ModalAddBrigade/types/typesModalAddBrigade';
-import { ModalDeleteBrigade } from '@/shared/ui/Modal/ModalAddAndDeleteBrigade/ModalDeleteBrigade/ModalDeleteBrigade';
-import type { ModalDeleteBrigadeProps } from '@/shared/ui/Modal/ModalAddAndDeleteBrigade/ModalDeleteBrigade/types/typesModalDeleteBrigade';
+import { ModalCreateBrigade } from '@/shared/ui/Modal/ModalCreateAndDeleteBrigade/ModalCreateBrigade/ModalCreateBrigade';
+import type { ModalCreateBrigadeProps } from '@/shared/ui/Modal/ModalCreateAndDeleteBrigade/ModalCreateBrigade/types/typesModalCreateBrigade';
+import { ModalDeleteBrigade } from '@/shared/ui/Modal/ModalCreateAndDeleteBrigade/ModalDeleteBrigade/ModalDeleteBrigade';
+import type { ModalDeleteBrigadeProps } from '@/shared/ui/Modal/ModalCreateAndDeleteBrigade/ModalDeleteBrigade/types/typesModalDeleteBrigade';
 import { DetailPersonModal } from '@/shared/ui/Modal/ModalDetail/DetailPersonModal/DetailPersonModal';
 import type { DetailedPersonModalProps } from '@/shared/ui/Modal/ModalDetail/DetailPersonModal/types/typesDetailPersonModal';
 import { ModalReplaceOnlyOne } from '@/shared/ui/Modal/ModalReplaceToBrigade/ModalReplaceOnlyOneSelect/ModalReplaceOnlyOneSelect';
@@ -28,8 +28,8 @@ export class ModalFactory {
         return createElement(ModalDeleteBrigade, props)
     }
 
-    static modalAddBrigade(props: ModalAddBrigadeProps){
-        return createElement(ModalAddBrigade, props)
+    static modalCreateBrigade(props: ModalCreateBrigadeProps){
+        return createElement(ModalCreateBrigade, props)
     }
 
 }

@@ -8,7 +8,7 @@ export function ModalReplaceSeveralSelect (
     {
         brigadesIdAndNumbers,
         arrSelectButton,
-        setIsApllyModalSeveral
+        setAplly
     }: ModalReplaceSeveralSelectProps
 ) {
     const [brigadeSelected, onBrigadeSelected] = useState<string | null>(null);
@@ -118,7 +118,7 @@ export function ModalReplaceSeveralSelect (
                         setShowToast(true)
                         return
                     }
-                    setIsApllyModalSeveral(
+                    setAplly(
                         brigadeSelected,
                     )
                 }}

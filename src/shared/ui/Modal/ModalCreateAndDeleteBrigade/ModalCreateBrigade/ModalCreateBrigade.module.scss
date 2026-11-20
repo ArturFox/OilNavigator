@@ -1,0 +1,111 @@
+@use 'styles/helpers/' as *;
+
+.title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    margin-bottom: rem(10);
+
+    color: var(--white);
+
+    font-size: rem(20);
+}
+
+.cycleStartDate {
+    width: 100%;
+    min-height: rem(44);
+
+    padding: rem(10);
+
+    border: rem(3) solid var(--white);
+    border-radius: rem(10);
+
+    outline: none;
+
+    font-size: rem(16);
+
+    background-color: var(--white);
+    color: var(--black);
+
+    -webkit-appearance: none;
+    appearance: none;
+
+    &::-webkit-datetime-edit {
+        color: var(--black);
+        padding: 0;
+    }
+
+    &::-webkit-datetime-edit-fields-wrapper {
+        padding: 0;
+    }
+
+    transition: border-color 0.2s ease;
+
+    &:focus {
+        border-color: var(--blue);
+    }
+
+    &::placeholder {
+        color: var(--gray);
+    }
+}
+
+.numberBrigade {
+    width: 100%;
+    min-height: rem(44);
+
+    padding: rem(10);
+
+    border: rem(3) solid var(--white);
+    border-radius: rem(10);
+
+    outline: none;
+
+    font-size: rem(16);
+
+    background-color: var(--white);
+    color: var(--black);
+
+    transition: border-color 0.2s ease;
+
+    &:focus {
+        border-color: var(--blue);
+    }
+
+    &::placeholder {
+        color: var(--gray);
+    }
+}
+
+.apply {
+    max-width: 100%;
+    
+    background-color: var(--gray);
+    color: var(--white);
+
+    border-radius: rem(10);
+
+    padding: rem(10);
+
+    font-size: rem(18);
+
+    margin-top: auto;
+
+    transition: transform 0.3s ease, opacity 0.3s ease;
+
+    &:active {
+        transform: scale(0.95);
+        opacity: 0.8;
+    }
+
+    &--active{
+        background-color: var(--greenBlack);
+    }
+
+    &:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+}

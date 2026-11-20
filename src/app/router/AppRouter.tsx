@@ -8,6 +8,7 @@ import { CoreStaffReplacementPage } from "../../pages/CoreStaffReplacementPage/C
 import { ProfilePage } from "../../pages/ProfilePage/ProfilePage";
 import { AdminScheduleChange } from "../../pages/AdminScheduleChange/AdminScheduleChange";
 import { ReplaseWorkerCoreAdd } from "@/pages/ReplaceWorker/ReplaseWorkerCoreAdd/ReplaseWorkerCoreAdd";
+import { ReplaseWorker } from "@/pages/ReplaceWorker/ReplaseWorker/ReplaseWorker";
 
 interface Props {
 
@@ -48,7 +49,9 @@ export function AppRouter({ auth }: Props) {
 
         <Route path="profile" element={<ProfilePage/>} />
 
-        <Route path="userChange" element={<ReplaseWorkerCoreAdd/>}/>
+        <Route path="replaseWorkerCoreAdd" element={<ReplaseWorkerCoreAdd/>}/>
+
+        <Route path="replaseWorker" element={<ReplaseWorker/>}/>
 
         <Route path="calendarBrigadeChange" element={<AdminScheduleChange/>}/>
         

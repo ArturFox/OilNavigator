@@ -38,6 +38,9 @@ export interface SortShift {
     id: string;
 
     brigade: Brigade; 
+    peopleOnThisDay: Persons[];
+    peopleWithoutBrigade: Persons[];
+    personsRemovedFromBrigade: Persons[];
 
     code: string;
     label: string;
@@ -48,8 +51,6 @@ export interface SortShift {
 
     startTime: string | null;
     endTime: string | null;
-
-    peopleOnThisDay: Persons[];
 
     isFutureDate: boolean;
 

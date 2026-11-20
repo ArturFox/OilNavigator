@@ -1,7 +1,7 @@
 import { useEffect, type Dispatch, type SetStateAction } from 'react';
 import styles from './ModalWorkerFilters.module.scss';
 import type { Brigade } from '@/entities/brigades/types/brigades.dto';
-import type { FilterSelected } from '@/pages/ReplaceWorker/types/typeReplaseWorker';
+import type { FilterSelected } from '@/pages/ReplaceWorker/ReplaseWorker/types/typeReplaseWorker';
 
 interface Props {
     modal: boolean;

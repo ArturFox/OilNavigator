@@ -109,6 +109,26 @@ function toDateKey(d: Date): Date {
   return new Date(d.getFullYear(), d.getMonth(), d.getDate());
 }
 
+function checkPersonProblems(
+  person: Persons,
+  currentDateString: string,
+  sevenPlusDaysString: string
+): Persons {
+
+  const redAlarm = [...person.redAlarm];
+  const yellowAlarm = [...person.yellowAlarm];
+
+  if (person.vacation_start && person.vacation_end && currentDateString >= person.vacation_start && currentDateString <= person.vacation_end) redAlarm.push("Отпуск");
+  if (person.sick_start && person.sick_end && currentDateString >= person.sick_start && currentDateString <= person.sick_end) redAlarm.push("Больничный");
+  if (person.study_start && person.study_end && currentDateString >= person.study_start && currentDateString <= person.study_end) redAlarm.push("Обучение");
+
+  if (person.vacation_start && person.vacation_start > currentDateString && person.vacation_start <= sevenPlusDaysString) yellowAlarm.push("Скоро отпуск");
+  if (person.study_start && person.study_start > currentDateString && person.study_start <= sevenPlusDaysString) yellowAlarm.push("Скоро обучение");
+
+  return { ...person, redAlarm, yellowAlarm };
+
+}
+
 // вычисляем на один месяц расписание для каждой бригады
 export const createMonthShift = createSelector(
   
@@ -214,10 +234,8 @@ export const createMonthShift = createSelector(
         // получаем массив людей из бригады по которой идем
         let personsOnThisDay: Persons[] = [...(persons.get(brigade.id) ?? [])];
 
-        // из массива замен на конкретный один день 
-        // берем и фильтруем его 
-        // что день из бд === дню на котором мы сейчас находимся по итерации
-        // что бригада из бд === бригаде по которой сейчас идем
+        // Получим все замены именно в этот день и именно для этой бригады по которой сейчас идем
+        // replacement.personWhoWasReplacedBrigadeId это ID бригады сотрудника, которого заменяют
         const dayReplacements: PersonReplacementMapper[] = personReplacement.filter(
 
             (replacement) => {
@@ -234,6 +252,9 @@ export const createMonthShift = createSelector(
             }
         );
 
+        // Храним сотрудников, которых сегодня заменили
+        let personsRemovedFromBrigade: Persons[] = [];
+
         // Убираем того человека, 
         // кого заменяют, 
         // только если найдены замены
@@ -241,24 +262,22 @@ export const createMonthShift = createSelector(
 
           personsOnThisDay = personsOnThisDay.filter(
 
-            (person) =>
+            (person) => !dayReplacements.some( (replacement) => {
 
-              !dayReplacements.some(
+              const personNotNull: boolean = replacement.personWhoWasReplacedId !== null;
 
-                (replacement) => {
+              const match: boolean =  replacement.personWhoWasReplacedId === person.id;
 
-                  const personNotNull: boolean = replacement.personWhoWasReplacedId !== null;
+              if (personNotNull && match) {
+                personsRemovedFromBrigade.push(person);
+              }
 
-                  const match: boolean =  replacement.personWhoWasReplacedId === person.id;
+              const sum: boolean = personNotNull && match;
 
-                  const sum: boolean = personNotNull && match;
-
-                  return sum;
-                
-                }
-
-              )
-
+              return sum;
+              
+            })
+            
           );
 
         }
@@ -284,6 +303,17 @@ export const createMonthShift = createSelector(
 
         }
 
+        // получаем людей без бригады
+        const personsWithoutBrigade: Persons[] = [...(persons.get('no_brigade') ?? [])];
+
+        // Убираем из списка без бригады сотрудников, которые сегодня вышли на замену в другую бригаду
+        const personsWithoutBrigadeOnThisDay = personsWithoutBrigade.filter(
+          (person) =>
+            !dayReplacements.some(
+              (replacement) => replacement.personReplacedId === person.id
+            )
+        );
+
         //для отображения цвета
         //если день прошел то серый
         //если сегодняшний или будующий то синий
@@ -295,64 +325,17 @@ export const createMonthShift = createSelector(
         const howManyNotHuman: number = 7 - personsOnThisDay.length;
 
 
-        const personsStatus: Persons[] = personsOnThisDay.map((person) => {
+        const personsStatus: Persons[] = personsOnThisDay.map((person) =>
+          checkPersonProblems(person, currentDateString, sevenPlusDaysString)
+        );
 
-          const redAlarm = [...person.redAlarm];
-          const yellowAlarm = [...person.yellowAlarm];
+        const personsWithoutBrigadeStatus: Persons[] = personsWithoutBrigadeOnThisDay.map((person) =>
+          checkPersonProblems(person, currentDateString, sevenPlusDaysString)
+        );
 
-          // ПРОБЛЕМЫ НА ЭТОТ ДЕНЬ
-
-          if (
-              person.vacation_start && 
-              person.vacation_end && 
-              currentDateString >= person.vacation_start && 
-              currentDateString <= person.vacation_end
-          ) {
-              redAlarm.push("Отпуск");
-          }
-
-          if (
-              person.sick_start && 
-              person.sick_end && 
-              currentDateString >= person.sick_start && 
-              currentDateString <= person.sick_end
-          ) {
-              redAlarm.push("Больничный");
-          }
-
-          if(
-              person.study_start && 
-              person.study_end && 
-              currentDateString >= person.study_start && 
-              currentDateString <= person.study_end
-          ) {
-              redAlarm.push('Обучение');
-          }
-
-          // СОБЫТИЕ В БЛИЖАЙШИЕ 7 ДНЕЙ
-
-          if (
-              person.vacation_start && 
-              person.vacation_start > currentDateString && 
-              person.vacation_start <= sevenPlusDaysString
-          ) {
-              yellowAlarm.push("Скоро отпуск");
-          }
-
-          if (
-              person.study_start && 
-              person.study_start > currentDateString && 
-              person.study_start <= sevenPlusDaysString
-          ) {
-              yellowAlarm.push("Скоро обучение");
-          }
-
-          return { 
-            ...person,
-            redAlarm,
-            yellowAlarm
-          };
-        });
+        const personsRemovedFromBrigadeCheckProblems: Persons[] = personsRemovedFromBrigade.map((person) =>
+          checkPersonProblems(person, currentDateString, sevenPlusDaysString)
+        );
 
         const hasRedAlarm: boolean =
             isFutureDate &&
@@ -382,7 +365,9 @@ export const createMonthShift = createSelector(
           weekday: weekday,
           hasRedAlarm: hasRedAlarm,
           hasYellowAlarm: hasYellowAlarm,
-          color: template.color
+          color: template.color,
+          peopleWithoutBrigade: personsWithoutBrigadeStatus,
+          personsRemovedFromBrigade: personsRemovedFromBrigadeCheckProblems
         });
       }
     })
@@ -432,164 +417,3 @@ export const sortShiftMap = createSelector(
   }
 
 )
-
-export const whoDontHaveBrigade = createSelector(
-  personsMap,
-  dateStore,
-
-  (persons, monthSelected) => {
-
-    const [year, month] = monthSelected.split("-").map(Number);
-
-    const daysInMonth = new Date(year, month, 0).getDate();
-
-    const todayDate: Date = new Date();
-
-    const todayDateString = `${todayDate.getFullYear()}-${String(todayDate.getMonth() + 1).padStart(2, '0')}-${String(todayDate.getDate()).padStart(2, '0')}`;
-
-    const sevenPlusDays = new Date(
-      todayDate.getFullYear(),
-      todayDate.getMonth(),
-      todayDate.getDate() + 7
-    );
-
-    const sevenPlusDaysString = `${sevenPlusDays.getFullYear()}-${String(sevenPlusDays.getMonth() + 1).padStart(2, '0')}-${String(sevenPlusDays.getDate()).padStart(2, '0')}`;
-
-    const checkWhoDontHaveBrigade: Persons[] = [...persons.values()]
-      .flat()
-      .filter((p) => !p.brigade_id);
-
-    const result: SortShift[] = [];
-
-    checkWhoDontHaveBrigade.forEach((person) => {
-
-      for (let day = 1; day <= daysInMonth; day++) {
-
-        const currentDate = new Date(year, month - 1, day);
-
-        const dateKey = `${currentDate.getFullYear()}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${String(currentDate.getDate()).padStart(2, '0')}`;
-
-        const dateRussian = `${String(currentDate.getDate()).padStart(2, '0')}-${String(currentDate.getMonth() + 1).padStart(2, '0')}-${currentDate.getFullYear()}`;
-
-        const redAlarm: string[] = [];
-        const yellowAlarm: string[] = [];
-
-        if (
-          person.vacation_start &&
-          person.vacation_end &&
-          dateKey >= person.vacation_start &&
-          dateKey <= person.vacation_end
-        ) {
-          redAlarm.push("Отпуск");
-        }
-
-        if (
-          person.sick_start &&
-          person.sick_end &&
-          dateKey >= person.sick_start &&
-          dateKey <= person.sick_end
-        ) {
-          redAlarm.push("Больничный");
-        }
-
-        if (
-          person.study_start &&
-          person.study_end &&
-          dateKey >= person.study_start &&
-          dateKey <= person.study_end
-        ) {
-          redAlarm.push("Обучение");
-        }
-
-        if (
-          person.vacation_start &&
-          person.vacation_start > dateKey &&
-          person.vacation_start <= sevenPlusDaysString
-        ) {
-          yellowAlarm.push("Скоро отпуск");
-        }
-
-        if (
-          person.study_start &&
-          person.study_start > dateKey &&
-          person.study_start <= sevenPlusDaysString
-        ) {
-          yellowAlarm.push("Скоро обучение");
-        }
-
-        const isFutureDate: boolean = todayDateString <= dateKey;
-
-        const weekday: string =
-          new Intl.DateTimeFormat('ru-RU', { weekday: 'short' })
-            .format(currentDate);
-
-        const hasRedAlarm: boolean =
-          isFutureDate && redAlarm.length > 0;
-
-        const hasYellowAlarm: boolean =
-          isFutureDate && yellowAlarm.length > 0;
-
-        result.push({
-          id: `${dateKey}-${person.id}-no_brigade`,
-          brigade: { 
-            id: 'no-brigade', 
-            name: 'Без бригады', 
-            number_brigade: 0, 
-            cycle_start_date: null, 
-            installation_id: '', 
-          },
-          code: '',
-          label: 'Без бригады',
-          startDate: dateKey,
-          russianDate: dateRussian,
-          startTime: null,
-          endTime: null,
-          peopleOnThisDay: [
-            {
-              ...person,
-              redAlarm,
-              yellowAlarm,
-            }
-          ],
-          isFutureDate,
-          notHuman: false,
-          howManyNotHuman: 0,
-          weekday,
-          hasRedAlarm,
-          hasYellowAlarm,
-          color: ''
-        });
-      }
-    });
-
-    return result;
-  }
-);
-
-export const sortWhoDontHaveBrigade = createSelector(
-
-  whoDontHaveBrigade,
-
-  (shifts): Map<string, SortShift> => {
-
-    const map = new Map<string, SortShift>();
-
-    for (const shift of shifts) {
-
-      if (!map.has(shift.startDate)) {
-
-        map.set(shift.startDate, {
-          ...shift,
-          peopleOnThisDay: [],
-        });
-        
-      }
-
-      map.get(shift.startDate)!.peopleOnThisDay.push(
-        ...shift.peopleOnThisDay
-      );
-    }
-
-    return map
-  }
-);

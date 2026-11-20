@@ -1,0 +1,11 @@
+@use 'styles/helpers/' as *;
+
+.replaceWorkerProcess {
+    position: relative;
+    
+    display: flex;
+    justify-content: space-between;
+
+    width: 100%;
+    height: rem(250);
+}

@@ -8,7 +8,6 @@ import { PersonDropdownItem } from "./components/PersonDropdownItem";
 
 interface Props {
     shift: SortShift;
-    shiftsToday: SortShift[];
 }
 
 export function BrigadeDropdown(

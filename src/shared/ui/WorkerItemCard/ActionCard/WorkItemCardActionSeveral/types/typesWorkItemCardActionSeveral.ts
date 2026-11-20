@@ -1,16 +1,23 @@
 import type { Dispatch, SetStateAction } from "react";
 
 export interface WorkItemCardActionSeveralProps {
-    id: string;
-    name: string;
-    surname: string;
-    otherSurname: string;
-    job_title: string,
-    block: string,
-    discharge: number,
-    avalibleBlocks: string[];
 
-    buttonSelectCheck: boolean;
+    setIsApplymodalReplaceSeveral: Dispatch<SetStateAction<string | null>>
+    setIsApplymodalReplaceOnlyOne: React.Dispatch<React.SetStateAction<{
+        personId: string;
+        brigadeId: string;
+    } | null>>;
+
+    persons: {
+        id: string;
+        name: string;
+        surname: string;
+        otherSurname: string;
+        job_title: string,
+        block: string,
+        discharge: number,
+        avalibleBlocks: string[];
+    }[]
 
     brigadesIdAndNumbers: {
         brigadeId: string;
@@ -20,9 +27,15 @@ export interface WorkItemCardActionSeveralProps {
     listSelectedUsers: string[];
     onListSelectedUsers: Dispatch<SetStateAction<string[]>>;
 
-    onApply: React.Dispatch<React.SetStateAction<{
-        personId: string;
-        brigadeId: string;
-    } | null>>;
+    isButtonSelectCheck: boolean;
+    isOpenModalSeveral: boolean;
+    setIsOpenModalSeveral: (isOpenModalSeveral: boolean) => void;
+
+    arrSelectButton: {
+        id: string;
+        name: string;
+        surname: string;
+    }[];
+    isActiveSlide: boolean;
 
 }
