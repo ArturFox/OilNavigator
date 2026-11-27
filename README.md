@@ -66,3 +66,8 @@ OilNavigator - это веб и мобильное приложение для �
 ![Страница основного состава для бригады](./src/screenshots/CoreStaff.png)
 ![Страница основного состава для бригады](./src/screenshots/CoreStaffWithProblem.png)
 
+6) Страница для замены основного состава
+
+    Тут просто начальник выберает человека в бригаду 
+
+![ReplaceCoreStaff](./src/screenshots/ReplaceCoreStaff.png)
