@@ -25,4 +25,4 @@ OilNavigator - это веб и мобильное приложение для �
 
 Какбы пользовался Начальник установки
 
-![Главная страница](./screenshots/HomePage.png)
+![Главная страница](https://github.com/ArturFox/OilNavigator/raw/update1.01/screenshots/HomePage.png)
