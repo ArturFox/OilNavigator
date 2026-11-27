@@ -2,6 +2,8 @@
 
 Есть демо-версия проекта, доступная на GitHub Pages:
 
+ТОЛЬКО В МОБИЛЬНОМ РЕЖИМЕ!!!
+
 - **Демо:** https://arturfox.github.io/OilNavigator/
 - **Логин:** main@gmail.com
 - **Пароль:** 123456789
