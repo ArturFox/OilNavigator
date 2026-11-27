@@ -1,11 +1,13 @@
 import type { Persons } from "@/entities/persons/types/persons.dto";
 import { useState } from "react";
+import { toast } from "sonner";
 
 interface FilterSelected {
     brigadesId: (string | null)[];
     jobTitle: string[];
     block: string[];
     discharge: number[];
+    searchUser: string;
 }
 
 interface BrigadesWithPeople {
@@ -31,10 +33,21 @@ export function useFilteredPeopelSort (
         brigadesId: [],
         jobTitle: [],
         block: [],
-        discharge: []
+        discharge: [],
+        searchUser: '',
     });
 
     const applyFunctionFilters = () => {
+
+        if(
+            filters.block.length === 0 &&
+            filters.brigadesId.length === 0 &&
+            filters.jobTitle.length === 0 &&
+            filters.discharge.length === 0
+        ) {
+            toast.error('Вы не выбрали фильтры');
+            return
+        }
 
         setIsApplyFilters(true);
         setIsOpenModalFilters(false);
@@ -47,8 +60,11 @@ export function useFilteredPeopelSort (
             brigadesId: [],
             jobTitle: [],
             block: [],
-            discharge: []
+            discharge: [],
+            searchUser: ''
         });
+
+        toast.success('Фильтры сбросили фильтры')
 
         setIsApplyFilters(false);
 
@@ -56,7 +72,7 @@ export function useFilteredPeopelSort (
 
     const filteredPeopelSort: BrigadesWithPeople[] = peopelSort.map((brigade) => {
 
-        if (!isApplyFilters) {
+        if (!isApplyFilters && filters.searchUser === '') {
             return brigade;
         }
 
@@ -64,25 +80,42 @@ export function useFilteredPeopelSort (
 
             const matchesBrigade: boolean =
                 filters.brigadesId.length === 0 ||
-                filters.brigadesId.includes(person.brigade_id);
+                filters.brigadesId.includes(person.brigade_id)
+            ;
 
             const matchesJobTitle: boolean =
                 filters.jobTitle.length === 0 ||
-                filters.jobTitle.includes(person.job_title);
+                filters.jobTitle.includes(person.job_title)
+            ;
 
             const matchesBlock: boolean =
                 filters.block.length === 0 ||
-                filters.block.includes(person.block);
+                filters.block.includes(person.block)
+            ;
 
             const matchesDischarge: boolean =
                 filters.discharge.length === 0 ||
-                filters.discharge.includes(person.discharge);
+                filters.discharge.includes(person.discharge)
+            ;
+
+            const matchesSearchUser: boolean =
+                filters.searchUser.length === 0 ||
+                `${person.name} ${person.surname} ${person.other_surname}`
+                .toLowerCase()
+                .replace(/[^\p{L}\p{N}]/gu, '')
+                .includes(
+                    filters.searchUser
+                    .toLowerCase()
+                    .replace(/[^\p{L}\p{N}]/gu, '')
+                )
+            ;
 
             return (
                 matchesBrigade &&
                 matchesJobTitle &&
                 matchesBlock &&
-                matchesDischarge
+                matchesDischarge &&
+                matchesSearchUser
             );
         });
 

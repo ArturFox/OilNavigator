@@ -5,6 +5,7 @@ export interface BaseFilters {
     jobTitle: string[];
     block: string[];
     discharge: number[];
+    searchUser: string;
 }
 
 export interface FilterReplaceCoreStaffProps<T extends BaseFilters> {

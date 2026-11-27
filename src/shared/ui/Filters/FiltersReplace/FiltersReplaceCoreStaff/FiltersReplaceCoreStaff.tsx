@@ -45,8 +45,11 @@ export function FilterReplaceCoreStaff<T extends BaseFilters> (
                     <input
                         className={styles["replaceWorkerFilters__search-input"]}
                         placeholder='Поиск по ФИО'
-                        value={''}
-                        
+                        value={filters.searchUser}
+                        onChange={(e) => setFilters(prev => ({
+                            ...prev,
+                            searchUser: e.target.value
+                        }))}
                     />
                 </div>
 
@@ -63,66 +66,6 @@ export function FilterReplaceCoreStaff<T extends BaseFilters> (
                 </button>
 
             </article>
-
-            {/* <article
-                className={styles["replaceWorkerFilters__categories"]}
-            >
-
-                {Object.entries(filters).map(([key, value]) => {
-
-                    if (!value || value.length === 0) return null;
-
-                    if (key === 'brigadesId') {
-                        
-                        const selectedBrigades: Brigade[] = brigadesArr.filter((b) => value.includes(b.id))
-                        
-                        return (
-                            
-                            <div
-                                className={styles["replaceWorkerFilters__categories-block"]}
-                            >
-
-                                {selectedBrigades.map((b) => (
-                                    
-                                    <span
-                                        key={b.id}
-                                        className={styles["replaceWorkerFilters__categories-button"]}
-                                    >
-
-                                        {b.name}
-
-                                    </span>
-                                ))}
-
-                            </div>
-                        )
-                    }else {
-                        return (
-                            <div 
-                                key={key}
-                                className={styles["replaceWorkerFilters__categories-block"]}
-                            >
-
-                                {value.map((v: string | number) => (
-
-                                    <span
-                                        key={v}
-                                        className={styles["replaceWorkerFilters__categories-button"]}
-                                    >
-
-                                        {v}
-
-                                    </span>
-
-                                ))}
-                                
-                            </div>
-                        );
-                    }
-                })}
-
-
-            </article> */}
 
             {isOpenModalFilterReplaceCoreStaff && 
 
