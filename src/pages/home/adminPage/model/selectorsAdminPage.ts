@@ -5,7 +5,7 @@ import type { RootState } from "../../../../app/store/store";
 import { personsMapper } from "../../../../entities/persons/model/selector/selectorPersons";
 import type { Persons } from "../../../../entities/persons/types/persons.dto";
 import { shiftsMapper } from "../../../../entities/shifts/model/selector/selectorShifts";
-import type { Shift, SortShift } from "../../../../entities/shifts/types/shifts.dto";
+import type { Shift, SortShift, SortShiftDay } from "../../../../entities/shifts/types/shifts.dto";
 import { personsReplacementMapper } from "../../../../entities/personReplacement/model/selector/selectorPersonReplacement";
 import type { PersonReplacementMapper } from "@/entities/personReplacement/types/personReplacement.dto";
 
@@ -118,12 +118,43 @@ function checkPersonProblems(
   const redAlarm = [...person.redAlarm];
   const yellowAlarm = [...person.yellowAlarm];
 
-  if (person.vacation_start && person.vacation_end && currentDateString >= person.vacation_start && currentDateString <= person.vacation_end) redAlarm.push("Отпуск");
-  if (person.sick_start && person.sick_end && currentDateString >= person.sick_start && currentDateString <= person.sick_end) redAlarm.push("Больничный");
-  if (person.study_start && person.study_end && currentDateString >= person.study_start && currentDateString <= person.study_end) redAlarm.push("Обучение");
+  if (
+    person.vacation_start && 
+    person.vacation_end && 
+    currentDateString >= person.vacation_start && 
+    currentDateString <= person.vacation_end
+  ) {
+    redAlarm.push("Отпуск");
+  }
 
-  if (person.vacation_start && person.vacation_start > currentDateString && person.vacation_start <= sevenPlusDaysString) yellowAlarm.push("Скоро отпуск");
-  if (person.study_start && person.study_start > currentDateString && person.study_start <= sevenPlusDaysString) yellowAlarm.push("Скоро обучение");
+  if (
+    person.sick_start && 
+    person.sick_end && 
+    currentDateString >= person.sick_start && 
+    currentDateString <= person.sick_end
+  ) {
+    redAlarm.push("Больничный");
+  }
+
+  if (
+    person.study_start && 
+    person.study_end && 
+    currentDateString >= person.study_start && 
+    currentDateString <= person.study_end
+  ) {
+    redAlarm.push("Обучение");
+  }
+
+  if (
+    person.vacation_start && 
+    person.vacation_start > currentDateString && 
+    person.vacation_start <= sevenPlusDaysString
+  ) { 
+    yellowAlarm.push("Скоро отпуск");
+  }
+
+  if (
+    person.study_start && person.study_start > currentDateString && person.study_start <= sevenPlusDaysString) yellowAlarm.push("Скоро обучение");
 
   return { ...person, redAlarm, yellowAlarm };
 
@@ -138,10 +169,9 @@ export const createMonthShift = createSelector(
   personsMap,
   personsReplacementArr,
 
-  (brigades, shift, monthSelected, persons, personReplacement): SortShift[] => {
+  (brigades, shift, monthSelected, persons, personReplacement): SortShiftDay[] => {
 
-    // будующий результат 
-    const result: SortShift[] = [];
+    const result: SortShiftDay[] = [];
 
     // берем дату из стора 
     // и вытаскивает год и месяц
@@ -166,39 +196,42 @@ export const createMonthShift = createSelector(
     );
     const sevenPlusDaysString = `${sevenPlusDays.getFullYear()}-${String(sevenPlusDays.getMonth()+1).padStart(2,'0')}-${String(sevenPlusDays.getDate()).padStart(2,'0')}`;
 
-    // начинаем идти по каждой бригаде
-    brigades.forEach((brigade) => {
+    // для бригады составляем на каждый день распиание
+    for(let day = 1; day <= daysInMonth; day++){
 
-      // проверка что есть дата начала первого дня смены
-      if (!brigade.cycle_start_date) return;
+      // создаем дату на конкретный день по которому итерируемся
+      const currentDate = new Date(year, month - 1, day);
 
-      // берем дату начала первого дня смены 
-      // которая пришла из бд и переводим ее в локальную дату
-      // где есть год, месяц, день, а всё остальное по нулям
-      // это для безопасности 
-      const baseDate: Date = toDateKey(new Date(brigade.cycle_start_date));
+      // создаем из этой даты две строчные даты где
+      // первая в формате 2026-10-10
+      // вторая русская 10-10-2026
+      const currentDateString = `${currentDate.getFullYear()}-${String(currentDate.getMonth()+1).padStart(2,'0')}-${String(currentDate.getDate()).padStart(2,'0')}`;
+      const dateRussian = `${String(currentDate.getDate()).padStart(2,'0')}-${String(currentDate.getMonth()+1).padStart(2,'0')}-${currentDate.getFullYear()}`;
 
-      // берем массив смен из бд
-      // бд дает в хаотичном состоянии поэтому
-      // сортируем по index это поле обязательное в бд
-      const brigadePattern: Shift[] = [...(shift.get(brigade.id) ?? [])].sort((a, b) => a.day_index - b.day_index);
+      // создаем день недели
+      const weekday: string = new Intl.DateTimeFormat('ru-RU', { weekday: 'short' }).format(currentDate);
 
-      if(brigadePattern.length === 0) return;
+      const shifts: SortShift[] = [];
+      const personsRemovedFromBrigade: Persons[] = [];
+      const personsWithoutBrigade: Persons[] = [...(persons.get('no_brigade') ?? [])];
 
-      // для бригады составляем на каждый день распиание
-      for(let day = 1; day <= daysInMonth; day++){
+      brigades.forEach((brigade) => {
 
-        // создаем дату на конкретный день по которому итерируемся
-        const currentDate = new Date(year, month - 1, day);
+        // проверка что есть дата начала первого дня смены
+        if (!brigade.cycle_start_date) return;
 
-        // создаем из этой даты две строчные даты где
-        // первая в формате 2026-10-10
-        // вторая русская 10-10-2026
-        const currentDateString = `${currentDate.getFullYear()}-${String(currentDate.getMonth()+1).padStart(2,'0')}-${String(currentDate.getDate()).padStart(2,'0')}`;
-        const dateRussian = `${String(currentDate.getDate()).padStart(2,'0')}-${String(currentDate.getMonth()+1).padStart(2,'0')}-${currentDate.getFullYear()}`;
+        // берем дату начала первого дня смены 
+        // которая пришла из бд и переводим ее в локальную дату
+        // где есть год, месяц, день, а всё остальное по нулям
+        // это для безопасности 
+        const baseDate: Date = toDateKey(new Date(brigade.cycle_start_date));
 
-        // создаем день недели
-        const weekday: string = new Intl.DateTimeFormat('ru-RU', { weekday: 'short' }).format(currentDate);
+        // берем массив смен из бд
+        // бд дает в хаотичном состоянии поэтому
+        // сортируем по index это поле обязательное в бд
+        const brigadePattern: Shift[] = [...(shift.get(brigade.id) ?? [])].sort((a, b) => a.day_index - b.day_index);
+
+        if(brigadePattern.length === 0) return;
 
         // Вычисляем, сколько полных дней прошло между началом цикла бригады
         // (baseDate) и текущим днём расписания (currentDate).
@@ -217,7 +250,7 @@ export const createMonthShift = createSelector(
 
         // Если текущий день раньше даты начала цикла бригады,
         // пропускаем его: смены ещё не начались.
-        if (diff < 0) continue;
+        if (diff < 0) return;
 
         // бесконечный цикл
         // Дата	     diff diff % 4	Индекс смены
@@ -251,9 +284,6 @@ export const createMonthShift = createSelector(
 
             }
         );
-
-        // Храним сотрудников, которых сегодня заменили
-        let personsRemovedFromBrigade: Persons[] = [];
 
         // Убираем того человека, 
         // кого заменяют, 
@@ -303,117 +333,133 @@ export const createMonthShift = createSelector(
 
         }
 
-        // получаем людей без бригады
-        const personsWithoutBrigade: Persons[] = [...(persons.get('no_brigade') ?? [])];
-
-        // Убираем из списка без бригады сотрудников, которые сегодня вышли на замену в другую бригаду
-        const personsWithoutBrigadeOnThisDay = personsWithoutBrigade.filter(
-          (person) =>
-            !dayReplacements.some(
-              (replacement) => replacement.personReplacedId === person.id
-            )
+        const personsStatus: Persons[] = personsOnThisDay.map((person) =>
+          checkPersonProblems(person, currentDateString, sevenPlusDaysString)
         );
 
         //для отображения цвета
         //если день прошел то серый
         //если сегодняшний или будующий то синий
         const isFutureDate: boolean = todayDateString <= currentDateString;
+        const isToday: boolean = currentDateString === todayDateString;
+        const isPastDate: boolean = currentDateString < todayDateString;
       
         //Если в бригаде меньше 7 человек, то это true
         //и покажем в интерфейсе сколько человек не хваатает 
         const notHuman: boolean = personsOnThisDay.length < 7;
         const howManyNotHuman: number = 7 - personsOnThisDay.length;
 
-
-        const personsStatus: Persons[] = personsOnThisDay.map((person) =>
-          checkPersonProblems(person, currentDateString, sevenPlusDaysString)
-        );
-
-        const personsWithoutBrigadeStatus: Persons[] = personsWithoutBrigadeOnThisDay.map((person) =>
-          checkPersonProblems(person, currentDateString, sevenPlusDaysString)
-        );
-
-        const personsRemovedFromBrigadeCheckProblems: Persons[] = personsRemovedFromBrigade.map((person) =>
-          checkPersonProblems(person, currentDateString, sevenPlusDaysString)
-        );
-
         const hasRedAlarm: boolean =
-            isFutureDate &&
-            (
-                personsStatus.length < 7 ||
-                personsStatus.some(person => person.redAlarm.length > 0)
-            );
+          isFutureDate &&
+          (
+              personsStatus.length < 7 ||
+              personsStatus.some(person => person.redAlarm.length > 0)
+          )
+        ;
 
         const hasYellowAlarm: boolean =
-            isFutureDate &&
-            personsStatus.some(person => person.yellowAlarm.length > 0);
+          isFutureDate &&
+          personsStatus.some(person => person.yellowAlarm.length > 0)
+        ;
 
+        shifts.push({
 
-        result.push({
           id: `${currentDateString}-${brigade.id}`,
+
+          date: currentDateString,
+          russianDate: dateRussian,
+
           brigade: brigade,
-          startDate: currentDateString,
+          peopleOnThisDay: personsStatus,
+
           code: normalizedCode,
           label: template.label,
+
           startTime: template.start_time?.slice(0, 5) ?? null,
           endTime: template.end_time?.slice(0, 5) ?? null,
-          russianDate: dateRussian,
-          peopleOnThisDay: personsStatus,
-          isFutureDate: isFutureDate,
-          notHuman: notHuman,
-          howManyNotHuman: howManyNotHuman,
-          weekday: weekday,
-          hasRedAlarm: hasRedAlarm,
-          hasYellowAlarm: hasYellowAlarm,
+          
+          isFutureDate,
+          isPastDate,
+          isToday,
+
+          notHuman,
+          howManyNotHuman,
+          weekday,
+          hasRedAlarm,
+          hasYellowAlarm,
           color: template.color,
-          peopleWithoutBrigade: personsWithoutBrigadeStatus,
-          personsRemovedFromBrigade: personsRemovedFromBrigadeCheckProblems
+
         });
-      }
-    })
+
+
+      })
+
+      const dayReplacements = personReplacement.filter((replacement) => {
+        const date = new Date(replacement.date);
+
+        const dateString = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+
+        return dateString === currentDateString;
+      });
+
+      // Убираем из списка без бригады сотрудников, которые сегодня вышли на замену в другую бригаду
+      const personsWithoutBrigadeOnThisDay = personsWithoutBrigade.filter(
+        (person) =>
+          !dayReplacements.some(
+            (replacement) => replacement.personReplacedId === person.id
+          )
+      );
+
+      const personsWithoutBrigadeStatus: Persons[] = personsWithoutBrigadeOnThisDay.map((person) =>
+        checkPersonProblems(person, currentDateString, sevenPlusDaysString)
+      );
+
+      const personsRemovedFromBrigadeCheckProblems: Persons[] = personsRemovedFromBrigade.map((person) =>
+        checkPersonProblems(person, currentDateString, sevenPlusDaysString)
+      );
+
+      result.push({
+        date: currentDateString,
+        shifts,
+        personsWithoutBrigade: personsWithoutBrigadeStatus,
+        personsRemovedFromBrigade: personsRemovedFromBrigadeCheckProblems
+      });
+
+    }
 
     return result;
 
-  }
-
-)
+})
 
 // на каждый день отсортировали бригады вначале кто ночью потом утром потом вечером и потом кто отдыхает
 export const sortShiftMap = createSelector(
 
   createMonthShift,
 
-  (shifts): Map<string, SortShift[]> => {
+  (shifts): Map<string, SortShiftDay> => {
 
-    const sorted = [...shifts].sort((a,b) => {
+    const map = new Map<string, SortShiftDay>();
 
-      if (a.startDate !== b.startDate) {
+    const order = { "Н": 0, "У": 1, "В": 2, "О": 3 };
 
-        return a.startDate.localeCompare(b.startDate);
-      
-      }
+    for (const day of shifts) {
 
-      const order = { "Н": 0, "У": 1, "В": 2, "О": 3 };
+      const sorted = [...day.shifts].sort((a, b) => {
 
-      return order[a.code as "Н" | "У" | "В" | "О"] - order[b.code as "Н" | "У" | "В" | "О"];
+        return order[a.code as "Н" | "У" | "В" | "О"] -
+               order[b.code as "Н" | "У" | "В" | "О"];
 
-    });
+      });
 
-    const map = new Map<string, SortShift[]>();
+      map.set(day.date, {
+        ...day,
+        shifts: sorted
+      });
 
-    for (const shift of sorted) {
-
-      if (!map.has(shift.startDate)) {
-
-        map.set(shift.startDate, []);
-    
-      }
-
-      map.get(shift.startDate)!.push(shift);
     }
 
     return map;
 
   }
 
-)
+);

@@ -111,7 +111,7 @@ export function BrigadeDropdown(
                         key={person.id}
                         personWhoWasReplacedId={person}
                         isFutureDate={shift.isFutureDate} 
-                        startDate={shift.startDate}
+                        startDate={shift.date}
                         personWhoWasReplacedBrigadeId={shift.brigade.id}
                     />
 
@@ -124,7 +124,7 @@ export function BrigadeDropdown(
                         <PersonDropdownItem 
                             key={`${index}+Нету человека`}
                             isFutureDate={shift.isFutureDate}
-                            startDate={shift.startDate}
+                            startDate={shift.date}
                             personWhoWasReplacedBrigadeId={shift.brigade.id}
                         />
                         

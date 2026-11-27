@@ -16,6 +16,7 @@ interface NewWorkerCardProps {
     avalibleBlocks: string[] | null;
     objectSelectUser: ObjectSelectUser | null;
     setApply: (apply: boolean) => void;
+    isLoadingNewWorkerCardProps: boolean;
 }
 
 export function NewWorkerCard (
@@ -28,7 +29,8 @@ export function NewWorkerCard (
         jobTitle,
         numberBrigade,
         objectSelectUser,
-        setApply
+        setApply,
+        isLoadingNewWorkerCardProps
     }: NewWorkerCardProps
 ) {
 
@@ -133,8 +135,9 @@ export function NewWorkerCard (
                             ${objectSelectUser?.id !== null && styles["rightCard__acceptButton--selected"]}
                         `}
                         onClick={() => setApply(true)}
+                        disabled={isLoadingNewWorkerCardProps}
                     >
-                        Применить
+                        {isLoadingNewWorkerCardProps ? 'Выполнение...' : 'Применить'}
                     </button>
                 </>
             }

@@ -1,7 +1,10 @@
 import type { Persons } from '@/entities/persons/types/persons.dto';
 import { WorkItemCardFactory } from '@/shared/ui/WorkerItemCard/WorkItemCardFactory';
-import type { ObjectSelectUserReplaseWorkerCoreAdd } from '@/pages/ReplaceWorker/ReplaseWorkerCoreAdd/types/typesReplaseWorkerCoreAdd';
 import styles from './BrigadePeopleSection.module.scss';
+
+type IdSelectedUser = {
+    id: string;
+};
 
 interface Props {
     personIdParam: string | null
@@ -10,9 +13,9 @@ interface Props {
         people: Persons[];
     };
     brigadeName: string;
-    selectNewWorker: ObjectSelectUserReplaseWorkerCoreAdd | null;
+    selectNewWorker: IdSelectedUser | null;
     setSelectNewWorker: React.Dispatch<
-        React.SetStateAction<ObjectSelectUserReplaseWorkerCoreAdd | null>
+        React.SetStateAction<IdSelectedUser| null>
     >;
 }
 

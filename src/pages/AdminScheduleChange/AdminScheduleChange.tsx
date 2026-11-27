@@ -4,7 +4,7 @@ import type { Brigade } from "@/entities/brigades/types/brigades.dto";
 import { useGetPersonReplacementQuery } from "@/entities/personReplacement/api/getPersonReplacement";
 import { useGetPesonsQuery } from "@/entities/persons/api/getPersons";
 import { useGetShiftsQuery } from "@/entities/shifts/api/getShifts";
-import type { Shift, SortShift } from "@/entities/shifts/types/shifts.dto";
+import type { Shift, SortShiftDay } from "@/entities/shifts/types/shifts.dto";
 import { sortShiftMap } from "@/pages/Home/adminPage/model/selectorsAdminPage";
 import { Calendar } from "@/shared/ui/Calendar/Calendar";
 import { useState } from "react";
@@ -21,7 +21,7 @@ export function AdminScheduleChange() {
     const personsReplacementQuery = useGetPersonReplacementQuery();
 
     // селекторы
-    const shiftMap: Map<string, SortShift[]> = useSelector(sortShiftMap);
+    const shiftMap: Map<string, SortShiftDay> = useSelector(sortShiftMap);
     
     // получаем настоящию сегодняшнию дату
     const todayDate = useSelector((state: RootState) => state.date.todayDate);
@@ -38,7 +38,7 @@ export function AdminScheduleChange() {
     // состояния
     const [selectBrigade, _] = useState<Brigade[]>([]);
 
-    const entries: [string, SortShift[]][] = [...shiftMap.entries()];
+    const entries: [string, SortShiftDay][] = [...shiftMap.entries()];
 
     // const likeButtonRef = useRef<HTMLDivElement>(null);
 
@@ -77,39 +77,6 @@ export function AdminScheduleChange() {
                 date={date}
             />
 
-            {/* <div ref={likeButtonRef} /> */}
-
         </main>
     )
 }
-// export class LikeButton {
-
-//     container: HTMLElement;
-//     isLiked: boolean;
-
-//     constructor(container: HTMLElement) {
-//         this.container = container;
-//         this.isLiked = false;
-
-//         this.render();
-//     }
-
-//     render(): void {
-//         this.container.innerHTML = `
-//             <button class="like-btn">
-//                 ${this.isLiked ? '❤️ Активно' : '🤍 Неактивно'}
-//             </button>
-//         `;
-
-//         const button = this.container.querySelector(
-//             '.like-btn'
-//         ) as HTMLButtonElement;
-
-//         button.addEventListener('click', () => this.toggleLike());
-//     }
-
-//     toggleLike(): void {
-//         this.isLiked = !this.isLiked;
-//         this.render();
-//     }
-// }

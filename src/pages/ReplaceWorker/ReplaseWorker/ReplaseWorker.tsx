@@ -8,12 +8,15 @@ import { useGetPesonsQuery } from '@/entities/persons/api/getPersons';
 import { useGetBrigadesQuery } from '@/entities/brigades/api/getBrigades';
 import { useGetPersonReplacementQuery } from '@/entities/personReplacement/api/getPersonReplacement';
 import { useGetShiftsQuery } from '@/entities/shifts/api/getShifts';
-import type { ObjectSelectUserReplaseWorkerCoreAdd } from '@/pages/ReplaceWorker/ReplaseWorkerCoreAdd/types/typesReplaseWorkerCoreAdd';
 import { LayoutFactory } from '@/shared/ui/Layout/LayoutFactory';
-import type { SortShift } from '@/entities/shifts/types/shifts.dto';
+import type {  SortShiftDay } from '@/entities/shifts/types/shifts.dto';
 import { sortShiftMap } from '@/pages/Home/adminPage/model/selectorsAdminPage';
 import { supabase } from '@/shared/api/supabase/client';
 import { BrigadePeopleSection } from '@/pages/ReplaceWorker/ReplaseWorker/widgets/BrigadePeopleSection/BrigadePeopleSection';
+
+type IdSelectedUser = {
+    id: string;
+};
 
 export function ReplaseWorker () {
 
@@ -47,19 +50,17 @@ export function ReplaseWorker () {
     };
 
     // Селекторы
-    const shiftsMap: Map<string, SortShift[]> = useSelector(sortShiftMap);
+    const shiftsMap: Map<string, SortShiftDay> = useSelector(sortShiftMap);
 
-    const shiftsToday: SortShift[] = shiftsMap.get(dateStore) ?? [];
+    const shiftsToday: SortShiftDay | undefined = shiftsMap.get(dateStore);
 
-    const currentBrigade = shiftsToday.find(
+    const currentBrigade = shiftsToday?.shifts.find(
         shift => shift.brigade.id === brigadeIdParam
     );
 
     const currentWorkerWithProblems = currentBrigade?.peopleOnThisDay.find(
         person => person.id === personId
     );
-
-    console.log(currentWorkerWithProblems)
 
     if (
         !currentWorkerWithProblems 
@@ -73,9 +74,8 @@ export function ReplaseWorker () {
 
     // состояние где хранится id человека 
     // на которого кликнул пользователь
-    const [selectNewWorker, setSelectNewWorker] = useState<ObjectSelectUserReplaseWorkerCoreAdd | null>(null);
+    const [selectNewWorker, setSelectNewWorker] = useState<IdSelectedUser | null>(null);
 
-    console.log(selectNewWorker)
     const [apply, setApply] = useState<boolean>(false);
 
     const currentWorkerObj = {
@@ -94,15 +94,12 @@ export function ReplaseWorker () {
         yellowAlarm: currentWorkerWithProblems.yellowAlarm ?? [],
     }
 
-    console.log(currentWorkerObj.redAlarm)
-
-   const newWorker: Persons | null = selectNewWorker
-    ? shiftsToday
-        .flatMap((f) => [
-            ...f.peopleOnThisDay,
-            ...(f.peopleWithoutBrigade ?? [])
-        ])
-        .find((person) => person.id === selectNewWorker.id) ?? null
+   const newWorker: Persons | null = selectNewWorker && shiftsToday
+    ? [
+        ...shiftsToday.shifts.flatMap((f) => f.peopleOnThisDay),
+        ...shiftsToday.personsWithoutBrigade,
+        ...shiftsToday.personsRemovedFromBrigade
+    ].find((person) => person.id === selectNewWorker.id) ?? null
     : null;
 
     const newWorkerObj = newWorker
@@ -122,9 +119,6 @@ export function ReplaseWorker () {
             yellowAlarm: newWorker.yellowAlarm ?? [],
         }
     : null;
-
-    console.log(newWorkerObj?.redAlarm ?? null)
-
  
     useEffect(() => {
 
@@ -238,14 +232,13 @@ export function ReplaseWorker () {
                 newWorker: newWorkerObj
             })}
 
-            {(shiftsToday[0]?.personsRemovedFromBrigade && 
-              shiftsToday[0]?.personsRemovedFromBrigade.length > 0) &&  (
+            {(shiftsToday?.personsRemovedFromBrigade.length ?? 0) > 0 && (
                 <BrigadePeopleSection
                     personIdParam={personId}
                     key="personsRemovedFromBrigade"
                     brigade={{
                         brigadeId: 'no_brigade',
-                        people: shiftsToday[0].personsRemovedFromBrigade
+                        people: shiftsToday!.personsRemovedFromBrigade
                     }}
                     brigadeName={'Замененый человек'}
                     selectNewWorker={selectNewWorker}
@@ -253,14 +246,13 @@ export function ReplaseWorker () {
                 />
             )}
 
-            {(shiftsToday[0]?.peopleWithoutBrigade && 
-              shiftsToday[0]?.peopleWithoutBrigade.length > 0 ) && (
+            {(shiftsToday?.personsWithoutBrigade.length ?? 0) > 0 && (
                 <BrigadePeopleSection
                     key="no_brigade"
                     personIdParam={personId}
                     brigade={{
                         brigadeId: 'no_brigade',
-                        people: shiftsToday[0].peopleWithoutBrigade
+                        people: shiftsToday!.personsWithoutBrigade
                     }}
                     brigadeName={'Без бригады'}
                     selectNewWorker={selectNewWorker}
@@ -268,7 +260,7 @@ export function ReplaseWorker () {
                 />
             )}
 
-            {shiftsToday.map((shift) => {
+            {shiftsToday?.shifts.map((shift) => {
 
                 const brigadeName = shift.brigade.name;
 

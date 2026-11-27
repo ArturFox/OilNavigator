@@ -1,16 +1,4 @@
-@use '../../../../../styles/helpers/' as *;
-
-.calendar {
-    list-style: none;
-
-    display: flex;
-    gap: rem(10);
-
-    overflow: scroll;
-    scrollbar-width: none;
-
-    min-height: rem(100);
-}
+@use 'styles/helpers/' as *;
 
 .calendar__item {
     display: flex;

@@ -8,6 +8,8 @@ import { ModalReplaceOnlyOne } from '@/shared/ui/Modal/ModalReplaceToBrigade/Mod
 import type { ModalReplaceOnlyOneProps } from '@/shared/ui/Modal/ModalReplaceToBrigade/ModalReplaceOnlyOneSelect/types/typesModalReplaceOnlyOneSelect';
 import { ModalReplaceSeveralSelect } from '@/shared/ui/Modal/ModalReplaceToBrigade/ModalReplaceSeveralSelect/ModalReplaceSeveralSelect';
 import type { ModalReplaceSeveralSelectProps } from '@/shared/ui/Modal/ModalReplaceToBrigade/ModalReplaceSeveralSelect/type/typesModalReplaceSeveralSelect';
+import { ModalWorkerFilter } from '@/shared/ui/Modal/ModalWorkerFilters/ModalWorkerFilters';
+import type { BaseFilters, ModalWorkerFilterProps } from '@/shared/ui/Modal/ModalWorkerFilters/types/typesModalWorkerFilters';
 import { createElement } from 'react';
 
 export class ModalFactory {
@@ -32,4 +34,7 @@ export class ModalFactory {
         return createElement(ModalCreateBrigade, props)
     }
 
+    static modalWorkerFilter<T extends BaseFilters>(props: ModalWorkerFilterProps<T>){
+        return createElement(ModalWorkerFilter<T>, props)
+    }
 }

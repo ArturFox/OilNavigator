@@ -1,0 +1,41 @@
+@use 'styles/helpers/' as *;
+
+.discharges {
+    display: flex;
+    flex-direction: column;
+    gap: rem(5);
+}
+
+.discharges__title {
+    color: var(--white);
+
+    font-size: rem(18);
+}
+
+.discharges__listDischarges {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: rem(5);
+}
+
+.discharges__listDischarges-button {
+
+    color: var(--black);
+    background-color: var(--white);
+
+    font-size: rem(16);
+
+    border-radius: rem(10);
+
+    padding: rem(10);
+
+    transition: transform 0.3s ease;
+
+    &:active {
+        transform: scale(0.9);
+    }
+
+    &--pressed {
+        background-color: var(--blue);
+    }
+}

@@ -60,3 +60,31 @@
     flex-direction: column;
     gap: rem(15);
 }
+
+.userChange__brigadePeopleList {
+    display: flex;
+    flex-direction: column;
+    gap: rem(10);
+}
+
+.userChange__brigadePeopleList-brigade {
+    display: flex;
+    flex-direction: column;
+    gap: rem(10);
+}
+
+.userChange__brigadePeopleList-brigade-title{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: nowrap;
+
+    span{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 100%;
+
+        color: var(--white);
+    }
+}

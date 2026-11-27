@@ -1,13 +1,13 @@
 import type { Brigade } from '@/entities/brigades/types/brigades.dto';
 import styles from './Calendar.module.scss';
-import type { Shift, SortShift } from '@/entities/shifts/types/shifts.dto';
+import type { Shift, SortShift, SortShiftDay } from '@/entities/shifts/types/shifts.dto';
 import { WeekDays } from '@/shared/ui/Calendar/widgets/WeekDays/WeekDays';
 import { CalendarDayFactory } from '@/shared/ui/Calendar/widgets/CalendarDay/CalendarDay';
 import React from 'react';
 
 interface Props {
     selectBrigade: Brigade[];
-    entries: [string, SortShift[]][];
+    entries: [string, SortShiftDay][];
     todayDate: string;
     uniqueObjectArr: Shift[];
     date: Date;
@@ -62,23 +62,24 @@ export function Calendar (
         (_, index) => (index + 1).toString()
     );
 
-    //
-    const filteredEntries = entries.map(([date, shifts]) => [
+    const filteredEntries: [string, SortShiftDay][] = entries.map(([date, day]) => [
         date,
-        shifts.filter((shift) => {
+        {
+            ...day,
+            shifts: day.shifts.filter((shift) => {
 
-            if (shift.code === 'О') return false;
+                if (shift.code === 'О') return false;
 
-            const isSelected: boolean = 
-                selectBrigade.length === 0 ||
-                selectBrigade.some(
-                    (brigade) => brigade.id === shift.brigade.id
-                )
-            ;
+                const isSelected: boolean = 
+                    selectBrigade.length === 0 ||
+                    selectBrigade.some(
+                        (brigade) => brigade.id === shift.brigade.id
+                    );
 
-            return isSelected;
-        })
-    ] as [string, SortShift[]]);
+                return isSelected;
+            })
+        }
+    ]);
 
     const filterUniqueShiftWithOutRest = uniqueObjectArr
         .filter((uniqueShift) => uniqueShift.code !== 'О')
@@ -87,7 +88,7 @@ export function Calendar (
     const sortedShift: [string, (SortShift | null)[]][] = filteredEntries.map(([date, shifts]) => [
         date,
         filterUniqueShiftWithOutRest.map((uniqueShift) =>
-            shifts.find((shift) => {
+            shifts.shifts.find((shift) => {
 
                 return (
                     shift.startTime === uniqueShift.start_time?.slice(0, 5) &&

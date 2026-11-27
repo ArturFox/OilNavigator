@@ -38,14 +38,13 @@ export interface SortShift {
     id: string;
 
     brigade: Brigade; 
+
     peopleOnThisDay: Persons[];
-    peopleWithoutBrigade: Persons[];
-    personsRemovedFromBrigade: Persons[];
 
     code: string;
     label: string;
 
-    startDate: string;
+    date: string;
     
     russianDate: string;
 
@@ -53,6 +52,8 @@ export interface SortShift {
     endTime: string | null;
 
     isFutureDate: boolean;
+    isPastDate: boolean;
+    isToday: boolean;
 
     notHuman: boolean;
     howManyNotHuman: number;
@@ -63,4 +64,16 @@ export interface SortShift {
     hasYellowAlarm: boolean,
 
     color: string;
+}
+
+export interface SortShiftDay {
+
+    date: string;
+
+    shifts: SortShift[];
+
+    personsWithoutBrigade: Persons[];
+
+    personsRemovedFromBrigade: Persons[];
+    
 }

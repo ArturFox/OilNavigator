@@ -51,6 +51,7 @@ export function WorkerReplaceBlockWithOutProblems (
                 avalibleBlocks={newWorker?.avalibleBlocks ?? null}
                 objectSelectUser={newWorker?.objectSelectUser ?? null}
                 setApply={newWorker?.setApply ?? (() => {})}
+                isLoadingNewWorkerCardProps={newWorker?.isLoadingNewWorkerCardProps ?? false}
             />
             
             {(isOpenModalDetail && currentWorker ) && 

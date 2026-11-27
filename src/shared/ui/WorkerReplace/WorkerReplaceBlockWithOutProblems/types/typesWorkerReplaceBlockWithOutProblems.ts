@@ -26,6 +26,7 @@ type NewWorker = {
     avalibleBlocks: string[];
     objectSelectUser: ObjectSelectUser | null;
     setApply: (apply: boolean) => void;
+    isLoadingNewWorkerCardProps: boolean;
 }
 
 export interface WorkerReplaceBlockWithOutProblemsProps {

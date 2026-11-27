@@ -1,257 +1,84 @@
-import { useEffect, type Dispatch, type SetStateAction } from 'react';
 import styles from './ModalWorkerFilters.module.scss';
-import type { Brigade } from '@/entities/brigades/types/brigades.dto';
-import type { FilterSelected } from '@/pages/ReplaceWorker/ReplaseWorker/types/typeReplaseWorker';
+import { Brigades } from '@/shared/ui/Modal/ModalWorkerFilters/widgets/Brigades/Brigades';
+import { JobTitles } from '@/shared/ui/Modal/ModalWorkerFilters/widgets/JobTitles/JobTitles';
+import { Discharges } from '@/shared/ui/Modal/ModalWorkerFilters/widgets/Discharges/Discharges';
+import { Blocks } from '@/shared/ui/Modal/ModalWorkerFilters/widgets/Blocks/Blocks';
+import type { BaseFilters, ModalWorkerFilterProps } from '@/shared/ui/Modal/ModalWorkerFilters/types/typesModalWorkerFilters';
 
-interface Props {
-    modal: boolean;
-    onModal: (modal: boolean) => void;
-    brigadesArr: Brigade[];
-    jobTitleArr: string[];
-    blockArr: string[];
-    dischargeArr: number[];
-    filters: FilterSelected;
-    onFilters: Dispatch<SetStateAction<FilterSelected>>;
-    filterApply: boolean;
-    onFilterApply: (filterApply: boolean) => void;
-}
+export function ModalWorkerFilter<T extends BaseFilters>(
 
-export function ModalWorkerFilters ({
-    modal, 
-    onModal,  
-    brigadesArr, 
-    jobTitleArr,
-    blockArr,
-    dischargeArr,
-    filters,
-    onFilters,
-    onFilterApply,
-    filterApply
-}: Props) {
-    
+    {
+        filters,
+        setFilters,
 
-    useEffect(() => {
-        
-        if(modal === false){
-            return;
-        }
+        brigades,
+        jobTitles,
+        blocks,
+        discharges,
 
-        document.body.style.overflow = 'hidden';
-        
-        return () => {
-            document.body.style.overflow = '';
-        };
+        apply,
+        reset
 
-    }, [modal]);
+    }: ModalWorkerFilterProps<T>
 
-    return(
-        
+) {
+
+    return (
+
         <div
-            className={`
-                ${styles["modal"]}
-                ${modal === true && styles["modal--open"]}    
-            `}
-            onClick={() => onModal(!modal)}
+            className={styles['modal']}
+            onClick={(event) => event.stopPropagation()}
         >
 
-            <div
-                className={`
-                    ${styles['modal__main']}
-                    ${modal && styles['modal__main--open']}    
-                `}
-                onClick={(event) => event?.stopPropagation()}
-            >
-                <div
-                    className={styles["modal__categoryes"]}
-                >
+            <div className={styles["modal__categoryes"]}>
 
-                    <h3
-                        className={styles["modal__title"]}
-                    >
-                        Поиск по фильтрам
-                    </h3>
+                <h3 className={styles["modal__categoryes-title"]}>
+                    Поиск по фильтрам
+                </h3>
 
-                    <div
-                        className={styles["modal__brigades"]}
-                    >
+                <Brigades
+                    brigades={brigades}
 
-                        <h4
-                            className={styles["modal__brigadesTitle"]}
-                        >
-                            Бригады
-                        </h4>
+                    filters={filters}
+                    setFilters={setFilters}
+                />
 
-                        <div
-                            className={styles["modal__brigadesList"]}
-                        >
-                            {brigadesArr.map((brigade) => (
+               
+                <JobTitles
+                    jobTitleNameProps={jobTitles}
 
-                                <button
-                                    key={brigade.id}
-                                    className={`
-                                        ${styles["modal__brigadesListButton"]}
-                                        ${filters.brigadesId.includes((brigade.id))
-                                            ? styles["modal__brigadesListButton--pressed"]
-                                            : ''
-                                        }    
-                                    `}
-                                    onClick={() =>
-                                        onFilters((prev) => ({
-                                            ...prev,
-                                            brigadesId: prev.brigadesId.includes(brigade.id)
-                                                ? prev.brigadesId.filter(
-                                                    (brigadeId) => brigadeId !== brigade.id
-                                                )
-                                                : [...prev.brigadesId, brigade.id]
-                                        }))
-                                    }
-                                >
-                                    {brigade.name}
-                                </button>
-                            ))}
+                    filters={filters}
+                    setFilters={setFilters}
+                />
 
-                        </div>
+                <Blocks
+                    filters={filters}
+                    setFilters={setFilters}
+                    blocks={blocks}
+                />
 
-                    </div>
+                <Discharges
+                    filters={filters}
+                    setFilters={setFilters}
+                    discharges={discharges}
+                />
 
-                    <div>
-
-                        <h4
-                            className={styles["modal__brigadesTitle"]}
-                        >
-                            Должность
-                        </h4>
-
-                        <div
-                            className={styles["modal__brigadesList"]}
-                        >
-                            {jobTitleArr.map((jobTitle, index) => (
-
-                                <button
-                                    key={index}
-                                    className={`
-                                        ${styles["modal__brigadesListButton"]}
-                                        ${filters.jobTitle.includes(jobTitle)
-                                            ? styles["modal__brigadesListButton--pressed"]
-                                            : ''
-                                        }
-                                    `}
-                                    onClick={() => 
-                                        onFilters((prev) => ({
-                                            ...prev,
-                                            jobTitle: prev.jobTitle.includes(jobTitle)
-                                                ? prev.jobTitle.filter(
-                                                    (job) => job !== jobTitle
-                                                )
-                                                : [...prev.jobTitle, jobTitle]
-                                        }))
-                                    }
-                                >
-                                    {jobTitle}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-
-                    <div>
-
-                        <h4
-                            className={styles["modal__brigadesTitle"]}
-                        >
-                            Блок
-                        </h4>
-
-                        <div
-                            className={styles["modal__brigadesList"]}
-                        >
-                            {blockArr.map((block, index) => (
-
-                                <button
-                                    key={index}
-                                    className={`
-                                        ${styles["modal__brigadesListButton"]}
-                                        ${filters.block.includes(block) && styles["modal__brigadesListButton--pressed"]}
-                                    `}
-                                    onClick={() => 
-                                        onFilters((prev) => ({
-                                            ...prev,
-                                            block: prev.block.includes(block)
-                                                ? prev.block.filter((b) => b !== block)
-                                                : [...prev.block, block]
-                                        }))
-                                    }
-                                >
-                                    {block}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-
-                    <div>
-
-                        <h4
-                            className={styles["modal__brigadesTitle"]}
-                        >
-                            Разряд
-                        </h4>
-
-                        <div
-                            className={styles["modal__brigadesList"]}
-                        >
-                            {dischargeArr.map((discharge, index) => (
-
-                                <button
-                                    key={index}
-                                    className={`
-                                        ${styles["modal__brigadesListButton"]}
-                                        ${filters.discharge.includes(discharge)
-                                            ? styles["modal__brigadesListButton--pressed"]
-                                            : ''
-                                        }
-                                    `}
-                                    onClick={() => 
-                                        onFilters((prev) => ({
-                                            ...prev,
-                                            discharge: prev.discharge.includes(discharge)
-                                                ? prev.discharge.filter((d) => d !== discharge)
-                                                : [...prev.discharge, discharge]
-                                        }))
-                                    }
-                                >
-                                    {discharge}
-                                </button>
-                            ))}
-                        </div>
-                    </div>
-
-                </div>
-
-
-                <button
-                    className={styles["modal__apply"]}
-                    onClick={() => {
-                        onFilterApply(!filterApply)
-                        onModal(modal = false)
-                    }}
-                >
-                    Применить
-                </button>
-
-                <button
-                    className={styles["modal__cansel"]}
-                    onClick={() => {
-                        onFilters({
-                            block: [],
-                            brigadesId: [],
-                            discharge: [],
-                            jobTitle: []
-                        })
-                        onModal(modal = false)
-                    }}
-                >
-                    Сбросить
-                </button>
             </div>
+
+            <button
+                className={styles["modal__apply"]}
+                onClick={apply}
+            >
+                Применить
+            </button>
+
+            <button
+                className={styles["modal__cansel"]}
+                onClick={reset}
+            >
+                Сбросить
+            </button>
+
         </div>
-    )
+    );
 }

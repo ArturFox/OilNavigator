@@ -2,33 +2,36 @@ import type { Dispatch, SetStateAction } from "react";
 
 export interface BrigadeNavigationRowProps {
 
+    // хук useSwipe
+    isbrigadeSelectId: string;
+    setIsBrigadeSelectId: (brigadeClick: string) => void;
+
+    // хук useBrigadeCreate
     isModalWhereCreateNewBrigade: boolean;
     setIsModalWhereCreateNewBrigade: (isCreateModal: boolean) => void;
     isLoadingCreateNewBrigade: boolean;
+    setIsCreateNewBrigade: Dispatch<SetStateAction<{
+        cycleStartDate: string;
+        numberBrigade: number;
+    } | null>>
 
+    // хук useBrigadeDelete
     isModalWhereDeleteBrigade: boolean;
     setIsModalWhereDeleteBrigade: (isModalWhereDeleteBrigade: boolean) => void;
     isLoadingDeleteBrigade: boolean;
+    setIsBrigadeIdDelete: Dispatch<SetStateAction<string | null>>;
 
-    brigadeList: {
-        id:string,
-        numberBrigade:number,
-        isFull: boolean;
-    }[];
-
+    // Нужен чтобы отображать в модалках список бригад
     brigadesIdAndNumbers: {
         brigadeId: string;
         brigadeNumber: number;
     }[];
     
-    setIsBrigadeIdDelete: Dispatch<SetStateAction<string | null>>;
-
-    isbrigadeSelectId: string;
-    setIsBrigadeSelectId: (brigadeClick: string) => void;
-
-    setIsCreateNewBrigade: Dispatch<SetStateAction<{
-        cycleStartDate: string;
-        numberBrigade: number;
-    } | null>>
+    // Для отображения списка бригад
+    brigadeList: {
+        id:string,
+        numberBrigade:number,
+        isFull: boolean;
+    }[];
 
 }
