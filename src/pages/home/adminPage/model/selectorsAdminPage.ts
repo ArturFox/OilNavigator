@@ -432,6 +432,44 @@ export const createMonthShift = createSelector(
 })
 
 // на каждый день отсортировали бригады вначале кто ночью потом утром потом вечером и потом кто отдыхает
+// Map {
+
+//   date: "2026-11-28",
+
+//   shifts: [
+
+//     {
+//       id: "2026-11-28-b3",
+
+//       brigade: {},
+
+//       peopleOnThisDay: [],
+
+//       code: "Н",
+//       label: "Ночь",
+//       date: "2026-11-28",
+//       russianDate: "28-11-2026",
+//       startTime: "20:00",
+//       endTime: "08:00",
+//       isFutureDate: true,
+//       isPastDate: false,
+//       isToday: false,
+//       notHuman: true,
+//       howManyNotHuman: 5,
+//       weekday: "сб",
+//       hasRedAlarm: true,
+//       hasYellowAlarm: false,
+//       color: red,
+
+//     },
+      
+//   ],
+
+//   personsWithoutBrigade: [],
+
+//   personsRemovedFromBrigade: []
+
+// }
 export const sortShiftMap = createSelector(
 
   createMonthShift,
